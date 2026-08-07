@@ -1,69 +1,368 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="id" class="dark scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZYLO OS Web Flasher</title>
+    <title>ZYLO OS | Pesantren Darularafah Raya</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            400: '#34d399', // Emerald 400 (Green matching Pesantren logo)
+                            500: '#10b981', // Emerald 500
+                            600: '#059669', // Emerald 600
+                            900: '#064e3b',
+                            950: '#022c22'
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'blink': 'blink 4s infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        blink: {
+                            '0%, 96%, 98%, 100%': { height: '48px', transform: 'translateY(0)' },
+                            '97%': { height: '8px', transform: 'translateY(20px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <!-- ESP Web Tools -->
     <script type="module" src="https://unpkg.com/esp-web-tools@10.0.1/dist/web/install-button.js?module"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Space+Mono:wght@700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0b111a; color: #e2e8f0; overflow-x: hidden; }
+        .oled-font { font-family: 'Space Mono', monospace; }
+        
+        /* OLED Screen Simulation */
+        .oled-screen {
+            width: 256px;
+            height: 128px;
+            background-color: #000;
+            border: 12px solid #1e293b;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.2), inset 0 0 10px rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Eyes Base */
+        .eye {
+            width: 48px;
+            height: 48px;
+            background-color: #fff;
+            border-radius: 8px;
+            position: absolute;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .eye.left { left: 48px; }
+        .eye.right { right: 48px; }
+        
+        /* States */
+        .state-normal .eye {
+            height: 48px;
+            animation: blink 4s infinite;
+        }
+        
+        /* Happy eyes: semi-circles opening upwards */
+        .state-happy .eye {
+            height: 24px;
+            border-radius: 24px 24px 0 0;
+            background-color: transparent;
+            border: 12px solid #fff;
+            border-bottom: 0;
+            animation: none;
+            transform: translateY(12px);
+        }
+        
+        /* Surprised eyes: round with pupil */
+        .state-surprised .eye {
+            height: 56px;
+            border-radius: 50%;
+            background-color: #fff;
+            animation: none;
+        }
+        .state-surprised .eye::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #000;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        /* Grid Bento Style */
+        .bento-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .bento-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px -10px rgba(16, 185, 129, 0.15);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        /* Subtle glow inside card */
+        .bento-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.05), transparent 60%);
+            pointer-events: none;
+        }
     </style>
 </head>
-<body class="bg-gray-950 text-white min-h-screen flex flex-col items-center justify-center p-6 relative">
-    
-    <!-- Decorative background blobs -->
-    <div class="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600 rounded-full blur-[120px] opacity-20 pointer-events-none"></div>
-    <div class="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600 rounded-full blur-[120px] opacity-20 pointer-events-none"></div>
+<body class="antialiased selection:bg-brand-500 selection:text-white">
 
-    <div class="max-w-md w-full bg-gray-900/80 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-gray-800 text-center relative z-10">
+    <!-- Ambient Glowing Background -->
+    <div class="fixed top-[-15%] left-[-10%] w-[50%] h-[50%] bg-brand-600 rounded-full blur-[150px] opacity-10 pointer-events-none z-0"></div>
+    <div class="fixed bottom-[-15%] right-[-10%] w-[50%] h-[50%] bg-emerald-900 rounded-full blur-[150px] opacity-20 pointer-events-none z-0"></div>
+
+    <main class="relative z-10 max-w-6xl mx-auto px-6 py-12 lg:py-20 flex flex-col items-center">
         
-        <!-- Logo / Header -->
-        <div class="mb-8">
-            <h1 class="text-5xl font-extrabold mb-2 tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">ZYLO OS</h1>
-            <p class="text-gray-400 font-medium tracking-[0.2em] text-xs uppercase">Mini Robot Firmware</p>
-        </div>
-        
-        <!-- Instructions -->
-        <div class="bg-gray-950/50 rounded-2xl p-6 mb-8 border border-gray-800/50">
-            <h2 class="text-lg font-semibold mb-4 text-gray-200 text-left">Quick Install Guide</h2>
-            <ol class="text-left text-sm text-gray-400 space-y-4">
-                <li class="flex items-start">
-                    <span class="bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5 flex-shrink-0 text-xs font-bold shadow-lg">1</span>
-                    <p>Connect your ZYLO robot (ESP32-C3) via a USB-C data cable.</p>
-                </li>
-                <li class="flex items-start">
-                    <span class="bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5 flex-shrink-0 text-xs font-bold shadow-lg">2</span>
-                    <p>Use a supported browser like Google Chrome or Microsoft Edge.</p>
-                </li>
-                <li class="flex items-start">
-                    <span class="bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5 flex-shrink-0 text-xs font-bold shadow-lg">3</span>
-                    <p>Click install below and select your ESP32's COM port.</p>
-                </li>
-            </ol>
+        <!-- Header Branding -->
+        <header class="text-center mb-16 animate-float">
+            <div class="inline-flex items-center justify-center px-4 py-1.5 mb-6 rounded-full bg-brand-950/60 border border-brand-500/30 text-brand-400 text-xs font-bold tracking-[0.2em] uppercase shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                Pesantren Darularafah Raya
+            </div>
+            <h1 class="text-5xl lg:text-7xl font-extrabold mb-4 tracking-tighter text-white">
+                ZYLO <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-teal-400">OS</span>
+            </h1>
+            <p class="text-slate-400 text-lg max-w-2xl mx-auto font-medium leading-relaxed">
+                Platform firmware cerdas untuk menghidupkan robot mini interaktif Anda. 
+                Satu klik instalasi via Web tanpa perlu Arduino IDE.
+            </p>
+        </header>
+
+        <!-- Main Content Area: Split layout -->
+        <div class="w-full flex flex-col lg:flex-row gap-8 lg:gap-16 items-center justify-center mb-24">
+            
+            <!-- Installer Box -->
+            <div class="w-full lg:w-5/12 bento-card flex flex-col items-center text-center z-10">
+                <div class="w-20 h-20 bg-gradient-to-br from-brand-900 to-brand-950 border border-brand-500/30 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
+                    <svg class="w-10 h-10 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <h2 class="text-3xl font-bold text-white mb-3 tracking-tight">Web Flasher</h2>
+                <p class="text-sm text-slate-400 mb-8 leading-relaxed px-4">
+                    Colokkan ESP32-C3 ZYLO Anda via kabel data USB-C. Browser akan otomatis mengirim firmware ke dalam sistem.
+                </p>
+                
+                <esp-web-install-button manifest="manifest.json" class="w-full block">
+                    <button slot="activate" class="w-full bg-gradient-to-r from-brand-500 to-teal-500 hover:from-brand-400 hover:to-teal-400 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 shadow-[0_10px_30px_-5px_rgba(16,185,129,0.4)] flex items-center justify-center gap-3 transform hover:-translate-y-1">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        Instal ZYLO OS
+                    </button>
+                    <span slot="unsupported" class="text-red-400 text-xs mt-4 block bg-red-900/20 py-2 rounded-lg border border-red-500/20"> Browser Anda tidak mendukung Web Serial. Mohon gunakan Google Chrome atau Microsoft Edge di PC/Laptop.</span>
+                    <span slot="not-allowed" class="text-yellow-400 text-xs mt-4 block bg-yellow-900/20 py-2 rounded-lg border border-yellow-500/20"> Izin port serial ditolak oleh browser.</span>
+                </esp-web-install-button>
+            </div>
+
+            <!-- Live Preview Simulator -->
+            <div class="w-full lg:w-5/12 flex flex-col items-center justify-center">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="relative flex h-3 w-3">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-3 w-3 bg-brand-500"></span>
+                    </span>
+                    <h3 class="text-slate-300 font-bold tracking-wide uppercase text-sm">Live Preview Simulator</h3>
+                </div>
+                
+                <!-- The OLED Device -->
+                <div id="oled-display" class="oled-screen state-normal mb-8 transform scale-110">
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                    <!-- Boot text (hidden by default) -->
+                    <div id="boot-text" class="hidden absolute flex-col items-center justify-center text-white oled-font w-full h-full">
+                        <div class="border-2 border-white rounded-lg px-5 py-2 mb-2">
+                            <span class="text-[32px] font-bold leading-none block mt-1">ZYLO</span>
+                        </div>
+                        <div class="text-[9px] tracking-widest mt-1">MINI ROBOT OS</div>
+                    </div>
+                </div>
+
+                <!-- Simulator Controls -->
+                <div class="flex flex-wrap gap-4 justify-center mt-4">
+                    <button onclick="simulateBoot()" class="px-5 py-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-sm font-semibold transition-colors flex items-center gap-2 border border-slate-700">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        Uji Booting
+                    </button>
+                    <button onclick="simulateTouch()" id="btn-touch" class="px-5 py-3 rounded-xl bg-brand-900/40 hover:bg-brand-800/60 text-brand-300 text-sm font-semibold border border-brand-500/30 transition-colors flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path></svg>
+                        Simulasikan Sentuhan
+                    </button>
+                </div>
+            </div>
+            
         </div>
 
-        <!-- ESP Web Tools Button -->
-        <esp-web-install-button manifest="manifest.json" class="w-full block">
-            <button slot="activate" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_10px_25px_-5px_rgba(79,70,229,0.5)] flex items-center justify-center gap-3">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                <span class="text-lg">Flash ZYLO OS</span>
-            </button>
-            <span slot="unsupported" class="text-red-400 text-sm font-medium mt-4 block">
-                Your browser does not support Web Serial. Please use Google Chrome or Microsoft Edge on a desktop PC.
-            </span>
-            <span slot="not-allowed" class="text-yellow-400 text-sm font-medium mt-4 block">
-                You must allow serial access to install the firmware.
-            </span>
-        </esp-web-install-button>
+        <!-- Bento Grid Features -->
+        <div class="w-full mt-10">
+            <h2 class="text-3xl font-extrabold text-white mb-12 text-center">Spesifikasi & Fitur Lengkap</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 (Large) -->
+                <div class="bento-card lg:col-span-2 flex flex-col justify-center">
+                    <div class="w-12 h-12 rounded-full bg-blue-900/50 flex items-center justify-center text-2xl mb-4 border border-blue-500/20">👀</div>
+                    <h3 class="text-xl font-bold text-white mb-3">Ekspresi Dinamis ZYLO</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Mata ZYLO dirancang agar terlihat hidup. Menggunakan sistem *state-machine* di C++, mata akan berkedip secara natural setiap beberapa detik. Ekspresinya juga bisa berubah seketika menjadi gembira (happy) atau kaget berdasarkan stimulus dari lingkungannya.
+                    </p>
+                </div>
+                
+                <!-- Card 2 -->
+                <div class="bento-card">
+                    <div class="w-12 h-12 rounded-full bg-purple-900/50 flex items-center justify-center text-2xl mb-4 border border-purple-500/20">👆</div>
+                    <h3 class="text-lg font-bold text-white mb-3">Interaksi Sensor Sentuh</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Terintegrasi penuh dengan sensor kapasitif (TTP223). Cukup usap bagian kepala ZYLO, dan dia akan bereaksi seketika!
+                    </p>
+                </div>
 
-    </div>
-    
-    <div class="mt-8 text-center z-10">
-        <p class="text-xs text-gray-500">Powered by ESP Web Tools &bull; ZYLO Mini Robot Project</p>
-    </div>
+                <!-- Card 3 -->
+                <div class="bento-card">
+                    <div class="w-12 h-12 rounded-full bg-amber-900/50 flex items-center justify-center text-2xl mb-4 border border-amber-500/20">🎵</div>
+                    <h3 class="text-lg font-bold text-white mb-3">Umpan Balik Audio</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Menggunakan passive buzzer (PWM), ZYLO memainkan *startup jingle* saat dinyalakan dan suara *chirp* yang menggemaskan saat diajak bermain.
+                    </p>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="bento-card lg:col-span-2 order-last lg:order-none">
+                    <div class="w-12 h-12 rounded-full bg-brand-900/50 flex items-center justify-center text-2xl mb-4 border border-brand-500/20">🌐</div>
+                    <h3 class="text-xl font-bold text-white mb-3">Web Flasher Terintegrasi</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Selamat tinggal proses kompilasi kode (Arduino IDE) yang merepotkan! Siapapun bisa mem-flash atau memperbarui OS ZYLO hanya menggunakan browser Chrome dan satu klik tombol di atas. Sangat *user-friendly* untuk didistribusikan ke end-user.
+                    </p>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="bento-card">
+                    <div class="w-12 h-12 rounded-full bg-rose-900/50 flex items-center justify-center text-2xl mb-4 border border-rose-500/20">⚡</div>
+                    <h3 class="text-lg font-bold text-white mb-3">Performa ESP32-C3</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Diotaki oleh mikrokontroler canggih ESP32-C3 yang mungil namun bertenaga, sanggup merender animasi OLED 128x64 dengan sangat halus (60fps).
+                    </p>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="bento-card">
+                    <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-2xl mb-4 border border-slate-600">🔋</div>
+                    <h3 class="text-lg font-bold text-white mb-3">Sistem Baterai Portabel</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Dirancang kompatibel untuk diintegrasikan dengan modul charger tipe-C (TP4056) dan baterai LiPo 3.7V untuk mobilitas penuh.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-24 text-center border-t border-slate-800/60 pt-10 w-full">
+            <div class="flex items-center justify-center gap-2 mb-4">
+                <span class="w-2 h-2 rounded-full bg-brand-500"></span>
+                <p class="text-slate-400 font-semibold tracking-widest text-xs uppercase">ZYLO Project OS</p>
+            </div>
+            <p class="text-slate-600 text-sm">
+                Dikembangkan untuk **Pesantren Darularafah Raya** &bull; Hak Cipta &copy; 2026
+            </p>
+        </footer>
+    </main>
+
+    <!-- JS Logic for the Interactive Simulator -->
+    <script>
+        const display = document.getElementById('oled-display');
+        const bootText = document.getElementById('boot-text');
+        const eyes = document.querySelectorAll('.eye');
+        let stateTimeout;
+
+        // Web Audio API Context (For beep simulation)
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+
+        // Helper to generate retro beep sounds
+        function playTone(frequency, duration) {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.type = 'square'; // Chiptune feel
+            oscillator.frequency.value = frequency;
+            
+            gainNode.gain.setValueAtTime(0.02, audioCtx.currentTime); // very low volume so it's not annoying
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration/1000);
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + duration/1000);
+        }
+
+        async function simulateBoot() {
+            clearTimeout(stateTimeout);
+            
+            // Set screen to boot mode
+            display.className = 'oled-screen';
+            eyes.forEach(e => e.style.display = 'none');
+            bootText.style.display = 'flex';
+            
+            // Jingle melody (C6, E6, G6, C7)
+            playTone(1047, 150);
+            setTimeout(() => playTone(1319, 150), 200);
+            setTimeout(() => playTone(1568, 150), 400);
+            setTimeout(() => playTone(2093, 300), 600);
+
+            // Wait 1.5s, hide boot, show normal eyes
+            stateTimeout = setTimeout(() => {
+                bootText.style.display = 'none';
+                eyes.forEach(e => e.style.display = 'block');
+                display.className = 'oled-screen state-normal';
+            }, 1800);
+        }
+
+        function simulateTouch() {
+            if (display.classList.contains('state-happy')) return; // ignore if already happy
+            if (bootText.style.display === 'flex') return; // ignore if booting
+            
+            clearTimeout(stateTimeout);
+            display.className = 'oled-screen state-happy';
+            
+            // Happy chirp sound (low to high sweep simulated by 2 tones)
+            playTone(2000, 100);
+            setTimeout(() => playTone(2500, 150), 120);
+
+            // Revert back to normal after 3 seconds
+            stateTimeout = setTimeout(() => {
+                display.className = 'oled-screen state-normal';
+            }, 3000);
+        }
+
+        // Initialize audio engine quietly on first interaction
+        document.body.addEventListener('click', () => {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+        }, { once: true });
+    </script>
 </body>
 </html>
