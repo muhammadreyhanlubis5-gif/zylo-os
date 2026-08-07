@@ -1,0 +1,63 @@
+name: Build and Deploy ZYLO OS
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Compile Arduino Sketch
+        uses: arduino/compile-action@v1
+        with:
+          fqbn: esp32:esp32:esp32c3
+          sketch-path: firmware/zylo_os
+          libraries: |
+            - name: Adafruit GFX Library
+            - name: Adafruit SSD1306
+          export-binaries: true
+
+      - name: Prepare Web Flasher Assets
+        run: |
+          # Copy the compiled .bin to the web_flasher firmware directory
+          # The compile action puts binaries in the sketch folder under build/
+          mkdir -p web_flasher/firmware
+          
+          # Find the merged binary (contains bootloader + partitions + app)
+          find firmware/zylo_os/build -name "*.merged.bin" -exec cp {} web_flasher/firmware/zylo_v1.0.bin \;
+          
+          # Fallback just in case merged.bin is not created
+          if [ ! -f web_flasher/firmware/zylo_v1.0.bin ]; then
+            find firmware/zylo_os/build -name "*.ino.bin" -exec cp {} web_flasher/firmware/zylo_v1.0.bin \;
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './web_flasher'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

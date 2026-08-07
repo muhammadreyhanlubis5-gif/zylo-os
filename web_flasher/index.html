@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZYLO OS Web Flasher</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- ESP Web Tools -->
+    <script type="module" src="https://unpkg.com/esp-web-tools@10.0.1/dist/web/install-button.js?module"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-950 text-white min-h-screen flex flex-col items-center justify-center p-6 relative">
+    
+    <!-- Decorative background blobs -->
+    <div class="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600 rounded-full blur-[120px] opacity-20 pointer-events-none"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600 rounded-full blur-[120px] opacity-20 pointer-events-none"></div>
+
+    <div class="max-w-md w-full bg-gray-900/80 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-gray-800 text-center relative z-10">
+        
+        <!-- Logo / Header -->
+        <div class="mb-8">
+            <h1 class="text-5xl font-extrabold mb-2 tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">ZYLO OS</h1>
+            <p class="text-gray-400 font-medium tracking-[0.2em] text-xs uppercase">Mini Robot Firmware</p>
+        </div>
+        
+        <!-- Instructions -->
+        <div class="bg-gray-950/50 rounded-2xl p-6 mb-8 border border-gray-800/50">
+            <h2 class="text-lg font-semibold mb-4 text-gray-200 text-left">Quick Install Guide</h2>
+            <ol class="text-left text-sm text-gray-400 space-y-4">
+                <li class="flex items-start">
+                    <span class="bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5 flex-shrink-0 text-xs font-bold shadow-lg">1</span>
+                    <p>Connect your ZYLO robot (ESP32-C3) via a USB-C data cable.</p>
+                </li>
+                <li class="flex items-start">
+                    <span class="bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5 flex-shrink-0 text-xs font-bold shadow-lg">2</span>
+                    <p>Use a supported browser like Google Chrome or Microsoft Edge.</p>
+                </li>
+                <li class="flex items-start">
+                    <span class="bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5 flex-shrink-0 text-xs font-bold shadow-lg">3</span>
+                    <p>Click install below and select your ESP32's COM port.</p>
+                </li>
+            </ol>
+        </div>
+
+        <!-- ESP Web Tools Button -->
+        <esp-web-install-button manifest="manifest.json" class="w-full block">
+            <button slot="activate" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_10px_25px_-5px_rgba(79,70,229,0.5)] flex items-center justify-center gap-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <span class="text-lg">Flash ZYLO OS</span>
+            </button>
+            <span slot="unsupported" class="text-red-400 text-sm font-medium mt-4 block">
+                Your browser does not support Web Serial. Please use Google Chrome or Microsoft Edge on a desktop PC.
+            </span>
+            <span slot="not-allowed" class="text-yellow-400 text-sm font-medium mt-4 block">
+                You must allow serial access to install the firmware.
+            </span>
+        </esp-web-install-button>
+
+    </div>
+    
+    <div class="mt-8 text-center z-10">
+        <p class="text-xs text-gray-500">Powered by ESP Web Tools &bull; ZYLO Mini Robot Project</p>
+    </div>
+</body>
+</html>
