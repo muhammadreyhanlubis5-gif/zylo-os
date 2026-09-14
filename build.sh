@@ -3,20 +3,19 @@ set -e
 
 echo "1. Installing Arduino CLI..."
 curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-export PATH=$PATH:./bin
 
 echo "2. Configuring ESP32 Core..."
-arduino-cli config init
-arduino-cli config set board_manager.additional_urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
-arduino-cli core update-index
-arduino-cli core install esp32:esp32
+./bin/arduino-cli config init
+./bin/arduino-cli config set board_manager.additional_urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+./bin/arduino-cli core update-index
+./bin/arduino-cli core install esp32:esp32
 
 echo "3. Installing required libraries..."
-arduino-cli lib install "Adafruit GFX Library" "Adafruit SSD1306"
+./bin/arduino-cli lib install "Adafruit GFX Library" "Adafruit SSD1306"
 
 echo "4. Compiling ZYLO OS Firmware..."
 mkdir -p build_output
-arduino-cli compile --fqbn esp32:esp32:esp32c3 firmware/zylo_os/zylo_os.ino --output-dir build_output
+./bin/arduino-cli compile --fqbn esp32:esp32:esp32c3 firmware/zylo_os/zylo_os.ino --output-dir build_output
 
 echo "5. Preparing Web Flasher assets..."
 mkdir -p web_flasher/firmware
