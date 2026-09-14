@@ -23,11 +23,12 @@ jobs:
         uses: arduino/compile-sketches@v1
         with:
           fqbn: esp32:esp32:esp32c3
-          sketch-path: firmware/zylo_os
+          sketch-paths: firmware/zylo_os
           libraries: |
             - name: Adafruit GFX Library
             - name: Adafruit SSD1306
-          export-binaries: true
+          cli-compile-flags: |
+            - -e
 
       - name: Prepare Web Flasher Assets
         run: |
