@@ -66,13 +66,14 @@
             width: 48px;
             height: 48px;
             background-color: #fff;
-            border-radius: 8px;
+            border-radius: 12px;
             position: absolute;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            top: 0; bottom: 0; margin: auto; /* Perfect absolute vertical centering */
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); /* Premium bouncy easing */
             transform-origin: center;
         }
-        .eye.left { left: 48px; }
-        .eye.right { right: 48px; }
+        .eye.left { left: 44px; }
+        .eye.right { right: 44px; }
         
         /* States */
         /* Normal */
@@ -86,7 +87,7 @@
             height: 24px;
             border-radius: 24px 24px 0 0;
             background-color: transparent;
-            border: 12px solid #fff;
+            border: 10px solid #fff;
             border-bottom: 0;
             animation: none;
             transform: translateY(12px);
@@ -95,16 +96,18 @@
         /* Surprised */
         .state-surprised .eye {
             height: 56px;
+            width: 40px;
             border-radius: 50%;
-            background-color: #fff;
+            background-color: transparent;
+            border: 8px solid #fff;
             animation: none;
         }
         .state-surprised .eye::after {
             content: '';
             position: absolute;
-            width: 16px;
-            height: 16px;
-            background: #000;
+            width: 12px;
+            height: 12px;
+            background: #fff;
             border-radius: 50%;
             top: 50%;
             left: 50%;
@@ -123,13 +126,13 @@
 
         /* Angry */
         .state-angry .eye {
-            height: 40px;
+            height: 36px;
             border-radius: 8px 8px 32px 32px;
             background-color: #fff;
             animation: none;
         }
-        .state-angry .eye.left { transform: rotate(-25deg); }
-        .state-angry .eye.right { transform: rotate(25deg); }
+        .state-angry .eye.left { transform: rotate(-20deg) translateY(6px); }
+        .state-angry .eye.right { transform: rotate(20deg) translateY(6px); }
 
         /* Sleep */
         .state-sleep .eye {
@@ -147,6 +150,7 @@
             background-color: #fff;
             animation: none;
             transform: translateY(12px);
+            border-top: 6px solid #1e293b;
         }
         
         /* Love */
@@ -155,13 +159,15 @@
             width: 36px;
             background-color: #fff;
             border-radius: 0 16px 0 16px;
-            animation: none;
+            animation: pulse-love 1s infinite alternate;
             transform: rotate(45deg);
         }
+        @keyframes pulse-love { 0% { transform: rotate(45deg) scale(1); } 100% { transform: rotate(45deg) scale(1.15); } }
 
         /* Dizzy */
         .state-dizzy .eye {
-            height: 48px;
+            height: 44px;
+            width: 44px;
             background: transparent;
             border: 6px solid #fff;
             border-top-color: transparent;
@@ -172,20 +178,21 @@
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
         /* Skeptical */
-        .state-skeptical .eye.left { height: 24px; border-radius: 0 0 24px 24px; transform: translateY(12px); animation: none; }
+        .state-skeptical .eye.left { height: 20px; border-radius: 0 0 24px 24px; transform: translateY(12px); animation: none; }
         .state-skeptical .eye.right { height: 48px; border-radius: 50%; animation: none; }
         
         /* Clock Mode Modifier */
         .clock-mode .eye {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             animation: none !important;
             background-color: #fff;
             border: none;
+            transform: none !important;
         }
-        .clock-mode .eye.left { left: 16px; transform: translateY(-50%) !important; top: 50%; }
-        .clock-mode .eye.right { right: 16px; transform: translateY(-50%) !important; top: 50%; }
+        .clock-mode .eye.left { left: 24px; }
+        .clock-mode .eye.right { right: 24px; }
         
         /* Grid Bento Style */
         .bento-card {
