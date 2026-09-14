@@ -13,9 +13,9 @@
                 extend: {
                     colors: {
                         brand: {
-                            400: '#34d399', // Emerald 400 (Green matching Pesantren logo)
-                            500: '#10b981', // Emerald 500
-                            600: '#059669', // Emerald 600
+                            400: '#34d399', 
+                            500: '#10b981', 
+                            600: '#059669', 
                             900: '#064e3b',
                             950: '#022c22'
                         }
@@ -58,6 +58,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.3s ease;
         }
         
         /* Eyes Base */
@@ -67,18 +68,20 @@
             background-color: #fff;
             border-radius: 8px;
             position: absolute;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: center;
         }
         .eye.left { left: 48px; }
         .eye.right { right: 48px; }
         
         /* States */
+        /* Normal */
         .state-normal .eye {
             height: 48px;
             animation: blink 4s infinite;
         }
         
-        /* Happy eyes: semi-circles opening upwards */
+        /* Happy */
         .state-happy .eye {
             height: 24px;
             border-radius: 24px 24px 0 0;
@@ -89,7 +92,7 @@
             transform: translateY(12px);
         }
         
-        /* Surprised eyes: round with pupil */
+        /* Surprised */
         .state-surprised .eye {
             height: 56px;
             border-radius: 50%;
@@ -107,6 +110,38 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
+
+        /* Sad */
+        .state-sad .eye {
+            height: 32px;
+            border-radius: 32px 32px 8px 8px;
+            background-color: #fff;
+            animation: none;
+        }
+        .state-sad .eye.left { transform: rotate(15deg) translateY(10px); }
+        .state-sad .eye.right { transform: rotate(-15deg) translateY(10px); }
+
+        /* Angry */
+        .state-angry .eye {
+            height: 40px;
+            border-radius: 8px 8px 32px 32px;
+            background-color: #fff;
+            animation: none;
+        }
+        .state-angry .eye.left { transform: rotate(-25deg); }
+        .state-angry .eye.right { transform: rotate(25deg); }
+        
+        /* Clock Mode Modifier */
+        .clock-mode .eye {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            animation: none !important;
+            background-color: #fff;
+            border: none;
+        }
+        .clock-mode .eye.left { left: 16px; transform: translateY(-50%) !important; top: 50%; }
+        .clock-mode .eye.right { right: 16px; transform: translateY(-50%) !important; top: 50%; }
         
         /* Grid Bento Style */
         .bento-card {
@@ -124,14 +159,11 @@
             box-shadow: 0 15px 35px -10px rgba(16, 185, 129, 0.15);
             border-color: rgba(16, 185, 129, 0.3);
         }
-        /* Subtle glow inside card */
-        .bento-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.05), transparent 60%);
-            pointer-events: none;
-        }
+        
+        /* Custom scrollbar for control panels */
+        .control-panel::-webkit-scrollbar { height: 6px; }
+        .control-panel::-webkit-scrollbar-track { background: transparent; }
+        .control-panel::-webkit-scrollbar-thumb { background: rgba(52, 211, 153, 0.3); border-radius: 10px; }
     </style>
 </head>
 <body class="antialiased selection:bg-brand-500 selection:text-white">
@@ -140,7 +172,7 @@
     <div class="fixed top-[-15%] left-[-10%] w-[50%] h-[50%] bg-brand-600 rounded-full blur-[150px] opacity-10 pointer-events-none z-0"></div>
     <div class="fixed bottom-[-15%] right-[-10%] w-[50%] h-[50%] bg-emerald-900 rounded-full blur-[150px] opacity-20 pointer-events-none z-0"></div>
 
-    <main class="relative z-10 max-w-6xl mx-auto px-6 py-12 lg:py-20 flex flex-col items-center">
+    <main class="relative z-10 max-w-7xl mx-auto px-6 py-12 lg:py-20 flex flex-col items-center">
         
         <!-- Header Branding -->
         <header class="text-center mb-16 animate-float">
@@ -152,21 +184,20 @@
             </h1>
             <p class="text-slate-400 text-lg max-w-2xl mx-auto font-medium leading-relaxed">
                 Platform firmware cerdas untuk menghidupkan robot mini interaktif Anda. 
-                Satu klik instalasi via Web tanpa perlu Arduino IDE.
             </p>
         </header>
 
-        <!-- Main Content Area: Split layout -->
-        <div class="w-full flex flex-col lg:flex-row gap-8 lg:gap-16 items-center justify-center mb-24">
+        <!-- Main Content Area -->
+        <div class="w-full grid grid-cols-1 xl:grid-cols-12 gap-8 mb-24">
             
-            <!-- Installer Box -->
-            <div class="w-full lg:w-5/12 bento-card flex flex-col items-center text-center z-10">
+            <!-- Installer Box (Left/Top) -->
+            <div class="xl:col-span-4 bento-card flex flex-col items-center text-center justify-center">
                 <div class="w-20 h-20 bg-gradient-to-br from-brand-900 to-brand-950 border border-brand-500/30 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
                     <svg class="w-10 h-10 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 </div>
                 <h2 class="text-3xl font-bold text-white mb-3 tracking-tight">Web Flasher</h2>
-                <p class="text-sm text-slate-400 mb-8 leading-relaxed px-4">
-                    Colokkan ESP32-C3 ZYLO Anda via kabel data USB-C. Browser akan otomatis mengirim firmware ke dalam sistem.
+                <p class="text-sm text-slate-400 mb-8 leading-relaxed px-2">
+                    Colokkan ESP32-C3 ZYLO Anda via kabel USB-C. Browser akan otomatis mengirim firmware secara instan.
                 </p>
                 
                 <esp-web-install-button manifest="manifest.json" class="w-full block">
@@ -174,60 +205,98 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                         Instal ZYLO OS
                     </button>
-                    <span slot="unsupported" class="text-red-400 text-xs mt-4 block bg-red-900/20 py-2 rounded-lg border border-red-500/20"> Browser Anda tidak mendukung Web Serial. Mohon gunakan Google Chrome atau Microsoft Edge di PC/Laptop.</span>
-                    <span slot="not-allowed" class="text-yellow-400 text-xs mt-4 block bg-yellow-900/20 py-2 rounded-lg border border-yellow-500/20"> Izin port serial ditolak oleh browser.</span>
+                    <span slot="unsupported" class="text-red-400 text-xs mt-4 block bg-red-900/20 py-2 rounded-lg border border-red-500/20">Browser tidak mendukung Web Serial.</span>
+                    <span slot="not-allowed" class="text-yellow-400 text-xs mt-4 block bg-yellow-900/20 py-2 rounded-lg border border-yellow-500/20">Izin port serial ditolak.</span>
                 </esp-web-install-button>
             </div>
 
-            <!-- Live Preview Simulator -->
-            <div class="w-full lg:w-5/12 flex flex-col items-center justify-center">
-                <div class="flex items-center gap-3 mb-6">
-                    <span class="relative flex h-3 w-3">
-                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
-                      <span class="relative inline-flex rounded-full h-3 w-3 bg-brand-500"></span>
-                    </span>
-                    <h3 class="text-slate-300 font-bold tracking-wide uppercase text-sm">Live Preview Simulator</h3>
+            <!-- Full Simulator Dashboard (Right/Bottom) -->
+            <div class="xl:col-span-8 bento-card p-6 lg:p-8 flex flex-col items-center">
+                <div class="w-full flex flex-col md:flex-row justify-between items-center mb-8 gap-4 border-b border-slate-700/50 pb-4">
+                    <div class="flex items-center gap-3">
+                        <span class="relative flex h-3 w-3">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-3 w-3 bg-brand-500"></span>
+                        </span>
+                        <h3 class="text-slate-200 font-bold tracking-wide uppercase text-sm">Dashboard Simulasi Interaktif</h3>
+                    </div>
+                    
+                    <!-- Clock Mode Toggle -->
+                    <label class="flex items-center cursor-pointer bg-slate-800/80 px-4 py-2 rounded-lg border border-slate-700 hover:bg-slate-700 transition-colors">
+                        <div class="relative">
+                            <input type="checkbox" id="clock-toggle" class="sr-only" onchange="toggleClockMode()">
+                            <div class="block bg-slate-900 w-10 h-6 rounded-full border border-slate-600"></div>
+                            <div class="dot absolute left-1 top-1 bg-slate-400 w-4 h-4 rounded-full transition transform"></div>
+                        </div>
+                        <div class="ml-3 text-slate-300 text-sm font-semibold flex items-center gap-2">
+                            ⏱️ Mode Jam
+                        </div>
+                    </label>
                 </div>
                 
-                <!-- The OLED Device -->
-                <div id="oled-display" class="oled-screen state-normal mb-8 transform scale-110">
-                    <div class="eye left"></div>
-                    <div class="eye right"></div>
-                    <!-- Boot text (hidden by default) -->
-                    <div id="boot-text" class="hidden absolute flex-col items-center justify-center text-white oled-font w-full h-full">
-                        <div class="border-2 border-white rounded-lg px-5 py-2 mb-2">
-                            <span class="text-[32px] font-bold leading-none block mt-1">ZYLO</span>
+                <div class="flex flex-col lg:flex-row gap-10 items-center justify-center w-full">
+                    
+                    <!-- The OLED Device -->
+                    <div id="oled-display" class="oled-screen state-normal flex-shrink-0">
+                        <div class="eye left"></div>
+                        <div class="eye right"></div>
+                        
+                        <!-- Boot text -->
+                        <div id="boot-text" class="hidden absolute flex-col items-center justify-center text-white oled-font w-full h-full z-20 bg-black border-4 border-slate-800 rounded-xl">
+                            <span class="text-[32px] font-bold leading-none block mt-1 tracking-widest">Z Y L O</span>
+                            <div class="text-[10px] tracking-widest mt-2">x A R A F A H</div>
+                            <div class="text-[12px] tracking-widest mt-2 text-slate-300" id="loading-bar">[ . . . . ]</div>
                         </div>
-                        <div class="text-[9px] tracking-widest mt-1">MINI ROBOT OS</div>
+                        
+                        <!-- Clock text -->
+                        <div id="clock-text" class="hidden absolute items-center justify-center text-white oled-font text-[42px] font-bold tracking-tighter w-full h-full z-10 pt-2">
+                            12:00
+                        </div>
                     </div>
-                </div>
 
-                <!-- Simulator Controls -->
-                <div class="flex flex-wrap gap-4 justify-center mt-4">
-                    <button onclick="simulateBoot()" class="px-5 py-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-sm font-semibold transition-colors flex items-center gap-2 border border-slate-700">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                        Uji Booting
-                    </button>
-                    <button onclick="simulateTouch()" id="btn-touch" class="px-5 py-3 rounded-xl bg-brand-900/40 hover:bg-brand-800/60 text-brand-300 text-sm font-semibold border border-brand-500/30 transition-colors flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path></svg>
-                        Simulasikan Sentuhan
-                    </button>
+                    <!-- Simulator Controls Grid -->
+                    <div class="w-full flex flex-col gap-6">
+                        
+                        <!-- Eye Expressions Panel -->
+                        <div class="w-full">
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-3 ml-1">Ekspresi Mata</p>
+                            <div class="control-panel flex overflow-x-auto gap-2 pb-2">
+                                <button onclick="setEyeState('normal')" class="flex-shrink-0 px-4 py-2 bg-slate-800 hover:bg-brand-900/40 border border-slate-700 hover:border-brand-500/50 rounded-lg text-sm text-slate-200 transition-colors">😐 Normal</button>
+                                <button onclick="setEyeState('happy')" class="flex-shrink-0 px-4 py-2 bg-slate-800 hover:bg-brand-900/40 border border-slate-700 hover:border-brand-500/50 rounded-lg text-sm text-slate-200 transition-colors">😊 Gembira</button>
+                                <button onclick="setEyeState('surprised')" class="flex-shrink-0 px-4 py-2 bg-slate-800 hover:bg-brand-900/40 border border-slate-700 hover:border-brand-500/50 rounded-lg text-sm text-slate-200 transition-colors">😲 Kaget</button>
+                                <button onclick="setEyeState('sad')" class="flex-shrink-0 px-4 py-2 bg-slate-800 hover:bg-brand-900/40 border border-slate-700 hover:border-brand-500/50 rounded-lg text-sm text-slate-200 transition-colors">🥺 Sedih</button>
+                                <button onclick="setEyeState('angry')" class="flex-shrink-0 px-4 py-2 bg-slate-800 hover:bg-brand-900/40 border border-slate-700 hover:border-brand-500/50 rounded-lg text-sm text-slate-200 transition-colors">😠 Marah</button>
+                            </div>
+                        </div>
+
+                        <!-- Sound Effects Panel -->
+                        <div class="w-full">
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-3 ml-1">Uji Audio (Buzzer)</p>
+                            <div class="control-panel flex overflow-x-auto gap-2 pb-2">
+                                <button onclick="simulateBoot()" class="flex-shrink-0 px-4 py-2 bg-indigo-900/30 hover:bg-indigo-800/50 border border-indigo-700/50 rounded-lg text-sm text-indigo-200 transition-colors">🔄 Boot Jingle</button>
+                                <button onclick="playHappySound()" class="flex-shrink-0 px-4 py-2 bg-teal-900/30 hover:bg-teal-800/50 border border-teal-700/50 rounded-lg text-sm text-teal-200 transition-colors">✨ Happy Chirp</button>
+                                <button onclick="playSadSound()" class="flex-shrink-0 px-4 py-2 bg-blue-900/30 hover:bg-blue-800/50 border border-blue-700/50 rounded-lg text-sm text-blue-200 transition-colors">💧 Sad Tone</button>
+                                <button onclick="playAngrySound()" class="flex-shrink-0 px-4 py-2 bg-rose-900/30 hover:bg-rose-800/50 border border-rose-700/50 rounded-lg text-sm text-rose-200 transition-colors">💢 Angry Buzz</button>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
             
         </div>
 
         <!-- Bento Grid Features -->
-        <div class="w-full mt-10">
-            <h2 class="text-3xl font-extrabold text-white mb-12 text-center">Spesifikasi & Fitur Lengkap</h2>
+        <div class="w-full">
+            <h2 class="text-3xl font-extrabold text-white mb-12 text-center">Spesifikasi & Kapabilitas</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Card 1 (Large) -->
-                <div class="bento-card lg:col-span-2 flex flex-col justify-center">
+                <!-- Card 1 -->
+                <div class="bento-card lg:col-span-2">
                     <div class="w-12 h-12 rounded-full bg-blue-900/50 flex items-center justify-center text-2xl mb-4 border border-blue-500/20">👀</div>
                     <h3 class="text-xl font-bold text-white mb-3">Ekspresi Dinamis ZYLO</h3>
                     <p class="text-slate-400 text-sm leading-relaxed">
-                        Mata ZYLO dirancang agar terlihat hidup. Menggunakan sistem *state-machine* di C++, mata akan berkedip secara natural setiap beberapa detik. Ekspresinya juga bisa berubah seketika menjadi gembira (happy) atau kaget berdasarkan stimulus dari lingkungannya.
+                        Mata ZYLO dirancang agar terlihat hidup. Menggunakan sistem *state-machine* di C++, mata akan berkedip secara natural setiap beberapa detik. Ekspresinya juga bisa berubah seketika menjadi gembira, kaget, sedih, atau marah berdasarkan stimulus dari lingkungannya.
                     </p>
                 </div>
                 
@@ -245,16 +314,16 @@
                     <div class="w-12 h-12 rounded-full bg-amber-900/50 flex items-center justify-center text-2xl mb-4 border border-amber-500/20">🎵</div>
                     <h3 class="text-lg font-bold text-white mb-3">Umpan Balik Audio</h3>
                     <p class="text-slate-400 text-sm leading-relaxed">
-                        Menggunakan passive buzzer (PWM), ZYLO memainkan *startup jingle* saat dinyalakan dan suara *chirp* yang menggemaskan saat diajak bermain.
+                        Menggunakan passive buzzer (PWM), ZYLO memainkan *startup jingle* saat dinyalakan dan berbagai efek suara unik untuk setiap ekspresi emosinya.
                     </p>
                 </div>
 
                 <!-- Card 4 -->
-                <div class="bento-card lg:col-span-2 order-last lg:order-none">
-                    <div class="w-12 h-12 rounded-full bg-brand-900/50 flex items-center justify-center text-2xl mb-4 border border-brand-500/20">🌐</div>
-                    <h3 class="text-xl font-bold text-white mb-3">Web Flasher Terintegrasi</h3>
+                <div class="bento-card">
+                    <div class="w-12 h-12 rounded-full bg-brand-900/50 flex items-center justify-center text-2xl mb-4 border border-brand-500/20">⏱️</div>
+                    <h3 class="text-xl font-bold text-white mb-3">Mode Jam (Clock)</h3>
                     <p class="text-slate-400 text-sm leading-relaxed">
-                        Selamat tinggal proses kompilasi kode (Arduino IDE) yang merepotkan! Siapapun bisa mem-flash atau memperbarui OS ZYLO hanya menggunakan browser Chrome dan satu klik tombol di atas. Sangat *user-friendly* untuk didistribusikan ke end-user.
+                        Dapat berfungsi sebagai jam meja pintar. Layar OLED akan menampilkan waktu *real-time* sembari mata robot berpindah ke sudut layar.
                     </p>
                 </div>
 
@@ -263,16 +332,16 @@
                     <div class="w-12 h-12 rounded-full bg-rose-900/50 flex items-center justify-center text-2xl mb-4 border border-rose-500/20">⚡</div>
                     <h3 class="text-lg font-bold text-white mb-3">Performa ESP32-C3</h3>
                     <p class="text-slate-400 text-sm leading-relaxed">
-                        Diotaki oleh mikrokontroler canggih ESP32-C3 yang mungil namun bertenaga, sanggup merender animasi OLED 128x64 dengan sangat halus (60fps).
+                        Diotaki mikrokontroler canggih yang mungil namun bertenaga, sanggup merender animasi OLED 128x64 dengan *frame rate* mulus.
                     </p>
                 </div>
 
                 <!-- Card 6 -->
-                <div class="bento-card">
-                    <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-2xl mb-4 border border-slate-600">🔋</div>
-                    <h3 class="text-lg font-bold text-white mb-3">Sistem Baterai Portabel</h3>
+                <div class="bento-card lg:col-span-2">
+                    <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-2xl mb-4 border border-slate-600">🌐</div>
+                    <h3 class="text-lg font-bold text-white mb-3">Sistem Web Flasher Instan</h3>
                     <p class="text-slate-400 text-sm leading-relaxed">
-                        Dirancang kompatibel untuk diintegrasikan dengan modul charger tipe-C (TP4056) dan baterai LiPo 3.7V untuk mobilitas penuh.
+                        Sistem OS ini dibangun 100% *cloud-ready*. Pengguna hanya membutuhkan kabel data dan browser web untuk memasang firmware ZYLO, membuang jauh kerumitan Arduino IDE. Sangat sempurna untuk distribusi massal.
                     </p>
                 </div>
             </div>
@@ -290,27 +359,36 @@
         </footer>
     </main>
 
+    <!-- Custom toggle switch CSS override -->
+    <style>
+        input:checked ~ .dot { transform: translateX(100%); background-color: #34d399; }
+        input:checked ~ .block { background-color: rgba(16, 185, 129, 0.2); border-color: #10b981; }
+    </style>
+
     <!-- JS Logic for the Interactive Simulator -->
     <script>
         const display = document.getElementById('oled-display');
         const bootText = document.getElementById('boot-text');
+        const clockText = document.getElementById('clock-text');
         const eyes = document.querySelectorAll('.eye');
+        const clockToggle = document.getElementById('clock-toggle');
+        
         let stateTimeout;
+        let clockInterval;
 
-        // Web Audio API Context (For beep simulation)
+        // --- AUDIO ENGINE ---
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         const audioCtx = new AudioContext();
 
-        // Helper to generate retro beep sounds
-        function playTone(frequency, duration) {
+        function playTone(frequency, duration, type = 'square') {
             if(audioCtx.state === 'suspended') audioCtx.resume();
             const oscillator = audioCtx.createOscillator();
             const gainNode = audioCtx.createGain();
             
-            oscillator.type = 'square'; // Chiptune feel
+            oscillator.type = type; 
             oscillator.frequency.value = frequency;
             
-            gainNode.gain.setValueAtTime(0.02, audioCtx.currentTime); // very low volume so it's not annoying
+            gainNode.gain.setValueAtTime(0.03, audioCtx.currentTime); 
             gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration/1000);
             
             oscillator.connect(gainNode);
@@ -320,46 +398,101 @@
             oscillator.stop(audioCtx.currentTime + duration/1000);
         }
 
+        // Sound Triggers
+        function playHappySound() {
+            setEyeState('happy');
+            playTone(2000, 100);
+            setTimeout(() => playTone(2500, 150), 120);
+        }
+
+        function playSadSound() {
+            setEyeState('sad');
+            playTone(600, 300, 'triangle');
+            setTimeout(() => playTone(400, 400, 'triangle'), 300);
+        }
+
+        function playAngrySound() {
+            setEyeState('angry');
+            playTone(150, 150, 'sawtooth');
+            setTimeout(() => playTone(120, 250, 'sawtooth'), 100);
+        }
+
         async function simulateBoot() {
             clearTimeout(stateTimeout);
             
-            // Set screen to boot mode
+            // Set screen to boot mode (disable clock if on)
+            if(clockToggle.checked) {
+                clockToggle.checked = false;
+                toggleClockMode();
+            }
+            
             display.className = 'oled-screen';
             eyes.forEach(e => e.style.display = 'none');
             bootText.style.display = 'flex';
             
-            // Jingle melody (C6, E6, G6, C7)
-            playTone(1047, 150);
-            setTimeout(() => playTone(1319, 150), 200);
-            setTimeout(() => playTone(1568, 150), 400);
-            setTimeout(() => playTone(2093, 300), 600);
+            const loadingBar = document.getElementById('loading-bar');
+            loadingBar.innerText = '[ . . . . ]';
 
-            // Wait 1.5s, hide boot, show normal eyes
+            playTone(1047, 150);
+            loadingBar.innerText = '[ O . . . ]';
+            
+            setTimeout(() => { playTone(1319, 150); loadingBar.innerText = '[ O O . . ]'; }, 200);
+            setTimeout(() => { playTone(1568, 150); loadingBar.innerText = '[ O O O . ]'; }, 400);
+            setTimeout(() => { playTone(2093, 300); loadingBar.innerText = '[ O O O O ]'; }, 600);
+
             stateTimeout = setTimeout(() => {
                 bootText.style.display = 'none';
                 eyes.forEach(e => e.style.display = 'block');
-                display.className = 'oled-screen state-normal';
+                setEyeState('normal');
             }, 1800);
         }
 
-        function simulateTouch() {
-            if (display.classList.contains('state-happy')) return; // ignore if already happy
-            if (bootText.style.display === 'flex') return; // ignore if booting
-            
+        // --- EYE STATES ---
+        function setEyeState(state) {
             clearTimeout(stateTimeout);
-            display.className = 'oled-screen state-happy';
+            if (bootText.style.display === 'flex') return; // block if booting
             
-            // Happy chirp sound (low to high sweep simulated by 2 tones)
-            playTone(2000, 100);
-            setTimeout(() => playTone(2500, 150), 120);
-
-            // Revert back to normal after 3 seconds
-            stateTimeout = setTimeout(() => {
-                display.className = 'oled-screen state-normal';
-            }, 3000);
+            // Remove previous states
+            display.className = 'oled-screen ' + (clockToggle.checked ? 'clock-mode' : '');
+            display.classList.add(`state-${state}`);
+            
+            // If not normal or clock, revert to normal after 3s
+            if (state !== 'normal' && !clockToggle.checked) {
+                stateTimeout = setTimeout(() => {
+                    display.className = 'oled-screen state-normal ' + (clockToggle.checked ? 'clock-mode' : '');
+                }, 3000);
+            }
         }
 
-        // Initialize audio engine quietly on first interaction
+        // --- CLOCK MODE ---
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            clockText.innerText = `${hours}:${minutes}`;
+        }
+
+        function toggleClockMode() {
+            if (bootText.style.display === 'flex') {
+                clockToggle.checked = false;
+                return;
+            }
+
+            if (clockToggle.checked) {
+                display.classList.add('clock-mode');
+                display.classList.remove('state-happy', 'state-surprised', 'state-sad', 'state-angry');
+                display.classList.add('state-normal'); // Force normal blink in clock mode
+                clockText.style.display = 'flex';
+                updateClock();
+                clockInterval = setInterval(updateClock, 1000);
+            } else {
+                display.classList.remove('clock-mode');
+                clockText.style.display = 'none';
+                clearInterval(clockInterval);
+            }
+        }
+
+        // Init Audio
         document.body.addEventListener('click', () => {
             if(audioCtx.state === 'suspended') audioCtx.resume();
         }, { once: true });
