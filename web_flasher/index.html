@@ -130,6 +130,15 @@
         }
         .state-angry .eye.left { transform: rotate(-25deg); }
         .state-angry .eye.right { transform: rotate(25deg); }
+
+        /* Sleep */
+        .state-sleep .eye {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #fff;
+            animation: none;
+            transform: translateY(20px);
+        }
         
         /* Clock Mode Modifier */
         .clock-mode .eye {
@@ -242,10 +251,10 @@
                         <div class="eye right"></div>
                         
                         <!-- Boot text -->
-                        <div id="boot-text" class="hidden absolute flex-col items-center justify-center text-white oled-font w-full h-full z-20 bg-black border-4 border-slate-800 rounded-xl">
-                            <span class="text-[32px] font-bold leading-none block mt-1 tracking-widest">Z Y L O</span>
-                            <div class="text-[10px] tracking-widest mt-2">x A R A F A H</div>
-                            <div class="text-[12px] tracking-widest mt-2 text-slate-300" id="loading-bar">[ . . . . ]</div>
+                        <div id="boot-text" class="hidden absolute flex-col items-center justify-center text-white oled-font w-full h-full z-20 bg-black border-[6px] border-[#1e293b] rounded-2xl">
+                            <span class="text-[28px] font-bold leading-none block mt-1 tracking-widest whitespace-nowrap">Z Y L O</span>
+                            <div class="text-[12px] tracking-widest mt-2 whitespace-nowrap">x A R A F A H</div>
+                            <div class="text-[12px] tracking-widest mt-2 text-slate-300 whitespace-nowrap" id="loading-bar">[ . . . . ]</div>
                         </div>
                         
                         <!-- Clock text -->
@@ -266,6 +275,7 @@
                                 <button onclick="setEyeState('surprised')" class="flex-shrink-0 px-4 py-2 bg-slate-800 hover:bg-brand-900/40 border border-slate-700 hover:border-brand-500/50 rounded-lg text-sm text-slate-200 transition-colors">😲 Kaget</button>
                                 <button onclick="setEyeState('sad')" class="flex-shrink-0 px-4 py-2 bg-slate-800 hover:bg-brand-900/40 border border-slate-700 hover:border-brand-500/50 rounded-lg text-sm text-slate-200 transition-colors">🥺 Sedih</button>
                                 <button onclick="setEyeState('angry')" class="flex-shrink-0 px-4 py-2 bg-slate-800 hover:bg-brand-900/40 border border-slate-700 hover:border-brand-500/50 rounded-lg text-sm text-slate-200 transition-colors">😠 Marah</button>
+                                <button onclick="setEyeState('sleep')" class="flex-shrink-0 px-4 py-2 bg-slate-800 hover:bg-brand-900/40 border border-slate-700 hover:border-brand-500/50 rounded-lg text-sm text-slate-200 transition-colors">😴 Tidur</button>
                             </div>
                         </div>
 
@@ -426,7 +436,7 @@
                 toggleClockMode();
             }
             
-            display.className = 'oled-screen';
+            display.className = 'oled-screen flex-shrink-0';
             eyes.forEach(e => e.style.display = 'none');
             bootText.style.display = 'flex';
             
@@ -453,13 +463,13 @@
             if (bootText.style.display === 'flex') return; // block if booting
             
             // Remove previous states
-            display.className = 'oled-screen ' + (clockToggle.checked ? 'clock-mode' : '');
+            display.className = 'oled-screen flex-shrink-0 ' + (clockToggle.checked ? 'clock-mode' : '');
             display.classList.add(`state-${state}`);
             
             // If not normal or clock, revert to normal after 3s
             if (state !== 'normal' && !clockToggle.checked) {
                 stateTimeout = setTimeout(() => {
-                    display.className = 'oled-screen state-normal ' + (clockToggle.checked ? 'clock-mode' : '');
+                    display.className = 'oled-screen flex-shrink-0 state-normal ' + (clockToggle.checked ? 'clock-mode' : '');
                 }, 3000);
             }
         }
@@ -480,7 +490,7 @@
 
             if (clockToggle.checked) {
                 display.classList.add('clock-mode');
-                display.classList.remove('state-happy', 'state-surprised', 'state-sad', 'state-angry');
+                display.classList.remove('state-happy', 'state-surprised', 'state-sad', 'state-angry', 'state-sleep');
                 display.classList.add('state-normal'); // Force normal blink in clock mode
                 clockText.style.display = 'flex';
                 updateClock();

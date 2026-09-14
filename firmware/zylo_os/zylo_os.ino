@@ -28,7 +28,8 @@ enum EyeState {
   STATE_HAPPY,
   STATE_SURPRISED,
   STATE_SAD,
-  STATE_ANGRY
+  STATE_ANGRY,
+  STATE_SLEEP
 };
 
 EyeState currentState = STATE_NORMAL;
@@ -113,6 +114,17 @@ void drawBlinkEyes() {
   display.display();
 }
 
+void drawSleepEyes() {
+  display.clearDisplay();
+  display.fillRoundRect(24, 30, 24, 6, 3, SSD1306_WHITE);
+  display.fillRoundRect(80, 30, 24, 6, 3, SSD1306_WHITE);
+  // Add some zZZ
+  display.setTextSize(1);
+  display.setCursor(100, 10); display.print("z");
+  display.setCursor(110, 5); display.print("Z");
+  display.display();
+}
+
 void drawHappyEyes() {
   display.clearDisplay();
   display.fillCircle(36, 32, 12, SSD1306_WHITE);
@@ -161,6 +173,8 @@ void playEmotionSound(EyeState emotion) {
     tone(BUZZER_PIN, 800, 200); delay(220); tone(BUZZER_PIN, 600, 300);
   } else if (emotion == STATE_ANGRY) {
     tone(BUZZER_PIN, 300, 150); delay(170); tone(BUZZER_PIN, 200, 250);
+  } else if (emotion == STATE_SLEEP) {
+    tone(BUZZER_PIN, 400, 400); delay(450); tone(BUZZER_PIN, 350, 500);
   }
 }
 
@@ -169,8 +183,8 @@ void loop() {
   
   // Trigger new emotion on fresh touch
   if (isTouched && !wasTouched) {
-    // Pick random emotion from Happy, Surprised, Sad, Angry (values 2 to 5)
-    int randEmotion = random(2, 6);
+    // Pick random emotion from Happy, Surprised, Sad, Angry, Sleep (values 2 to 6)
+    int randEmotion = random(2, 7);
     currentState = (EyeState)randEmotion;
     
     // Switch case to render immediately before delay
@@ -179,11 +193,13 @@ void loop() {
       case STATE_SURPRISED: drawSurprisedEyes(); break;
       case STATE_SAD: drawSadEyes(); break;
       case STATE_ANGRY: drawAngryEyes(); break;
+      case STATE_SLEEP: drawSleepEyes(); break;
     }
     
     playEmotionSound(currentState);
     lastStateChange = millis();
   } 
+
   else if (!isTouched) {
     // Return to normal after 3 seconds of an emotion
     if (currentState >= STATE_HAPPY && (millis() - lastStateChange > 3000)) {
