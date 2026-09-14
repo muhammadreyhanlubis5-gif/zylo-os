@@ -29,7 +29,11 @@ enum EyeState {
   STATE_SURPRISED,
   STATE_SAD,
   STATE_ANGRY,
-  STATE_SLEEP
+  STATE_SLEEP,
+  STATE_COOL,
+  STATE_LOVE,
+  STATE_DIZZY,
+  STATE_SKEPTICAL
 };
 
 EyeState currentState = STATE_NORMAL;
@@ -140,6 +144,9 @@ void drawSurprisedEyes() {
   display.fillCircle(36, 32, 4, SSD1306_BLACK); 
   display.fillCircle(92, 32, 14, SSD1306_WHITE);
   display.fillCircle(92, 32, 4, SSD1306_BLACK);
+  
+  // Open Mouth
+  display.fillCircle(64, 48, 6, SSD1306_WHITE);
   display.display();
 }
 
@@ -151,6 +158,10 @@ void drawSadEyes() {
   
   display.fillRoundRect(80, 24, 24, 16, 8, SSD1306_WHITE);
   display.fillTriangle(80, 24, 104, 24, 104, 12, SSD1306_BLACK); // cut corner
+  
+  // Sad mouth
+  display.drawFastHLine(54, 50, 20, SSD1306_WHITE);
+  display.drawFastHLine(55, 51, 18, SSD1306_WHITE);
   display.display();
 }
 
@@ -164,17 +175,94 @@ void drawAngryEyes() {
   display.display();
 }
 
+void drawCoolEyes() {
+  display.clearDisplay();
+  // Sunglasses frame
+  display.fillRoundRect(20, 24, 32, 16, 4, SSD1306_WHITE);
+  display.fillRoundRect(76, 24, 32, 16, 4, SSD1306_WHITE);
+  // Bridge
+  display.drawFastHLine(52, 28, 24, SSD1306_WHITE);
+  display.drawFastHLine(52, 29, 24, SSD1306_WHITE);
+  // Smirk
+  display.drawFastHLine(58, 48, 12, SSD1306_WHITE);
+  display.fillTriangle(70, 48, 74, 44, 74, 48, SSD1306_WHITE);
+  display.display();
+}
+
+void drawLoveEyes() {
+  display.clearDisplay();
+  // Left Heart
+  display.fillCircle(30, 24, 8, SSD1306_WHITE);
+  display.fillCircle(42, 24, 8, SSD1306_WHITE);
+  display.fillTriangle(22, 28, 50, 28, 36, 42, SSD1306_WHITE);
+  // Right Heart
+  display.fillCircle(86, 24, 8, SSD1306_WHITE);
+  display.fillCircle(98, 24, 8, SSD1306_WHITE);
+  display.fillTriangle(78, 28, 106, 28, 92, 42, SSD1306_WHITE);
+  display.display();
+}
+
+void drawDizzyEyes() {
+  display.clearDisplay();
+  // X eyes
+  display.drawLine(24, 20, 48, 44, SSD1306_WHITE);
+  display.drawLine(24, 44, 48, 20, SSD1306_WHITE);
+  display.drawLine(25, 20, 49, 44, SSD1306_WHITE);
+  display.drawLine(25, 44, 49, 20, SSD1306_WHITE);
+  
+  display.drawLine(80, 20, 104, 44, SSD1306_WHITE);
+  display.drawLine(80, 44, 104, 20, SSD1306_WHITE);
+  display.drawLine(81, 20, 105, 44, SSD1306_WHITE);
+  display.drawLine(81, 44, 105, 20, SSD1306_WHITE);
+  
+  // Wavy mouth
+  display.drawFastHLine(54, 52, 6, SSD1306_WHITE);
+  display.drawFastHLine(60, 50, 8, SSD1306_WHITE);
+  display.drawFastHLine(68, 52, 6, SSD1306_WHITE);
+  display.display();
+}
+
+void drawSkepticalEyes() {
+  display.clearDisplay();
+  // Left eye squinting
+  display.fillRoundRect(24, 30, 24, 8, 2, SSD1306_WHITE);
+  // Right eye wide
+  display.fillCircle(92, 30, 14, SSD1306_WHITE);
+  display.fillCircle(92, 30, 4, SSD1306_BLACK);
+  // Mouth
+  display.drawLine(58, 50, 70, 46, SSD1306_WHITE);
+  display.drawLine(58, 51, 70, 47, SSD1306_WHITE);
+  display.display();
+}
+
+void playChatter(int baseFreq, int duration, int count) {
+  int step = duration / count;
+  for(int i=0; i<count; i++) {
+    tone(BUZZER_PIN, baseFreq + random(-300, 300), step - 10);
+    delay(step);
+  }
+  noTone(BUZZER_PIN);
+}
+
 void playEmotionSound(EyeState emotion) {
   if(emotion == STATE_HAPPY) {
-    tone(BUZZER_PIN, 2000, 100); delay(120); tone(BUZZER_PIN, 2500, 150);
+    playChatter(2200, 400, 5);
   } else if (emotion == STATE_SURPRISED) {
     tone(BUZZER_PIN, 1200, 50); delay(80); tone(BUZZER_PIN, 1800, 50); delay(80); tone(BUZZER_PIN, 2400, 100);
   } else if (emotion == STATE_SAD) {
     tone(BUZZER_PIN, 800, 200); delay(220); tone(BUZZER_PIN, 600, 300);
   } else if (emotion == STATE_ANGRY) {
-    tone(BUZZER_PIN, 300, 150); delay(170); tone(BUZZER_PIN, 200, 250);
+    playChatter(400, 500, 8); // low angry chatter
   } else if (emotion == STATE_SLEEP) {
     tone(BUZZER_PIN, 400, 400); delay(450); tone(BUZZER_PIN, 350, 500);
+  } else if (emotion == STATE_COOL) {
+    tone(BUZZER_PIN, 1500, 100); delay(150); tone(BUZZER_PIN, 1200, 150);
+  } else if (emotion == STATE_LOVE) {
+    playChatter(2500, 600, 6); // cute high chatter
+  } else if (emotion == STATE_DIZZY) {
+    tone(BUZZER_PIN, 1800, 100); delay(120); tone(BUZZER_PIN, 1400, 100); delay(120); tone(BUZZER_PIN, 1000, 200);
+  } else if (emotion == STATE_SKEPTICAL) {
+    tone(BUZZER_PIN, 1200, 300);
   }
 }
 
@@ -183,8 +271,8 @@ void loop() {
   
   // Trigger new emotion on fresh touch
   if (isTouched && !wasTouched) {
-    // Pick random emotion from Happy, Surprised, Sad, Angry, Sleep (values 2 to 6)
-    int randEmotion = random(2, 7);
+    // Pick random emotion from Happy (2) to Skeptical (10)
+    int randEmotion = random(2, 11);
     currentState = (EyeState)randEmotion;
     
     // Switch case to render immediately before delay
@@ -194,6 +282,10 @@ void loop() {
       case STATE_SAD: drawSadEyes(); break;
       case STATE_ANGRY: drawAngryEyes(); break;
       case STATE_SLEEP: drawSleepEyes(); break;
+      case STATE_COOL: drawCoolEyes(); break;
+      case STATE_LOVE: drawLoveEyes(); break;
+      case STATE_DIZZY: drawDizzyEyes(); break;
+      case STATE_SKEPTICAL: drawSkepticalEyes(); break;
     }
     
     playEmotionSound(currentState);

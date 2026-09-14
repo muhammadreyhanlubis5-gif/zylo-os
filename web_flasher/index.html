@@ -139,6 +139,41 @@
             animation: none;
             transform: translateY(20px);
         }
+
+        /* Cool */
+        .state-cool .eye {
+            height: 24px;
+            border-radius: 0 0 24px 24px;
+            background-color: #fff;
+            animation: none;
+            transform: translateY(12px);
+        }
+        
+        /* Love */
+        .state-love .eye {
+            height: 36px;
+            width: 36px;
+            background-color: #fff;
+            border-radius: 0 16px 0 16px;
+            animation: none;
+            transform: rotate(45deg);
+        }
+
+        /* Dizzy */
+        .state-dizzy .eye {
+            height: 48px;
+            background: transparent;
+            border: 6px solid #fff;
+            border-top-color: transparent;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Skeptical */
+        .state-skeptical .eye.left { height: 24px; border-radius: 0 0 24px 24px; transform: translateY(12px); animation: none; }
+        .state-skeptical .eye.right { height: 48px; border-radius: 50%; animation: none; }
         
         /* Clock Mode Modifier */
         .clock-mode .eye {
@@ -272,7 +307,11 @@
                             <div class="control-panel flex overflow-x-auto gap-2 pb-2">
                                 <button onclick="setEyeState('normal')" class="flex-shrink-0 px-4 py-2 bg-slate-800 hover:bg-brand-900/40 border border-slate-700 hover:border-brand-500/50 rounded-lg text-sm text-slate-200 transition-colors">😐 Normal</button>
                                 <button onclick="setEyeState('happy')" class="flex-shrink-0 px-4 py-2 bg-slate-800 hover:bg-brand-900/40 border border-slate-700 hover:border-brand-500/50 rounded-lg text-sm text-slate-200 transition-colors">😊 Gembira</button>
+                                <button onclick="setEyeState('love')" class="flex-shrink-0 px-4 py-2 bg-slate-800 hover:bg-brand-900/40 border border-slate-700 hover:border-brand-500/50 rounded-lg text-sm text-slate-200 transition-colors">😍 Cinta</button>
+                                <button onclick="setEyeState('cool')" class="flex-shrink-0 px-4 py-2 bg-slate-800 hover:bg-brand-900/40 border border-slate-700 hover:border-brand-500/50 rounded-lg text-sm text-slate-200 transition-colors">🕶️ Keren</button>
                                 <button onclick="setEyeState('surprised')" class="flex-shrink-0 px-4 py-2 bg-slate-800 hover:bg-brand-900/40 border border-slate-700 hover:border-brand-500/50 rounded-lg text-sm text-slate-200 transition-colors">😲 Kaget</button>
+                                <button onclick="setEyeState('skeptical')" class="flex-shrink-0 px-4 py-2 bg-slate-800 hover:bg-brand-900/40 border border-slate-700 hover:border-brand-500/50 rounded-lg text-sm text-slate-200 transition-colors">🤨 Curiga</button>
+                                <button onclick="setEyeState('dizzy')" class="flex-shrink-0 px-4 py-2 bg-slate-800 hover:bg-brand-900/40 border border-slate-700 hover:border-brand-500/50 rounded-lg text-sm text-slate-200 transition-colors">😵 Pusing</button>
                                 <button onclick="setEyeState('sad')" class="flex-shrink-0 px-4 py-2 bg-slate-800 hover:bg-brand-900/40 border border-slate-700 hover:border-brand-500/50 rounded-lg text-sm text-slate-200 transition-colors">🥺 Sedih</button>
                                 <button onclick="setEyeState('angry')" class="flex-shrink-0 px-4 py-2 bg-slate-800 hover:bg-brand-900/40 border border-slate-700 hover:border-brand-500/50 rounded-lg text-sm text-slate-200 transition-colors">😠 Marah</button>
                                 <button onclick="setEyeState('sleep')" class="flex-shrink-0 px-4 py-2 bg-slate-800 hover:bg-brand-900/40 border border-slate-700 hover:border-brand-500/50 rounded-lg text-sm text-slate-200 transition-colors">😴 Tidur</button>
@@ -408,23 +447,42 @@
             oscillator.stop(audioCtx.currentTime + duration/1000);
         }
 
+        function playChatter(baseFreq, durationMs, count) {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'square';
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            let now = audioCtx.currentTime;
+            let step = (durationMs / 1000) / count;
+            
+            osc.start(now);
+            for(let i=0; i<count; i++) {
+                let f = baseFreq + (Math.random() * 600 - 300);
+                osc.frequency.setValueAtTime(f, now + (i*step));
+                gain.gain.setValueAtTime(0.05, now + (i*step));
+                gain.gain.setValueAtTime(0.001, now + (i*step) + step - 0.01);
+            }
+            osc.stop(now + (durationMs/1000));
+        }
+
         // Sound Triggers
         function playHappySound() {
             setEyeState('happy');
-            playTone(2000, 100);
-            setTimeout(() => playTone(2500, 150), 120);
+            playChatter(2200, 400, 5);
         }
 
         function playSadSound() {
             setEyeState('sad');
-            playTone(600, 300, 'triangle');
-            setTimeout(() => playTone(400, 400, 'triangle'), 300);
+            playTone(800, 200, 'triangle');
+            setTimeout(() => playTone(600, 300, 'triangle'), 220);
         }
 
         function playAngrySound() {
             setEyeState('angry');
-            playTone(150, 150, 'sawtooth');
-            setTimeout(() => playTone(120, 250, 'sawtooth'), 100);
+            playChatter(400, 500, 8);
         }
 
         async function simulateBoot() {
@@ -490,7 +548,7 @@
 
             if (clockToggle.checked) {
                 display.classList.add('clock-mode');
-                display.classList.remove('state-happy', 'state-surprised', 'state-sad', 'state-angry', 'state-sleep');
+                display.classList.remove('state-happy', 'state-surprised', 'state-sad', 'state-angry', 'state-sleep', 'state-cool', 'state-love', 'state-dizzy', 'state-skeptical');
                 display.classList.add('state-normal'); // Force normal blink in clock mode
                 clockText.style.display = 'flex';
                 updateClock();
