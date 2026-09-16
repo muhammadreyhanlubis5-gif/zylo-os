@@ -46,13 +46,14 @@
             transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         
-        /* Dynamic Watch Shape */
+        /* Dynamic Watch Shape (ZSWatch Circular Style) */
         .shape-watch {
-            width: 160px !important;
-            height: 190px !important;
-            border-radius: 36px !important;
-            border-width: 6px !important;
-            box-shadow: 0 0 30px rgba(16, 185, 129, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1) !important;
+            width: 200px !important;
+            height: 200px !important;
+            border-radius: 50% !important;
+            border-width: 8px !important;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.4), inset 0 0 25px rgba(0, 0, 0, 0.8) !important;
+            background: #000;
         }
         
         /* Gen 1: Eyes Base */
@@ -194,57 +195,37 @@
                                 <div class="eye right"></div>
                             </div>
                             
-                            <!-- GEN 2 UI (Smart AI) -->
-                            <div id="ui-gen2" class="w-full h-full relative overflow-hidden" style="display:none; background: #000;">
+                            <!-- GEN 2 UI (Smart AI - ZSWatch Circular) -->
+                            <div id="ui-gen2" class="w-full h-full relative overflow-hidden rounded-full" style="display:none; background: #000;">
                                 <!-- Home Screen -->
-                                <div id="gen2-home" class="gen2-screen active bg-cover bg-center cursor-pointer" style="background-image: url('assets/wp_spiderman.png');" onclick="gen2Navigate('menu')">
-                                    <div class="absolute inset-0 bg-black/30"></div>
-                                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10 pt-4">
-                                        <div id="gen2-time" class="text-[52px] text-white font-bold drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)] leading-none tracking-tighter" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">12:30</div>
+                                <div id="gen2-home" class="gen2-screen active bg-cover bg-center cursor-pointer rounded-full" style="background-image: url('assets/wp_spiderman.png');" onclick="gen2Navigate('menu')">
+                                    <div class="absolute inset-0 bg-black/40 rounded-full"></div>
+                                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10">
+                                        <div id="gen2-time" class="text-[54px] text-white font-bold drop-shadow-[0_4px_12px_rgba(0,0,0,1)] leading-none tracking-tighter mt-4" style="font-family: -apple-system, sans-serif;">12:30</div>
+                                        <div class="text-[12px] text-brand-400 font-bold uppercase tracking-widest mt-1">OCT 28</div>
                                     </div>
-                                    <!-- Activity rings mock -->
-                                    <div class="absolute top-4 left-4 w-6 h-6 rounded-full border-[3px] border-red-500 border-t-transparent shadow-lg transform rotate-45"></div>
-                                    <div class="absolute top-5 left-5 w-4 h-4 rounded-full border-[3px] border-green-500 border-l-transparent shadow-lg transform -rotate-12"></div>
+                                    <!-- Circular tick marks -->
+                                    <div class="absolute inset-2 rounded-full border border-gray-500/30 border-dashed pointer-events-none"></div>
                                 </div>
                                 
-                                <!-- App Menu (Honeycomb) -->
-                                <div id="gen2-menu" class="gen2-screen flex-col bg-black">
-                                    <!-- Back button floating -->
-                                    <div class="absolute top-2 left-2 z-20 cursor-pointer text-white opacity-60 hover:opacity-100" onclick="gen2Navigate('home')">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path></svg>
-                                    </div>
-                                    
-                                    <div class="honeycomb flex-col pt-4">
-                                        <div class="hc-row">
-                                            <div class="gen2-icon bg-gradient-to-br from-blue-400 to-blue-600" title="Weather">☁️</div>
-                                            <div class="gen2-icon bg-gradient-to-br from-purple-400 to-purple-600" title="Music">🎵</div>
-                                        </div>
-                                        <div class="hc-row">
-                                            <div class="gen2-icon bg-gradient-to-br from-green-400 to-green-600" title="Phone">📞</div>
-                                            <div class="gen2-icon bg-gradient-to-br from-gray-700 to-gray-900 border-white" title="Settings">⚙️</div>
-                                            <div class="gen2-icon bg-gradient-to-br from-red-400 to-red-600" title="Health">💓</div>
-                                        </div>
-                                        <div class="hc-row">
-                                            <div class="gen2-icon bg-gradient-to-br from-yellow-400 to-orange-500 text-white shadow-[0_0_15px_rgba(250,204,21,0.6)]" onclick="termLog('Opening Grok AI...')" title="Grok AI">🧠</div>
-                                            <div class="gen2-icon bg-gradient-to-br from-pink-500 to-rose-500 shadow-[0_0_15px_rgba(236,72,153,0.6)]" onclick="gen2Navigate('wallpapers')" title="Wallpapers">🖼️</div>
-                                        </div>
-                                        <div class="hc-row">
-                                            <div class="gen2-icon bg-gradient-to-br from-cyan-400 to-cyan-600" title="Safari">🌐</div>
-                                            <div class="gen2-icon bg-gradient-to-br from-indigo-400 to-indigo-600" title="Mail">✉️</div>
-                                        </div>
+                                <!-- App Menu (ZSWatch Circular List) -->
+                                <div id="gen2-menu" class="gen2-screen flex-col bg-black rounded-full items-center">
+                                    <div class="w-full h-full overflow-y-auto hide-scroll flex flex-col items-center pt-[30px] pb-[30px] gap-3">
+                                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white text-xl cursor-pointer hover:scale-110 transition-transform" onclick="termLog('App: Weather')">☁️</div>
+                                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center text-white text-xl cursor-pointer hover:scale-110 transition-transform" onclick="termLog('App: Health')">💓</div>
+                                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-white text-2xl cursor-pointer hover:scale-110 transition-transform shadow-[0_0_20px_rgba(250,204,21,0.5)] border-2 border-white" onclick="termLog('App: Grok AI')">🧠</div>
+                                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white text-xl cursor-pointer hover:scale-110 transition-transform" onclick="gen2Navigate('wallpapers')">🖼️</div>
+                                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center text-white text-xl cursor-pointer hover:scale-110 transition-transform" onclick="gen2Navigate('home')">⬅️</div>
                                     </div>
                                 </div>
 
                                 <!-- Wallpaper Selector -->
-                                <div id="gen2-wallpapers" class="gen2-screen bg-black flex-col">
-                                    <div class="absolute top-2 left-2 z-20 cursor-pointer text-white opacity-60 hover:opacity-100" onclick="gen2Navigate('menu')">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path></svg>
-                                    </div>
-                                    <div class="w-full text-center mt-3 text-white text-[10px] font-bold tracking-widest">FACES</div>
-                                    <div class="flex-1 flex overflow-x-auto hide-scroll snap-x-mandatory items-center px-[40px] gap-3 pb-4">
-                                        <div onclick="setGen2Wallpaper('assets/wp_spiderman.png')" class="snap-center shrink-0 w-[90px] h-[110px] rounded-[24px] border-[3px] border-gray-800 hover:border-brand-500 bg-cover bg-center cursor-pointer transition-all hover:scale-105 shadow-lg" style="background-image: url('assets/wp_spiderman.png')"></div>
-                                        <div onclick="setGen2Wallpaper('assets/wp_luffy.png')" class="snap-center shrink-0 w-[90px] h-[110px] rounded-[24px] border-[3px] border-gray-800 hover:border-brand-500 bg-cover bg-center cursor-pointer transition-all hover:scale-105 shadow-lg" style="background-image: url('assets/wp_luffy.png')"></div>
-                                        <div onclick="setGen2Wallpaper('assets/wp_pikachu.png')" class="snap-center shrink-0 w-[90px] h-[110px] rounded-[24px] border-[3px] border-gray-800 hover:border-brand-500 bg-cover bg-center cursor-pointer transition-all hover:scale-105 shadow-lg" style="background-image: url('assets/wp_pikachu.png')"></div>
+                                <div id="gen2-wallpapers" class="gen2-screen bg-black flex-col rounded-full">
+                                    <div class="w-full h-full flex overflow-x-auto hide-scroll snap-x-mandatory items-center px-[60px] gap-4">
+                                        <div onclick="setGen2Wallpaper('assets/wp_spiderman.png')" class="snap-center shrink-0 w-[80px] h-[80px] rounded-full border-[3px] border-gray-600 hover:border-brand-500 bg-cover bg-center cursor-pointer transition-all hover:scale-110 shadow-lg" style="background-image: url('assets/wp_spiderman.png')"></div>
+                                        <div onclick="setGen2Wallpaper('assets/wp_luffy.png')" class="snap-center shrink-0 w-[80px] h-[80px] rounded-full border-[3px] border-gray-600 hover:border-brand-500 bg-cover bg-center cursor-pointer transition-all hover:scale-110 shadow-lg" style="background-image: url('assets/wp_luffy.png')"></div>
+                                        <div onclick="setGen2Wallpaper('assets/wp_pikachu.png')" class="snap-center shrink-0 w-[80px] h-[80px] rounded-full border-[3px] border-gray-600 hover:border-brand-500 bg-cover bg-center cursor-pointer transition-all hover:scale-110 shadow-lg" style="background-image: url('assets/wp_pikachu.png')"></div>
+                                        <div onclick="gen2Navigate('menu')" class="snap-center shrink-0 w-[80px] h-[80px] rounded-full border-[3px] border-gray-600 bg-gray-900 flex items-center justify-center cursor-pointer transition-all hover:scale-110 text-white text-2xl">🔙</div>
                                     </div>
                                 </div>
                             </div>
