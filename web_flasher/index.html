@@ -11,49 +11,13 @@
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            400: '#34d399', 
-                            500: '#10b981', 
-                            600: '#059669', 
-                            900: '#064e3b',
-                            950: '#022c22'
-                        },
-                        hacker: {
-                            bg: '#000000',
-                            card: '#021008',
-                            border: '#059669',
-                            text: '#10b981',
-                            hover: '#064e3b'
-                        }
-                    },
-                    animation: {
-                        'float': 'float 6s ease-in-out infinite',
-                        'blink': 'blink 4s infinite',
-                        'glitch': 'glitch 2s infinite',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-10px)' },
-                        },
-                        blink: {
-                            '0%, 96%, 98%, 100%': { height: '48px', transform: 'translateY(0)' },
-                            '97%': { height: '8px', transform: 'translateY(20px)' }
-                        },
-                        glitch: {
-                            '0%': { transform: 'translate(0)' },
-                            '20%': { transform: 'translate(-2px, 2px)' },
-                            '40%': { transform: 'translate(-2px, -2px)' },
-                            '60%': { transform: 'translate(2px, 2px)' },
-                            '80%': { transform: 'translate(2px, -2px)' },
-                            '100%': { transform: 'translate(0)' }
-                        }
+                        brand: { 400: '#34d399', 500: '#10b981', 600: '#059669', 900: '#064e3b', 950: '#022c22' },
+                        hacker: { bg: '#000000', card: '#021008', border: '#059669', text: '#10b981', hover: '#064e3b' }
                     }
                 }
             }
         }
     </script>
-    <!-- ESP Web Tools -->
     <script type="module" src="https://unpkg.com/esp-web-tools@10.0.1/dist/web/install-button.js?module"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Space+Mono:wght@700&display=swap');
@@ -64,7 +28,7 @@
         .oled-wrapper {
             transform: scale(1.5);
             transform-origin: center top;
-            margin-bottom: 70px; /* Space for the scale overflow */
+            margin-bottom: 70px; 
         }
         
         .oled-screen {
@@ -82,340 +46,262 @@
             transition: all 0.3s ease;
         }
         
-        /* Eyes Base */
-        .eye {
-            width: 48px;
-            height: 48px;
-            background-color: #10b981; /* Hacker Green Eyes */
-            border-radius: 12px;
-            position: absolute;
-            top: 0; bottom: 0; margin: auto;
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            transform-origin: center;
-            box-shadow: 0 0 15px #10b981;
-        }
+        /* Gen 1: Eyes Base */
+        .gen1-view { width: 100%; height: 100%; position: absolute; top:0; left:0; display:flex; align-items:center; justify-content:center; }
+        .eye { width: 48px; height: 48px; background-color: #10b981; border-radius: 12px; position: absolute; top: 0; bottom: 0; margin: auto; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); transform-origin: center; box-shadow: 0 0 15px #10b981; }
         .eye.left { left: 44px; }
         .eye.right { right: 44px; }
-        
-        /* Normal */
         .state-normal .eye { height: 48px; animation: blink 4s infinite; }
-        /* Happy */
-        .state-happy .eye { height: 24px; border-radius: 24px 24px 0 0; background-color: transparent; border: 10px solid #10b981; border-bottom: 0; animation: none; transform: translateY(12px); }
-        /* Surprised */
-        .state-surprised .eye { height: 56px; width: 40px; border-radius: 50%; background-color: transparent; border: 8px solid #10b981; animation: none; }
+        .state-happy .eye { height: 24px; border-radius: 24px 24px 0 0; background-color: transparent; border: 10px solid #10b981; border-bottom: 0; transform: translateY(12px); }
+        .state-surprised .eye { height: 56px; width: 40px; border-radius: 50%; background-color: transparent; border: 8px solid #10b981; }
         .state-surprised .eye::after { content: ''; position: absolute; width: 12px; height: 12px; background: #10b981; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-        /* Sad */
-        .state-sad .eye { height: 32px; border-radius: 32px 32px 8px 8px; background-color: #10b981; animation: none; }
+        .state-sad .eye { height: 32px; border-radius: 32px 32px 8px 8px; background-color: #10b981; }
         .state-sad .eye.left { transform: rotate(15deg) translateY(10px); }
         .state-sad .eye.right { transform: rotate(-15deg) translateY(10px); }
-        /* Angry */
-        .state-angry .eye { height: 36px; border-radius: 8px 8px 32px 32px; background-color: #10b981; animation: none; }
+        .state-angry .eye { height: 36px; border-radius: 8px 8px 32px 32px; background-color: #10b981; }
         .state-angry .eye.left { transform: rotate(-20deg) translateY(6px); }
         .state-angry .eye.right { transform: rotate(20deg) translateY(6px); }
-        /* Sleep */
-        .state-sleep .eye { height: 8px; border-radius: 4px; background-color: #10b981; animation: none; transform: translateY(20px); }
-        /* Cool */
-        .state-cool .eye { height: 24px; border-radius: 0 0 24px 24px; background-color: #10b981; animation: none; transform: translateY(12px); border-top: 6px solid #064e3b; }
-        /* Love */
-        .state-love .eye { height: 36px; width: 36px; background-color: #10b981; border-radius: 0 16px 0 16px; animation: pulse-love 1s infinite alternate; transform: rotate(45deg); }
-        @keyframes pulse-love { 0% { transform: rotate(45deg) scale(1); } 100% { transform: rotate(45deg) scale(1.15); box-shadow: 0 0 25px #10b981; } }
-        /* Dizzy */
-        .state-dizzy .eye { height: 44px; width: 44px; background: transparent; border: 6px solid #10b981; border-top-color: transparent; border-bottom-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; box-shadow: none; filter: drop-shadow(0 0 10px #10b981); }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        /* Skeptical */
-        .state-skeptical .eye.left { height: 20px; border-radius: 0 0 24px 24px; transform: translateY(12px); animation: none; }
-        .state-skeptical .eye.right { height: 48px; border-radius: 50%; animation: none; }
+        .state-sleep .eye { height: 8px; border-radius: 4px; background-color: #10b981; transform: translateY(20px); }
+        .state-cool .eye { height: 24px; border-radius: 0 0 24px 24px; background-color: #10b981; transform: translateY(12px); border-top: 6px solid #064e3b; }
+        @keyframes blink { 0%, 96%, 98%, 100% { height: 48px; transform: translateY(0); } 97% { height: 8px; transform: translateY(20px); } }
         
-        /* Clock Mode Modifier */
-        .clock-mode .eye { width: 20px; height: 20px; border-radius: 50%; animation: none !important; background-color: #10b981; border: none; transform: none !important; }
-        .clock-mode .eye.left { left: 24px; }
-        .clock-mode .eye.right { right: 24px; }
+        /* Gen 2/3 Menus */
+        .app-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 12px; width: 100%; height: 100%; position: absolute; top:0; left:0; display:none; background: #000;}
+        .app-icon { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+        .app-icon div { width: 32px; height: 32px; border: 2px solid #10b981; border-radius: 8px; display:flex; align-items:center; justify-content:center; font-size: 14px; box-shadow: 0 0 8px #10b981; }
+        .app-icon span { font-size: 8px; color: #10b981; font-family: 'Space Mono', monospace; font-weight: bold;}
         
-        /* Boot Animation Gradient */
         .boot-anim { animation: boot-gradient 1.8s forwards; }
-        @keyframes boot-gradient {
-            0% { background-color: #000; border-color: #022c22; }
-            40% { background-color: #022c22; border-color: #10b981; box-shadow: inset 0 0 50px #10b981; }
-            100% { background-color: #000; border-color: #064e3b; box-shadow: none; }
-        }
+        @keyframes boot-gradient { 0% { background-color: #000; border-color: #022c22; } 40% { background-color: #022c22; border-color: #10b981; box-shadow: inset 0 0 50px #10b981; } 100% { background-color: #000; border-color: #064e3b; } }
 
-        /* Hacker Bento Grid Style */
-        .bento-card {
-            background: #021008;
-            border: 1px solid #059669;
-            border-radius: 0.5rem;
-            padding: 2rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(5, 150, 105, 0.1);
-        }
-        .bento-card::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, #10b981, transparent);
-            opacity: 0.5;
-        }
-        .bento-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.2);
-            border-color: #10b981;
-        }
-        
-        /* Hacker Scanline Overlay */
-        .scanlines {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
-            background-size: 100% 4px;
-            pointer-events: none;
-            z-index: 50;
-            opacity: 0.3;
-        }
+        .bento-card { background: #021008; border: 1px solid #059669; border-radius: 0.5rem; padding: 2rem; transition: all 0.3s ease; position: relative; overflow: hidden; box-shadow: 0 4px 20px rgba(5, 150, 105, 0.1); }
+        .scanlines { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2)); background-size: 100% 4px; pointer-events: none; z-index: 50; opacity: 0.3; }
 
-        /* Custom scrollbar */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #000; }
         ::-webkit-scrollbar-thumb { background: #064e3b; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #10b981; }
 
-        /* Hacker Buttons */
-        .hacker-btn {
-            background: #000;
-            border: 1px solid #059669;
-            color: #10b981;
-            transition: all 0.2s;
-            position: relative;
-            overflow: hidden;
-        }
-        .hacker-btn:hover {
-            background: #064e3b;
-            color: #fff;
-            box-shadow: 0 0 15px rgba(16,185,129,0.5);
-        }
+        .hacker-btn { background: #000; border: 1px solid #059669; color: #10b981; transition: all 0.2s; position: relative; overflow: hidden; cursor: pointer; }
+        .hacker-btn:hover { background: #064e3b; color: #fff; box-shadow: 0 0 15px rgba(16,185,129,0.5); }
+        .sys-text { text-shadow: 0 0 5px #10b981; }
         
-        .sys-text {
-            text-shadow: 0 0 5px #10b981;
-        }
+        #terminal-box { font-family: 'Space Mono', monospace; font-size: 11px; color: #10b981; background: #000; border: 1px solid #064e3b; padding: 12px; height: 200px; overflow-y: auto; text-shadow: 0 0 2px #10b981; }
+        .term-log { margin-bottom: 4px; }
+        .term-err { color: #ef4444; text-shadow: 0 0 2px #ef4444; margin-bottom: 4px; }
+        .term-warn { color: #eab308; text-shadow: 0 0 2px #eab308; margin-bottom: 4px; }
     </style>
 </head>
 <body class="antialiased selection:bg-brand-500 selection:text-black">
     <div class="scanlines"></div>
 
     <main class="relative z-10 max-w-7xl mx-auto px-6 py-12 lg:py-20 flex flex-col items-center">
-        
-        <!-- Header Branding -->
-        <header class="text-center mb-16">
+        <header class="text-center mb-12">
             <div class="inline-flex items-center justify-center px-4 py-1.5 mb-6 rounded-sm bg-black border border-brand-500 text-brand-500 text-xs font-bold tracking-[0.2em] uppercase shadow-[0_0_15px_rgba(16,185,129,0.4)]">
                 > SYSTEM.INIT("Pesantren Darularafah Raya");
             </div>
-            <h1 class="text-5xl lg:text-7xl font-extrabold mb-4 tracking-tighter text-white sys-text">
-                ZYLO <span class="text-brand-500">OS</span>
-            </h1>
-            <p class="text-brand-600 text-lg max-w-2xl mx-auto font-medium">
-                [SECURE_BOOT_V2: ENABLED] - Advanced Firmware Deployment Matrix
-            </p>
+            <h1 class="text-5xl lg:text-7xl font-extrabold mb-4 tracking-tighter text-white sys-text">ZYLO <span class="text-brand-500">OS</span></h1>
+            <p class="text-brand-600 text-lg max-w-2xl mx-auto font-medium">[SECURE_BOOT_V2: ENABLED] - Advanced Firmware Deployment Matrix</p>
         </header>
 
-        <!-- Main Content Area -->
-        <div class="w-full grid grid-cols-1 xl:grid-cols-12 gap-8 mb-24">
+        <div class="w-full grid grid-cols-1 xl:grid-cols-12 gap-8 mb-12">
             
-            <!-- Installer Box (Left/Top) -->
-            <div class="xl:col-span-4 bento-card flex flex-col items-center text-center justify-center">
-                <div class="w-16 h-16 bg-black border border-brand-500 rounded-sm flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
-                    <svg class="w-8 h-8 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-                </div>
-                <h2 class="text-2xl font-bold text-brand-400 mb-2 uppercase tracking-widest sys-text">Web Flasher</h2>
-                <p class="text-xs text-brand-600 mb-6 leading-relaxed px-2">
-                    Connect ESP32-C3 via USB. Secure Boot handshake required.
-                </p>
-                
-                <!-- Firmware Generation Selector -->
-                <div class="w-full text-left mb-6">
-                    <label class="block text-brand-500 text-xs font-bold mb-2 uppercase tracking-widest">> Select Firmware_Gen:</label>
-                    <select id="firmware-select" class="w-full bg-black border border-brand-500 text-brand-400 text-sm font-mono p-3 rounded-sm focus:outline-none focus:ring-1 focus:ring-brand-400 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
-                        <option value="manifest.json">[GEN 1] Zylo 0.0.1v (Basic Core)</option>
-                        <option value="manifest.json">[GEN 2] Zylo 0.2.1v (Smart AI & Grok)</option>
-                        <option value="manifest.json">[GEN 3] Zylo 3.2.1v (Cellular / Neural Web)</option>
-                    </select>
-                </div>
+            <!-- Installer & Terminal Box -->
+            <div class="xl:col-span-4 flex flex-col gap-6">
+                <div class="bento-card flex flex-col items-center text-center justify-center p-6">
+                    <div class="w-16 h-16 bg-black border border-brand-500 rounded-sm flex items-center justify-center mb-4 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+                        <svg class="w-8 h-8 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                    </div>
+                    <h2 class="text-xl font-bold text-brand-400 mb-2 uppercase tracking-widest sys-text">Web Flasher</h2>
+                    <p class="text-xs text-brand-600 mb-6">Connect ESP32-C3 via USB. Secure Boot handshake required.</p>
+                    
+                    <div class="w-full text-left mb-6">
+                        <label class="block text-brand-500 text-xs font-bold mb-2 uppercase tracking-widest">> Select Firmware_Gen:</label>
+                        <select id="firmware-select" class="w-full bg-black border border-brand-500 text-brand-400 text-sm font-mono p-3 rounded-sm focus:outline-none focus:ring-1 focus:ring-brand-400 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
+                            <option value="manifest.json">[GEN 1] Zylo 0.0.1v (Basic Core)</option>
+                            <option value="manifest_gen2.json">[GEN 2] Zylo 0.2.1v (Smart AI & Grok)</option>
+                            <option value="manifest_gen3.json">[GEN 3] Zylo 3.2.1v (Cellular / Neural Web)</option>
+                        </select>
+                    </div>
 
-                <esp-web-install-button manifest="manifest.json" id="install-btn" class="w-full block">
-                    <button slot="activate" class="w-full bg-brand-500 hover:bg-brand-400 text-black font-bold py-4 px-6 rounded-sm transition-all shadow-[0_0_25px_rgba(16,185,129,0.6)] flex items-center justify-center gap-3 uppercase tracking-widest">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                        Execute Flash
-                    </button>
-                    <span slot="unsupported" class="text-red-500 text-xs mt-4 block bg-red-900/20 py-2 border border-red-500/50">ERROR: Browser Web Serial API missing.</span>
-                    <span slot="not-allowed" class="text-yellow-500 text-xs mt-4 block bg-yellow-900/20 py-2 border border-yellow-500/50">WARN: Serial Port permission denied.</span>
-                </esp-web-install-button>
+                    <esp-web-install-button manifest="manifest.json" id="install-btn" class="w-full block">
+                        <button slot="activate" onclick="termLog('Executing Flash Command...', 'warn')" class="w-full bg-brand-500 hover:bg-brand-400 text-black font-bold py-4 px-6 rounded-sm transition-all shadow-[0_0_25px_rgba(16,185,129,0.6)] flex items-center justify-center gap-3 uppercase tracking-widest cursor-pointer">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                            Execute Flash
+                        </button>
+                        <span slot="unsupported" class="text-red-500 text-xs mt-4 block bg-red-900/20 py-2 border border-red-500/50">ERROR: Browser Web Serial API missing.</span>
+                        <span slot="not-allowed" class="text-yellow-500 text-xs mt-4 block bg-yellow-900/20 py-2 border border-yellow-500/50">WARN: Serial Port permission denied.</span>
+                    </esp-web-install-button>
+                    
+                    <button onclick="generateLicense()" class="w-full mt-4 hacker-btn text-xs py-2 uppercase font-bold">Generate Unique License</button>
+                </div>
+                
+                <!-- Terminal Output -->
+                <div class="bento-card p-4">
+                    <div class="flex items-center justify-between border-b border-brand-900 pb-2 mb-2">
+                        <span class="text-brand-500 text-xs font-bold uppercase">>_ TERMINAL_OUT</span>
+                        <div class="flex gap-1"><div class="w-2 h-2 bg-red-500"></div><div class="w-2 h-2 bg-yellow-500"></div><div class="w-2 h-2 bg-green-500"></div></div>
+                    </div>
+                    <div id="terminal-box">
+                        <div class="term-log">ZYLO OS Installer v1.0.0 initialized.</div>
+                        <div class="term-log">Awaiting ESP32-C3 connection...</div>
+                    </div>
+                </div>
             </div>
 
             <!-- Full Simulator Dashboard -->
-            <div class="xl:col-span-8">
-                <div class="bento-card h-full p-8 relative overflow-hidden group">
-                    
-                    <!-- Dashboard Header -->
-                    <div class="flex items-center justify-between mb-12">
-                        <div class="flex items-center gap-3">
-                            <div class="w-3 h-3 rounded-none bg-brand-500 animate-pulse"></div>
-                            <h2 class="text-sm font-bold tracking-widest text-brand-400 uppercase sys-text">Interactive Simulation Matrix</h2>
-                        </div>
-                        
-                        <!-- Clock Toggle -->
-                        <div class="flex items-center gap-2 bg-black p-1.5 border border-brand-900">
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" id="clock-toggle" class="sr-only peer" onchange="toggleClockMode()">
-                                <div class="w-11 h-6 bg-hacker-card border border-brand-900 peer-focus:outline-none peer peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-brand-600 after:border-brand-500 after:border after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-500"></div>
-                            </label>
-                            <span class="text-xs font-bold text-brand-500 pr-2 uppercase">Clock_Mod</span>
-                        </div>
+            <div class="xl:col-span-8 bento-card p-8 flex flex-col">
+                <div class="flex items-center justify-between mb-12">
+                    <div class="flex items-center gap-3">
+                        <div class="w-3 h-3 bg-brand-500 animate-pulse"></div>
+                        <h2 class="text-sm font-bold tracking-widest text-brand-400 uppercase sys-text">Interactive Simulation Matrix</h2>
                     </div>
+                </div>
 
-                    <!-- Top Section: OLED Screen Centered (1.5x Scaled) -->
-                    <div class="flex flex-col items-center justify-center w-full mt-4">
-                        <div class="oled-wrapper">
-                            <div id="oled-display" class="oled-screen state-normal flex-shrink-0 shadow-2xl relative">
-                                <!-- Eyes -->
+                <!-- Top Section: OLED Screen Centered (1.5x Scaled) -->
+                <div class="flex flex-col items-center justify-center w-full mt-4">
+                    <div class="oled-wrapper">
+                        <div id="oled-display" class="oled-screen state-normal shadow-2xl">
+                            
+                            <!-- GEN 1 UI -->
+                            <div class="gen1-view" id="ui-gen1">
                                 <div class="eye left"></div>
                                 <div class="eye right"></div>
-                                
-                                <!-- Boot text with Logo -->
-                                <div id="boot-text" class="hidden absolute flex-col items-center justify-center text-brand-500 oled-font w-full h-full z-20 rounded-md border-[4px] border-brand-900 bg-black">
-                                    <div class="flex items-center justify-center gap-2 mt-1">
-                                        <img src="assets/arafah_logo.png" alt="Arafah" class="w-8 h-8 rounded-full border border-brand-500 grayscale brightness-200 contrast-200 hue-rotate-[100deg]">
-                                        <span class="text-[24px] font-bold leading-none block tracking-widest whitespace-nowrap">Z Y L O</span>
-                                    </div>
-                                    <div class="text-[10px] tracking-widest mt-2 whitespace-nowrap text-brand-500 font-bold">>_ ARAFAH_SYS</div>
-                                    <div class="text-[10px] tracking-widest mt-2 text-brand-600 whitespace-nowrap" id="loading-bar">[ . . . . ]</div>
+                            </div>
+                            
+                            <!-- GEN 2 UI (Smart AI) -->
+                            <div class="app-grid" id="ui-gen2">
+                                <div class="app-icon"><div>🧠</div><span>Grok_AI</span></div>
+                                <div class="app-icon"><div>🖼️</div><span>Wallppr</span></div>
+                                <div class="app-icon"><div>⚙️</div><span>Config</span></div>
+                                <div class="app-icon"><div>☁️</div><span>Weather</span></div>
+                                <div class="app-icon"><div>💓</div><span>Health</span></div>
+                                <div class="app-icon"><div>🎵</div><span>Music</span></div>
+                            </div>
+
+                            <!-- GEN 3 UI (Cellular) -->
+                            <div class="app-grid" id="ui-gen3">
+                                <div class="app-icon"><div>📞</div><span>Call</span></div>
+                                <div class="app-icon"><div>💬</div><span>W.App</span></div>
+                                <div class="app-icon"><div>🌐</div><span>Browser</span></div>
+                                <div class="app-icon"><div>📱</div><span>TikTok</span></div>
+                                <div class="app-icon"><div>📸</div><span>Insta</span></div>
+                                <div class="app-icon"><div>🛰️</div><span>GPS</span></div>
+                            </div>
+
+                            <!-- Boot Screen Overlay -->
+                            <div id="boot-text" class="hidden absolute flex-col items-center justify-center text-brand-500 oled-font w-full h-full z-20 border-[4px] border-brand-900 bg-black">
+                                <div class="flex items-center justify-center gap-2 mt-1">
+                                    <img src="assets/arafah_logo.png" alt="Arafah" class="w-8 h-8 rounded-full border border-brand-500 grayscale brightness-200 contrast-200 hue-rotate-[100deg]" onerror="this.style.display='none'">
+                                    <span class="text-[24px] font-bold leading-none block tracking-widest whitespace-nowrap">Z Y L O</span>
                                 </div>
-                                
-                                <!-- Clock text -->
-                                <div id="clock-text" class="hidden absolute w-full h-full z-10 flex-col items-center justify-center pointer-events-none">
-                                    <div id="clock-time" class="text-brand-500 text-3xl font-bold tracking-wider mt-4 sys-text">12:00</div>
-                                </div>
+                                <div class="text-[10px] tracking-widest mt-2 whitespace-nowrap text-brand-500 font-bold">>_ ARAFAH_SYS</div>
+                                <div class="text-[10px] tracking-widest mt-2 text-brand-600 whitespace-nowrap" id="loading-bar">[ . . . . ]</div>
                             </div>
                         </div>
-                        <p class="text-xs text-brand-900 font-mono uppercase tracking-widest">> 1.3" OLED Render (1.5x Scaling)</p>
                     </div>
+                    <p class="text-xs text-brand-900 font-mono uppercase tracking-widest">> 1.3" OLED Render (1.5x Scaling)</p>
+                </div>
 
-                    <!-- Bottom Section: Controls Grid -->
-                    <div class="w-full bg-black p-6 border border-brand-900 shadow-inner mt-8">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            
-                            <!-- Eye Expressions Panel -->
-                            <div class="w-full">
-                                <p class="text-xs text-brand-600 font-bold uppercase tracking-widest mb-3 ml-1">> Eye_States</p>
-                                <div class="control-panel flex flex-wrap gap-2">
-                                    <button onclick="setEyeState('normal')" class="hacker-btn px-3 py-2 text-xs uppercase">😐 Normal</button>
-                                    <button onclick="setEyeState('happy')" class="hacker-btn px-3 py-2 text-xs uppercase">😊 Happy</button>
-                                    <button onclick="setEyeState('love')" class="hacker-btn px-3 py-2 text-xs uppercase">😍 Love</button>
-                                    <button onclick="setEyeState('cool')" class="hacker-btn px-3 py-2 text-xs uppercase">🕶️ Cool</button>
-                                    <button onclick="setEyeState('surprised')" class="hacker-btn px-3 py-2 text-xs uppercase">😲 Shock</button>
-                                    <button onclick="setEyeState('skeptical')" class="hacker-btn px-3 py-2 text-xs uppercase">🤨 Sus</button>
-                                    <button onclick="setEyeState('dizzy')" class="hacker-btn px-3 py-2 text-xs uppercase">😵 Dizzy</button>
-                                    <button onclick="setEyeState('sad')" class="hacker-btn px-3 py-2 text-xs uppercase">🥺 Sad</button>
-                                    <button onclick="setEyeState('angry')" class="hacker-btn px-3 py-2 text-xs uppercase">😠 Anger</button>
-                                    <button onclick="setEyeState('sleep')" class="hacker-btn px-3 py-2 text-xs uppercase">😴 Sleep</button>
-                                </div>
+                <!-- Bottom Section: Controls Grid -->
+                <div class="w-full bg-black p-6 border border-brand-900 shadow-inner mt-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="w-full">
+                            <p class="text-xs text-brand-600 font-bold uppercase tracking-widest mb-3 ml-1">> Eye_States (Gen 1 Only)</p>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="setEyeState('normal')" class="hacker-btn px-3 py-2 text-xs uppercase">😐 Normal</button>
+                                <button onclick="setEyeState('happy')" class="hacker-btn px-3 py-2 text-xs uppercase">😊 Happy</button>
+                                <button onclick="setEyeState('love')" class="hacker-btn px-3 py-2 text-xs uppercase">😍 Love</button>
+                                <button onclick="setEyeState('surprised')" class="hacker-btn px-3 py-2 text-xs uppercase">😲 Shock</button>
+                                <button onclick="setEyeState('dizzy')" class="hacker-btn px-3 py-2 text-xs uppercase">😵 Dizzy</button>
+                                <button onclick="setEyeState('angry')" class="hacker-btn px-3 py-2 text-xs uppercase">😠 Anger</button>
                             </div>
-                            
-                            <!-- Audio Actions Panel -->
-                            <div class="w-full">
-                                <p class="text-xs text-brand-600 font-bold uppercase tracking-widest mb-3 ml-1">> Audio_Sys_Cmd</p>
-                                <div class="flex flex-wrap gap-2 mb-4">
-                                    <button onclick="simulateBoot()" class="hacker-btn px-4 py-2 text-xs uppercase font-bold">🚀 Run_Boot</button>
-                                    <button onclick="playHappySound()" class="hacker-btn px-4 py-2 text-xs uppercase">✨ Chirp.Wav</button>
-                                    <button onclick="playSadSound()" class="hacker-btn px-4 py-2 text-xs uppercase">💧 Sad.Wav</button>
-                                    <button onclick="playAngrySound()" class="hacker-btn px-4 py-2 text-xs uppercase">💢 Buzz.Wav</button>
-                                </div>
+                        </div>
+                        <div class="w-full">
+                            <p class="text-xs text-brand-600 font-bold uppercase tracking-widest mb-3 ml-1">> Audio_Sys_Cmd</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <button onclick="simulateBoot()" class="hacker-btn px-4 py-2 text-xs uppercase font-bold">🚀 Run_Boot</button>
+                                <button onclick="playHappySound()" class="hacker-btn px-4 py-2 text-xs uppercase">✨ Chirp.Wav</button>
+                                <button onclick="playSadSound()" class="hacker-btn px-4 py-2 text-xs uppercase">💧 Sad.Wav</button>
+                                <button onclick="playAngrySound()" class="hacker-btn px-4 py-2 text-xs uppercase">💢 Buzz.Wav</button>
                             </div>
-                            
                         </div>
                     </div>
                 </div>
             </div>
-            
-        </div>
-
-        <div class="w-full text-center mt-12 mb-8 border-t border-brand-900 pt-8">
-             <p class="text-brand-600 text-xs font-mono uppercase">>> SECURE_BOOT_V2 && FLASH_ENCRYPTION = TRUE</p>
-             <p class="text-brand-600 text-xs font-mono uppercase">>> CONNECTION: CLOUDFLARE_TUNNEL_ACTIVE</p>
         </div>
     </main>
 
-    <!-- JS Logic -->
     <script>
+        // Terminal Logging
+        function termLog(msg, type='info') {
+            const term = document.getElementById('terminal-box');
+            const div = document.createElement('div');
+            const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+            div.className = type === 'error' ? 'term-err' : (type === 'warn' ? 'term-warn' : 'term-log');
+            div.innerText = `[${time}] ${msg}`;
+            term.appendChild(div);
+            term.scrollTop = term.scrollHeight;
+        }
+
+        // License Generator
+        function generateLicense() {
+            const hex = [...Array(32)].map(() => Math.floor(Math.random() * 16).toString(16)).join('').toUpperCase();
+            termLog(`Generating unique port signature...`);
+            termLog(`EFUSE_KEY: ${hex}`, 'warn');
+            termLog(`Locking firmware to current domain... SECURE_BOOT ready.`, 'info');
+            alert(`Lisensi Dihasilkan!\nKunci Hardware: ${hex}\nChip ZYLO akan dikunci secara permanen ke port/server ini.`);
+        }
+
         // Firmware Selector Logic
         document.getElementById('firmware-select').addEventListener('change', (e) => {
+            const val = e.target.value;
             const installBtn = document.getElementById('install-btn');
-            installBtn.setAttribute('manifest', e.target.value);
-            console.log(`> Firmware target updated to: ${e.target.value}`);
+            installBtn.setAttribute('manifest', val);
+            termLog(`Firmware target updated to: ${val}`);
+            
+            // UI Switch
+            document.getElementById('ui-gen1').style.display = 'none';
+            document.getElementById('ui-gen2').style.display = 'none';
+            document.getElementById('ui-gen3').style.display = 'none';
+            
+            if(val === 'manifest.json') {
+                document.getElementById('ui-gen1').style.display = 'flex';
+                termLog(`Loaded UI: Classic Core`);
+            } else if (val === 'manifest_gen2.json') {
+                document.getElementById('ui-gen2').style.display = 'grid';
+                termLog(`Loaded UI: Smart AI Matrix`);
+            } else if (val === 'manifest_gen3.json') {
+                document.getElementById('ui-gen3').style.display = 'grid';
+                termLog(`Loaded UI: Cellular Neural Web`);
+            }
         });
 
+        // Event listener for Web Serial Button to capture clicks natively
+        const espButton = document.querySelector('esp-web-install-button');
+        espButton.addEventListener('click', () => {
+            termLog('Init USB Serial connection...', 'info');
+            termLog('Checking port permissions...', 'warn');
+        });
+
+        // --- Core UI & Audio ---
         const display = document.getElementById('oled-display');
         const bootText = document.getElementById('boot-text');
-        const clockText = document.getElementById('clock-text');
-        const eyes = document.querySelectorAll('.eye');
-        const clockToggle = document.getElementById('clock-toggle');
-        
         let stateTimeout;
-        let clockInterval;
 
-        // --- AUDIO ENGINE ---
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        const audioCtx = new AudioContext();
-
-        function playTone(frequency, duration, type = 'square') {
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            
-            oscillator.type = type; 
-            oscillator.frequency.value = frequency;
-            
-            gainNode.gain.setValueAtTime(0.03, audioCtx.currentTime); 
-            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration/1000);
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            
-            oscillator.start();
-            oscillator.stop(audioCtx.currentTime + duration/1000);
-        }
-
-        function playChatter(baseFreq, durationMs, count) {
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'square';
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            
-            let now = audioCtx.currentTime;
-            let step = (durationMs / 1000) / count;
-            
-            osc.start(now);
-            for(let i=0; i<count; i++) {
-                let f = baseFreq + (Math.random() * 600 - 300);
-                osc.frequency.setValueAtTime(f, now + (i*step));
-                gain.gain.setValueAtTime(0.05, now + (i*step));
-                gain.gain.setValueAtTime(0.001, now + (i*step) + step - 0.01);
+        function setEyeState(state) {
+            clearTimeout(stateTimeout);
+            if (bootText.style.display === 'flex') return;
+            const view = document.getElementById('ui-gen1');
+            view.className = 'gen1-view state-' + state;
+            termLog(`Eye_State changed: ${state}`);
+            if (state !== 'normal') {
+                stateTimeout = setTimeout(() => { view.className = 'gen1-view state-normal'; }, 3000);
             }
-            osc.stop(now + (durationMs/1000));
         }
-
-        function playHappySound() { setEyeState('happy'); playChatter(2200, 400, 5); }
-        function playSadSound() { setEyeState('sad'); playTone(800, 200, 'triangle'); setTimeout(() => playTone(600, 300, 'triangle'), 220); }
-        function playAngrySound() { setEyeState('angry'); playChatter(400, 500, 8); }
 
         async function simulateBoot() {
+            termLog(`Executing Boot Sequence...`);
             clearTimeout(stateTimeout);
-            if(clockToggle.checked) { clockToggle.checked = false; toggleClockMode(); }
-            
-            display.className = 'oled-screen flex-shrink-0 shadow-2xl relative';
-            eyes.forEach(e => e.style.display = 'none');
-            
             bootText.classList.remove('boot-anim'); 
             void bootText.offsetWidth; 
             bootText.classList.add('boot-anim');
@@ -423,59 +309,48 @@
             
             const loadingBar = document.getElementById('loading-bar');
             loadingBar.innerText = '[ . . . . ]';
-
-            playTone(1047, 150);
-            loadingBar.innerText = '[ O . . . ]';
             
-            setTimeout(() => { playTone(1319, 150); loadingBar.innerText = '[ O O . . ]'; }, 200);
-            setTimeout(() => { playTone(1568, 150); loadingBar.innerText = '[ O O O . ]'; }, 400);
-            setTimeout(() => { playTone(2093, 300); loadingBar.innerText = '[ O O O O ]'; }, 600);
+            setTimeout(() => { loadingBar.innerText = '[ O . . . ]'; }, 100);
+            setTimeout(() => { loadingBar.innerText = '[ O O . . ]'; }, 300);
+            setTimeout(() => { loadingBar.innerText = '[ O O O . ]'; }, 500);
+            setTimeout(() => { loadingBar.innerText = '[ O O O O ]'; termLog('Boot successful.'); }, 700);
 
             stateTimeout = setTimeout(() => {
                 bootText.style.display = 'none';
                 bootText.classList.remove('boot-anim');
-                eyes.forEach(e => e.style.display = 'block');
-                setEyeState('normal');
             }, 1800);
         }
 
-        function setEyeState(state) {
-            clearTimeout(stateTimeout);
-            if (bootText.style.display === 'flex') return;
-            
-            display.className = 'oled-screen flex-shrink-0 shadow-2xl relative ' + (clockToggle.checked ? 'clock-mode' : '');
-            display.classList.add(`state-${state}`);
-            
-            if (state !== 'normal' && !clockToggle.checked) {
-                stateTimeout = setTimeout(() => {
-                    display.className = 'oled-screen flex-shrink-0 shadow-2xl relative state-normal ' + (clockToggle.checked ? 'clock-mode' : '');
-                }, 3000);
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+        function playTone(freq, dur, type='square') {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type; osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0.03, audioCtx.currentTime); 
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur/1000);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + dur/1000);
+        }
+        function playChatter(baseFreq, durationMs, count) {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'square'; osc.connect(gain); gain.connect(audioCtx.destination);
+            let now = audioCtx.currentTime; let step = (durationMs / 1000) / count;
+            osc.start(now);
+            for(let i=0; i<count; i++) {
+                osc.frequency.setValueAtTime(baseFreq + (Math.random() * 600 - 300), now + (i*step));
+                gain.gain.setValueAtTime(0.05, now + (i*step));
+                gain.gain.setValueAtTime(0.001, now + (i*step) + step - 0.01);
             }
+            osc.stop(now + (durationMs/1000));
         }
-
-        function updateClock() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            clockText.innerText = `${hours}:${minutes}`;
-        }
-
-        function toggleClockMode() {
-            if (bootText.style.display === 'flex') { clockToggle.checked = false; return; }
-            if (clockToggle.checked) {
-                display.classList.add('clock-mode');
-                display.classList.remove('state-happy', 'state-surprised', 'state-sad', 'state-angry', 'state-sleep', 'state-cool', 'state-love', 'state-dizzy', 'state-skeptical');
-                display.classList.add('state-normal'); 
-                clockText.style.display = 'flex';
-                updateClock();
-                clockInterval = setInterval(updateClock, 1000);
-            } else {
-                display.classList.remove('clock-mode');
-                clockText.style.display = 'none';
-                clearInterval(clockInterval);
-            }
-        }
-
+        function playHappySound() { setEyeState('happy'); playChatter(2200, 400, 5); termLog('Played: Happy.wav'); }
+        function playSadSound() { setEyeState('sad'); playTone(800, 200, 'triangle'); setTimeout(() => playTone(600, 300, 'triangle'), 220); termLog('Played: Sad.wav'); }
+        function playAngrySound() { setEyeState('angry'); playChatter(400, 500, 8); termLog('Played: Buzz.wav'); }
+        
         document.body.addEventListener('click', () => {
             if(audioCtx.state === 'suspended') audioCtx.resume();
         }, { once: true });

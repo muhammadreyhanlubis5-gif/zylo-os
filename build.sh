@@ -1,32 +1,37 @@
 #!/bin/bash
 set -e
 
-echo "1. Installing Arduino CLI..."
-curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-
-echo "2. Configuring ESP32 Core..."
-./bin/arduino-cli config init
-./bin/arduino-cli config set board_manager.additional_urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
-./bin/arduino-cli core update-index
-./bin/arduino-cli core install esp32:esp32
-
-echo "3. Installing required libraries..."
-./bin/arduino-cli lib install "Adafruit GFX Library" "Adafruit SSD1306"
-
-echo "4. Compiling ZYLO OS Firmware..."
-mkdir -p build_output
-./bin/arduino-cli compile --fqbn esp32:esp32:esp32c3 firmware/zylo_os/zylo_os.ino --output-dir build_output
-
-echo "5. Preparing Web Flasher assets..."
-mkdir -p web_flasher/firmware
-
-# Netlify Ubuntu runners might output differently, check for merged.bin first, fallback to .bin
-if [ -f build_output/zylo_os.ino.merged.bin ]; then
-    cp build_output/zylo_os.ino.merged.bin web_flasher/firmware/zylo_v1.0.bin
-    echo "Using merged.bin"
+# Cari arduino-cli
+if [ -f "./bin/arduino-cli" ]; then
+    CLI="./bin/arduino-cli"
+elif command -v arduino-cli &> /dev/null; then
+    CLI="arduino-cli"
 else
-    cp build_output/zylo_os.ino.bin web_flasher/firmware/zylo_v1.0.bin
-    echo "Using standard .bin"
+    echo "ERROR: arduino-cli tidak ditemukan. Silakan install arduino-cli."
+    exit 1
 fi
 
-echo "Build successfully completed!"
+echo "Menggunakan arduino-cli di: $CLI"
+
+echo "======================================"
+echo "MENGKOMPILASI ZYLO OS GEN 1 (CORE)"
+echo "======================================"
+$CLI compile --fqbn esp32:esp32:esp32c3 --export-binaries firmware/gen1_core/gen1_core.ino
+echo "Menyalin binary Gen 1 ke web_flasher..."
+cp firmware/gen1_core/build/esp32.esp32.esp32c3/gen1_core.ino.bin web_flasher/zylo_v1.0.bin
+
+echo "======================================"
+echo "MENGKOMPILASI ZYLO OS GEN 2 (SMART)"
+echo "======================================"
+$CLI compile --fqbn esp32:esp32:esp32c3 --export-binaries firmware/gen2_smart/gen2_smart.ino
+echo "Menyalin binary Gen 2 ke web_flasher..."
+cp firmware/gen2_smart/build/esp32.esp32.esp32c3/gen2_smart.ino.bin web_flasher/zylo_v2.0.bin
+
+echo "======================================"
+echo "MENGKOMPILASI ZYLO OS GEN 3 (CELLULAR)"
+echo "======================================"
+$CLI compile --fqbn esp32:esp32:esp32c3 --export-binaries firmware/gen3_cellular/gen3_cellular.ino
+echo "Menyalin binary Gen 3 ke web_flasher..."
+cp firmware/gen3_cellular/build/esp32.esp32.esp32c3/gen3_cellular.ino.bin web_flasher/zylo_v3.0.bin
+
+echo "Kompilasi 3 Generasi Selesai!"

@@ -19,11 +19,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Compile Arduino Sketch
+      - name: Compile Arduino Sketches
         uses: arduino/compile-sketches@v1
         with:
           fqbn: esp32:esp32:esp32c3
-          sketch-paths: firmware/zylo_os
+          sketch-paths: |
+            - firmware/gen1_core
+            - firmware/gen2_smart
+            - firmware/gen3_cellular
           libraries: |
             - name: Adafruit GFX Library
             - name: Adafruit SSD1306
@@ -32,17 +35,12 @@ jobs:
 
       - name: Prepare Web Flasher Assets
         run: |
-          # Copy the compiled .bin to the web_flasher firmware directory
-          # The compile action puts binaries in the sketch folder under build/
-          mkdir -p web_flasher/firmware
-          
-          # Find the merged binary (contains bootloader + partitions + app)
-          find firmware/zylo_os/build -name "*.merged.bin" -exec cp {} web_flasher/firmware/zylo_v1.0.bin \;
-          
-          # Fallback just in case merged.bin is not created
-          if [ ! -f web_flasher/firmware/zylo_v1.0.bin ]; then
-            find firmware/zylo_os/build -name "*.ino.bin" -exec cp {} web_flasher/firmware/zylo_v1.0.bin \;
-          fi
+          # Gen 1
+          find firmware/gen1_core/build -name "*.ino.bin" -exec cp {} web_flasher/zylo_v1.0.bin \;
+          # Gen 2
+          find firmware/gen2_smart/build -name "*.ino.bin" -exec cp {} web_flasher/zylo_v2.0.bin \;
+          # Gen 3
+          find firmware/gen3_cellular/build -name "*.ino.bin" -exec cp {} web_flasher/zylo_v3.0.bin \;
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

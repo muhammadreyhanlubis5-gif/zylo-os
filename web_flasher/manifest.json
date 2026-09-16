@@ -1,14 +1,12 @@
 {
-  "name": "ZYLO OS v1.0",
-  "version": "1.0.0",
-  "home_assistant_domain": "zylo",
-  "funding_url": "https://github.com/sponsors/",
+  "name": "ZYLO OS Gen 1",
+  "version": "0.0.1v",
   "builds": [
     {
       "chipFamily": "ESP32-C3",
       "parts": [
         {
-          "path": "firmware/zylo_v1.0.bin",
+          "path": "zylo_v1.0.bin",
           "offset": 0
         }
       ]
