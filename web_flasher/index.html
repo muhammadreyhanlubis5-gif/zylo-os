@@ -89,6 +89,18 @@
         .term-log { margin-bottom: 4px; }
         .term-err { color: #ef4444; text-shadow: 0 0 2px #ef4444; margin-bottom: 4px; }
         .term-warn { color: #eab308; text-shadow: 0 0 2px #eab308; margin-bottom: 4px; }
+
+        /* Gen 2 Smooth Animations */
+        .gen2-screen { position: absolute; top:0; left:0; width: 100%; height: 100%; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); opacity: 0; pointer-events: none; transform: scale(1.1); }
+        .gen2-screen.active { opacity: 1; pointer-events: auto; transform: scale(1); }
+        .gen2-screen.exit { opacity: 0; transform: scale(0.9); }
+        
+        .gen2-icon { transition: all 0.2s ease; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .gen2-icon:hover { transform: scale(1.15) translateY(-2px); box-shadow: 0 6px 15px rgba(16,185,129,0.4); }
+        
+        .snap-x-mandatory { scroll-snap-type: x mandatory; }
+        .snap-center { scroll-snap-align: center; }
+        .hide-scroll::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="antialiased selection:bg-brand-500 selection:text-black">
@@ -169,48 +181,56 @@
                             </div>
                             
                             <!-- GEN 2 UI (Smart AI) -->
-                            <div id="ui-gen2" class="w-full h-full relative" style="display:none; background: #000;">
+                            <div id="ui-gen2" class="w-full h-full relative overflow-hidden" style="display:none; background: #000; border-radius: 4px;">
                                 <!-- Home Screen -->
-                                <div id="gen2-home" class="w-full h-full absolute top-0 left-0 cursor-pointer bg-cover bg-center transition-all" style="background-image: url('assets/wp_spiderman.png');" onclick="gen2Navigate('menu')">
-                                    <div class="absolute top-2 right-3 text-[10px] text-white font-mono font-bold drop-shadow-md">80%</div>
-                                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                                        <div id="gen2-time" class="text-4xl text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] leading-none mb-1 font-mono">12:30</div>
-                                        <div class="text-[9px] text-gray-200 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] uppercase font-bold tracking-widest">AM</div>
+                                <div id="gen2-home" class="gen2-screen active bg-cover bg-center cursor-pointer" style="background-image: url('assets/wp_spiderman.png');" onclick="gen2Navigate('menu')">
+                                    <div class="absolute inset-0 bg-black/20"></div>
+                                    <div class="absolute top-2 right-3 text-[10px] text-white font-mono font-bold drop-shadow-md z-10">80%</div>
+                                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10">
+                                        <div id="gen2-time" class="text-[44px] text-white font-bold drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)] leading-none mb-1 tracking-tighter" style="font-family: 'Helvetica Neue', Helvetica, sans-serif;">12:30</div>
                                     </div>
                                 </div>
                                 
                                 <!-- App Menu -->
-                                <div id="gen2-menu" class="w-full h-full absolute top-0 left-0 bg-black hidden flex-col">
-                                    <div class="w-full flex justify-between items-center p-2 border-b border-gray-800 cursor-pointer" onclick="gen2Navigate('home')">
-                                        <span class="text-[9px] text-brand-500 font-bold">◄ HOME</span>
-                                        <span class="text-[9px] text-gray-400">APPS</span>
+                                <div id="gen2-menu" class="gen2-screen bg-gray-900 flex-col">
+                                    <div class="w-full flex justify-between items-center px-3 py-2 bg-black/50 backdrop-blur-md border-b border-gray-800 z-10 cursor-pointer" onclick="gen2Navigate('home')">
+                                        <span class="text-[9px] text-brand-500 font-bold hover:text-brand-400">◄ HOME</span>
+                                        <span class="text-[9px] text-gray-400 font-bold tracking-widest">APPS</span>
                                     </div>
-                                    <div class="grid grid-cols-3 gap-2 p-2 overflow-y-auto">
-                                        <div class="app-icon cursor-pointer" onclick="termLog('Opening Grok AI...')">
-                                            <div class="bg-gray-900 border-gray-700 hover:border-brand-500">🧠</div>
-                                            <span>Grok_AI</span>
+                                    <div class="flex-1 overflow-y-auto hide-scroll p-3 flex flex-wrap justify-center gap-4 content-start">
+                                        <div class="flex flex-col items-center gap-1 group">
+                                            <div class="gen2-icon bg-blue-500 text-white" onclick="termLog('Opening Grok AI...')">🧠</div>
+                                            <span class="text-[7px] text-gray-300 font-bold opacity-0 group-hover:opacity-100 transition-opacity">Grok</span>
                                         </div>
-                                        <div class="app-icon cursor-pointer" onclick="gen2Navigate('wallpapers')">
-                                            <div class="bg-gray-900 border-gray-700 hover:border-brand-500">🖼️</div>
-                                            <span>Wallppr</span>
+                                        <div class="flex flex-col items-center gap-1 group">
+                                            <div class="gen2-icon bg-gradient-to-br from-pink-500 to-orange-400 text-white" onclick="gen2Navigate('wallpapers')">🖼️</div>
+                                            <span class="text-[7px] text-gray-300 font-bold opacity-0 group-hover:opacity-100 transition-opacity">Wallpr</span>
                                         </div>
-                                        <div class="app-icon cursor-pointer" onclick="termLog('Opening Config...')">
-                                            <div class="bg-gray-900 border-gray-700 hover:border-brand-500">⚙️</div>
-                                            <span>Config</span>
+                                        <div class="flex flex-col items-center gap-1 group">
+                                            <div class="gen2-icon bg-gray-700 text-white" onclick="termLog('Opening Config...')">⚙️</div>
+                                            <span class="text-[7px] text-gray-300 font-bold opacity-0 group-hover:opacity-100 transition-opacity">Config</span>
+                                        </div>
+                                        <div class="flex flex-col items-center gap-1 group">
+                                            <div class="gen2-icon bg-green-500 text-white" onclick="termLog('Opening Health...')">💓</div>
+                                            <span class="text-[7px] text-gray-300 font-bold opacity-0 group-hover:opacity-100 transition-opacity">Health</span>
+                                        </div>
+                                        <div class="flex flex-col items-center gap-1 group">
+                                            <div class="gen2-icon bg-purple-500 text-white" onclick="termLog('Opening Music...')">🎵</div>
+                                            <span class="text-[7px] text-gray-300 font-bold opacity-0 group-hover:opacity-100 transition-opacity">Music</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Wallpaper Selector -->
-                                <div id="gen2-wallpapers" class="w-full h-full absolute top-0 left-0 bg-black hidden flex-col">
-                                    <div class="w-full flex justify-between items-center p-2 border-b border-gray-800 cursor-pointer" onclick="gen2Navigate('menu')">
-                                        <span class="text-[9px] text-brand-500 font-bold">◄ BACK</span>
-                                        <span class="text-[9px] text-gray-400">WALLPAPER</span>
+                                <div id="gen2-wallpapers" class="gen2-screen bg-black flex-col">
+                                    <div class="w-full flex justify-between items-center px-3 py-2 bg-gray-900 border-b border-gray-800 z-10 cursor-pointer" onclick="gen2Navigate('menu')">
+                                        <span class="text-[9px] text-brand-500 font-bold hover:text-brand-400">◄ BACK</span>
+                                        <span class="text-[9px] text-gray-400 font-bold tracking-widest">WALLPAPER</span>
                                     </div>
-                                    <div class="flex overflow-x-auto gap-2 p-2 h-full items-center">
-                                        <div onclick="setGen2Wallpaper('assets/wp_spiderman.png')" class="min-w-[60px] h-[60px] rounded-lg border-2 border-gray-700 hover:border-brand-500 bg-cover bg-center cursor-pointer" style="background-image: url('assets/wp_spiderman.png')"></div>
-                                        <div onclick="setGen2Wallpaper('assets/wp_luffy.png')" class="min-w-[60px] h-[60px] rounded-lg border-2 border-gray-700 hover:border-brand-500 bg-cover bg-center cursor-pointer" style="background-image: url('assets/wp_luffy.png')"></div>
-                                        <div onclick="setGen2Wallpaper('assets/wp_pikachu.png')" class="min-w-[60px] h-[60px] rounded-lg border-2 border-gray-700 hover:border-brand-500 bg-cover bg-center cursor-pointer" style="background-image: url('assets/wp_pikachu.png')"></div>
+                                    <div class="flex-1 flex overflow-x-auto hide-scroll snap-x-mandatory items-center px-[98px] gap-4">
+                                        <div onclick="setGen2Wallpaper('assets/wp_spiderman.png')" class="snap-center shrink-0 w-[80px] h-[80px] rounded-2xl border-[3px] border-transparent hover:border-brand-500 bg-cover bg-center cursor-pointer transition-all hover:scale-110 shadow-lg" style="background-image: url('assets/wp_spiderman.png')"></div>
+                                        <div onclick="setGen2Wallpaper('assets/wp_luffy.png')" class="snap-center shrink-0 w-[80px] h-[80px] rounded-2xl border-[3px] border-transparent hover:border-brand-500 bg-cover bg-center cursor-pointer transition-all hover:scale-110 shadow-lg" style="background-image: url('assets/wp_luffy.png')"></div>
+                                        <div onclick="setGen2Wallpaper('assets/wp_pikachu.png')" class="snap-center shrink-0 w-[80px] h-[80px] rounded-2xl border-[3px] border-transparent hover:border-brand-500 bg-cover bg-center cursor-pointer transition-all hover:scale-110 shadow-lg" style="background-image: url('assets/wp_pikachu.png')"></div>
                                     </div>
                                 </div>
                             </div>
@@ -394,14 +414,34 @@
 
         // Gen 2 OS Simulator Logic
         function gen2Navigate(screen) {
-            document.getElementById('gen2-home').style.display = 'none';
-            document.getElementById('gen2-menu').style.display = 'none';
-            document.getElementById('gen2-wallpapers').style.display = 'none';
+            const home = document.getElementById('gen2-home');
+            const menu = document.getElementById('gen2-menu');
+            const walls = document.getElementById('gen2-wallpapers');
             
-            if(screen === 'home') document.getElementById('gen2-home').style.display = 'block';
-            if(screen === 'menu') document.getElementById('gen2-menu').style.display = 'flex';
-            if(screen === 'wallpapers') document.getElementById('gen2-wallpapers').style.display = 'flex';
+            // Remove active class and add exit class to all
+            home.classList.remove('active'); home.classList.add('exit');
+            menu.classList.remove('active'); menu.classList.add('exit');
+            walls.classList.remove('active'); walls.classList.add('exit');
             
+            setTimeout(() => {
+                // Ensure only one is displayed after transition starts
+                home.style.display = 'none';
+                menu.style.display = 'none';
+                walls.style.display = 'none';
+
+                let target;
+                if(screen === 'home') target = home;
+                if(screen === 'menu') target = menu;
+                if(screen === 'wallpapers') target = walls;
+
+                target.style.display = 'flex';
+                // Trigger reflow
+                void target.offsetWidth;
+                target.classList.remove('exit');
+                target.classList.add('active');
+                
+            }, 100); // Slight delay for CSS to catch up
+
             termLog(`Gen 2 UI Navigated to: ${screen.toUpperCase()}`);
         }
 
