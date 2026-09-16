@@ -30,6 +30,7 @@ jobs:
           libraries: |
             - name: Adafruit GFX Library
             - name: Adafruit SSD1306
+            - name: TFT_eSPI
           cli-compile-flags: |
             - -e
 
