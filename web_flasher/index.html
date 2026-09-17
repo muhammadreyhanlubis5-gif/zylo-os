@@ -1067,25 +1067,28 @@
                         </div>
                       </div>
                       <div
-                        class="flex-1 flex flex-col items-center justify-start pt-1 px-4 gap-1"
+                        class="flex-1 flex flex-col items-center justify-start pt-2 px-4 gap-2"
                       >
                         <img
                           id="np-art"
                           src=""
-                          class="w-[75px] h-[75px] rounded-xl object-cover shadow-[0_8px_30px_rgba(0,0,0,0.8)]"
+                          class="w-[85px] h-[85px] rounded-xl object-cover shadow-[0_8px_30px_rgba(0,0,0,0.8)] cursor-pointer hover:scale-105 transition-transform"
+                          onclick="togglePlay()"
                         />
-                        <div class="text-center mt-1 w-full px-2">
-                          <div
+                        <div class="text-center mt-2 w-full px-2" style="overflow: hidden;">
+                          <!-- Menggunakan marquee agar teks panjang otomatis berjalan -->
+                          <marquee
                             id="np-title"
-                            class="text-[12px] text-white font-bold truncate"
-                          ></div>
+                            class="text-[12px] text-white font-bold block"
+                            scrollamount="3"
+                          ></marquee>
                           <div
                             id="np-artist"
-                            class="text-[9px] text-gray-400 truncate"
+                            class="text-[9px] text-gray-400 truncate mt-[2px]"
                           ></div>
                         </div>
                         <!-- Progress -->
-                        <div class="w-full px-2 mt-1">
+                        <div class="w-full px-2 mt-2">
                           <div
                             class="w-full bg-gray-700 rounded-full h-[3px] relative cursor-pointer"
                             onclick="seekTrack(event)"
@@ -1097,51 +1100,11 @@
                             ></div>
                           </div>
                           <div
-                            class="flex justify-between text-[7px] text-gray-500 mt-[2px]"
+                            class="flex justify-between text-[7px] text-gray-500 mt-[4px]"
                           >
                             <span id="np-elapsed">0:00</span>
                             <span id="np-duration">0:00</span>
                           </div>
-                        </div>
-                        <!-- Controls -->
-                        <div class="flex items-center justify-center gap-4 mt-1">
-                          <svg
-                            onclick="prevTrack()"
-                            class="w-5 h-5 text-gray-300 cursor-pointer hover:text-white"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path
-                              d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z"
-                            ></path>
-                          </svg>
-                          <div
-                            onclick="togglePlay()"
-                            class="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer hover:scale-105 transition-transform shadow-lg"
-                          >
-                            <svg
-                              id="np-play-icon"
-                              class="w-4 h-4 text-black"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                            >
-                              <path
-                                fill-rule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                                clip-rule="evenodd"
-                              ></path>
-                            </svg>
-                          </div>
-                          <svg
-                            onclick="nextTrack()"
-                            class="w-5 h-5 text-gray-300 cursor-pointer hover:text-white"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path
-                              d="M11.555 5.168A1 1 0 0010 6v2.798L4.555 5.168A1 1 0 003 6v8a1 1 0 001.555.832L10 11.202V14a1 1 0 001.555.832l6-4a1 1 0 000-1.664l-6-4z"
-                            ></path>
-                          </svg>
                         </div>
                       </div>
                     </div>
@@ -2154,6 +2117,16 @@
           const el = document.getElementById(id);
           if (el) el.innerHTML = svg;
         });
+        
+        // Toggle Marquee scrolling state
+        const marquee = document.getElementById("np-title");
+        if (marquee && marquee.start && marquee.stop) {
+          if (isPlaying) {
+            marquee.start();
+          } else {
+            marquee.stop();
+          }
+        }
       }
 
       function formatTime(s) {
