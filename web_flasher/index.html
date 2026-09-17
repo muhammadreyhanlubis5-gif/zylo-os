@@ -1,825 +1,2040 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id" class="dark scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ZYLO OS | Hacker Terminal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: { 400: '#34d399', 500: '#10b981', 600: '#059669', 900: '#064e3b', 950: '#022c22' },
-                        hacker: { bg: '#000000', card: '#021008', border: '#059669', text: '#10b981', hover: '#064e3b' }
-                    }
-                }
-            }
-        }
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                400: "#34d399",
+                500: "#10b981",
+                600: "#059669",
+                900: "#064e3b",
+                950: "#022c22",
+              },
+              hacker: {
+                bg: "#000000",
+                card: "#021008",
+                border: "#059669",
+                text: "#10b981",
+                hover: "#064e3b",
+              },
+            },
+          },
+        },
+      };
     </script>
-    <script type="module" src="https://unpkg.com/esp-web-tools@10.0.1/dist/web/install-button.js?module"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/esp-web-tools@10.0.1/dist/web/install-button.js?module"
+    ></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Space+Mono:wght@700&display=swap');
-        body { font-family: 'Fira Code', monospace; background-color: #000; color: #10b981; overflow-x: hidden; }
-        .oled-font { font-family: 'Space Mono', monospace; }
-        
-        /* OLED Screen Simulation - SCALED 1.5x */
-        .oled-wrapper {
-            transform: scale(1.5);
-            transform-origin: center top;
-            margin-bottom: 70px; 
-        }
-        
-        .oled-screen {
-            width: 256px;
-            height: 128px;
-            background-color: #000;
-            border: 8px solid #064e3b;
-            border-radius: 12px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 0 40px rgba(16, 185, 129, 0.4), inset 0 0 15px rgba(16, 185, 129, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        
-        /* Dynamic Watch Shape (Premium Rounded Rect) */
-        .shape-watch {
-            width: 190px !important;
-            height: 220px !important;
-            border-radius: 40px !important;
-            border-width: 6px !important;
-            box-shadow: 0 0 30px rgba(16, 185, 129, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1) !important;
-            background: #000;
-        }
+      @import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Space+Mono:wght@700&display=swap");
+      body {
+        font-family: "Fira Code", monospace;
+        background-color: #000;
+        color: #10b981;
+        overflow-x: hidden;
+      }
+      .oled-font {
+        font-family: "Space Mono", monospace;
+      }
 
-        /* Glassmorphism Premium Icons */
-        .glass-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 12px; align-items: center; justify-items: center; }
-        .glass-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
+      /* OLED Screen Simulation - SCALED 1.5x */
+      .oled-wrapper {
+        transform: scale(1.5);
+        transform-origin: center top;
+        margin-bottom: 70px;
+      }
+
+      .oled-screen {
+        width: 256px;
+        height: 128px;
+        background-color: #000;
+        border: 8px solid #064e3b;
+        border-radius: 12px;
+        position: relative;
+        overflow: hidden;
+        box-shadow:
+          0 0 40px rgba(16, 185, 129, 0.4),
+          inset 0 0 15px rgba(16, 185, 129, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      /* Dynamic Watch Shape (Premium Rounded Rect) */
+      .shape-watch {
+        width: 190px !important;
+        height: 220px !important;
+        border-radius: 40px !important;
+        border-width: 6px !important;
+        box-shadow:
+          0 0 30px rgba(16, 185, 129, 0.3),
+          inset 0 0 20px rgba(255, 255, 255, 0.1) !important;
+        background: #000;
+      }
+
+      /* Glassmorphism Premium Icons */
+      .glass-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        padding: 12px;
+        align-items: center;
+        justify-items: center;
+      }
+      .glass-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+      }
+      .glass-icon:hover {
+        transform: scale(1.15) translateY(-2px);
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+      .glass-icon svg {
+        width: 20px;
+        height: 20px;
+        z-index: 2;
+      }
+      .glass-glow {
+        position: absolute;
+        bottom: 4px;
+        width: 24px;
+        height: 12px;
+        border-radius: 50%;
+        filter: blur(8px);
+        z-index: 1;
+        opacity: 0.7;
+        transition: opacity 0.3s;
+      }
+      .glass-icon:hover .glass-glow {
+        opacity: 1;
+      }
+
+      /* Gen 1: Eyes Base */
+      .gen1-view {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .eye {
+        width: 48px;
+        height: 48px;
+        background-color: #10b981;
+        border-radius: 12px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transform-origin: center;
+        box-shadow: 0 0 15px #10b981;
+      }
+      .eye.left {
+        left: 44px;
+      }
+      .eye.right {
+        right: 44px;
+      }
+      .state-normal .eye {
+        height: 48px;
+        animation: blink 4s infinite;
+      }
+      .state-happy .eye {
+        height: 24px;
+        border-radius: 24px 24px 0 0;
+        background-color: transparent;
+        border: 10px solid #10b981;
+        border-bottom: 0;
+        transform: translateY(12px);
+      }
+      .state-surprised .eye {
+        height: 56px;
+        width: 40px;
+        border-radius: 50%;
+        background-color: transparent;
+        border: 8px solid #10b981;
+      }
+      .state-surprised .eye::after {
+        content: "";
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        background: #10b981;
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .state-sad .eye {
+        height: 32px;
+        border-radius: 32px 32px 8px 8px;
+        background-color: #10b981;
+      }
+      .state-sad .eye.left {
+        transform: rotate(15deg) translateY(10px);
+      }
+      .state-sad .eye.right {
+        transform: rotate(-15deg) translateY(10px);
+      }
+      .state-angry .eye {
+        height: 36px;
+        border-radius: 8px 8px 32px 32px;
+        background-color: #10b981;
+      }
+      .state-angry .eye.left {
+        transform: rotate(-20deg) translateY(6px);
+      }
+      .state-angry .eye.right {
+        transform: rotate(20deg) translateY(6px);
+      }
+      .state-sleep .eye {
+        height: 8px;
+        border-radius: 4px;
+        background-color: #10b981;
+        transform: translateY(20px);
+      }
+      .state-cool .eye {
+        height: 24px;
+        border-radius: 0 0 24px 24px;
+        background-color: #10b981;
+        transform: translateY(12px);
+        border-top: 6px solid #064e3b;
+      }
+      @keyframes blink {
+        0%,
+        96%,
+        98%,
+        100% {
+          height: 48px;
+          transform: translateY(0);
         }
-        .glass-icon:hover {
-            transform: scale(1.15) translateY(-2px);
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.3);
+        97% {
+          height: 8px;
+          transform: translateY(20px);
         }
-        .glass-icon svg { width: 20px; height: 20px; z-index: 2; }
-        .glass-glow { position: absolute; bottom: 4px; width: 24px; height: 12px; border-radius: 50%; filter: blur(8px); z-index: 1; opacity: 0.7; transition: opacity 0.3s; }
-        .glass-icon:hover .glass-glow { opacity: 1; }
-        
-        /* Gen 1: Eyes Base */
-        .gen1-view { width: 100%; height: 100%; position: absolute; top:0; left:0; display:flex; align-items:center; justify-content:center; }
-        .eye { width: 48px; height: 48px; background-color: #10b981; border-radius: 12px; position: absolute; top: 0; bottom: 0; margin: auto; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); transform-origin: center; box-shadow: 0 0 15px #10b981; }
-        .eye.left { left: 44px; }
-        .eye.right { right: 44px; }
-        .state-normal .eye { height: 48px; animation: blink 4s infinite; }
-        .state-happy .eye { height: 24px; border-radius: 24px 24px 0 0; background-color: transparent; border: 10px solid #10b981; border-bottom: 0; transform: translateY(12px); }
-        .state-surprised .eye { height: 56px; width: 40px; border-radius: 50%; background-color: transparent; border: 8px solid #10b981; }
-        .state-surprised .eye::after { content: ''; position: absolute; width: 12px; height: 12px; background: #10b981; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-        .state-sad .eye { height: 32px; border-radius: 32px 32px 8px 8px; background-color: #10b981; }
-        .state-sad .eye.left { transform: rotate(15deg) translateY(10px); }
-        .state-sad .eye.right { transform: rotate(-15deg) translateY(10px); }
-        .state-angry .eye { height: 36px; border-radius: 8px 8px 32px 32px; background-color: #10b981; }
-        .state-angry .eye.left { transform: rotate(-20deg) translateY(6px); }
-        .state-angry .eye.right { transform: rotate(20deg) translateY(6px); }
-        .state-sleep .eye { height: 8px; border-radius: 4px; background-color: #10b981; transform: translateY(20px); }
-        .state-cool .eye { height: 24px; border-radius: 0 0 24px 24px; background-color: #10b981; transform: translateY(12px); border-top: 6px solid #064e3b; }
-        @keyframes blink { 0%, 96%, 98%, 100% { height: 48px; transform: translateY(0); } 97% { height: 8px; transform: translateY(20px); } }
-        
-        /* Gen 2/3 Menus */
-        .app-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 12px; width: 100%; height: 100%; position: absolute; top:0; left:0; display:none; background: #000;}
-        .app-icon { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
-        .app-icon div { width: 32px; height: 32px; border: 2px solid #10b981; border-radius: 8px; display:flex; align-items:center; justify-content:center; font-size: 14px; box-shadow: 0 0 8px #10b981; }
-        .app-icon span { font-size: 8px; color: #10b981; font-family: 'Space Mono', monospace; font-weight: bold;}
-        
-        .boot-anim { animation: boot-gradient 1.8s forwards; }
-        @keyframes boot-gradient { 0% { background-color: #000; border-color: #022c22; } 40% { background-color: #022c22; border-color: #10b981; box-shadow: inset 0 0 50px #10b981; } 100% { background-color: #000; border-color: #064e3b; } }
+      }
 
-        .bento-card { background: #021008; border: 1px solid #059669; border-radius: 0.5rem; padding: 2rem; transition: all 0.3s ease; position: relative; overflow: hidden; box-shadow: 0 4px 20px rgba(5, 150, 105, 0.1); }
-        .scanlines { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2)); background-size: 100% 4px; pointer-events: none; z-index: 50; opacity: 0.3; }
+      /* Gen 2/3 Menus */
+      .app-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding: 12px;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: none;
+        background: #000;
+      }
+      .app-icon {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+      }
+      .app-icon div {
+        width: 32px;
+        height: 32px;
+        border: 2px solid #10b981;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        box-shadow: 0 0 8px #10b981;
+      }
+      .app-icon span {
+        font-size: 8px;
+        color: #10b981;
+        font-family: "Space Mono", monospace;
+        font-weight: bold;
+      }
 
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #064e3b; border-radius: 4px; }
+      .boot-anim {
+        animation: boot-gradient 1.8s forwards;
+      }
+      @keyframes boot-gradient {
+        0% {
+          background-color: #000;
+          border-color: #022c22;
+        }
+        40% {
+          background-color: #022c22;
+          border-color: #10b981;
+          box-shadow: inset 0 0 50px #10b981;
+        }
+        100% {
+          background-color: #000;
+          border-color: #064e3b;
+        }
+      }
 
-        .hacker-btn { background: #000; border: 1px solid #059669; color: #10b981; transition: all 0.2s; position: relative; overflow: hidden; cursor: pointer; }
-        .hacker-btn:hover { background: #064e3b; color: #fff; box-shadow: 0 0 15px rgba(16,185,129,0.5); }
-        .sys-text { text-shadow: 0 0 5px #10b981; }
-        
-        #terminal-box { font-family: 'Space Mono', monospace; font-size: 11px; color: #10b981; background: #000; border: 1px solid #064e3b; padding: 12px; height: 200px; overflow-y: auto; text-shadow: 0 0 2px #10b981; }
-        .term-log { margin-bottom: 4px; }
-        .term-err { color: #ef4444; text-shadow: 0 0 2px #ef4444; margin-bottom: 4px; }
-        .term-warn { color: #eab308; text-shadow: 0 0 2px #eab308; margin-bottom: 4px; }
+      .bento-card {
+        background: #021008;
+        border: 1px solid #059669;
+        border-radius: 0.5rem;
+        padding: 2rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(5, 150, 105, 0.1);
+      }
+      .scanlines {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0),
+          rgba(255, 255, 255, 0) 50%,
+          rgba(0, 0, 0, 0.2) 50%,
+          rgba(0, 0, 0, 0.2)
+        );
+        background-size: 100% 4px;
+        pointer-events: none;
+        z-index: 50;
+        opacity: 0.3;
+      }
 
-        /* Gen 2 Instant Snap (Super Ringan, No Delay) */
-        .gen2-screen { position: absolute; top:0; left:0; width: 100%; height: 100%; display: none !important; }
-        .gen2-screen.active { display: flex !important; }
-        
-        .snap-x-mandatory { scroll-snap-type: x mandatory; }
-        .snap-center { scroll-snap-align: center; }
-        .gen2-app-ui { position: absolute; top:0; left:0; width: 100%; height: 100%; background: #000; display:flex; flex-direction: column; color: white; font-size: 11px; z-index: 50; }
-        .gen2-app-header { background: #111; padding: 6px 12px; display: flex; align-items: center; border-bottom: 1px solid #333; font-weight: bold; font-size: 11px; color: #10b981; }
-        .gen2-app-content { flex: 1; overflow-y: auto; padding: 12px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
-        .gen2-app-content::-webkit-scrollbar { display: none; }
-        .gen2-btn { background: #222; border: 1px solid #444; padding: 8px 12px; border-radius: 8px; width: 100%; text-align: left; margin-bottom: 6px; cursor: pointer; transition: background 0.2s; display:flex; align-items:center; justify-content:space-between; }
-        .gen2-btn:hover { background: #333; border-color: #10b981; }
-        .hide-scroll::-webkit-scrollbar { display: none; }
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #000;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #064e3b;
+        border-radius: 4px;
+      }
+
+      .hacker-btn {
+        background: #000;
+        border: 1px solid #059669;
+        color: #10b981;
+        transition: all 0.2s;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+      }
+      .hacker-btn:hover {
+        background: #064e3b;
+        color: #fff;
+        box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+      }
+      .sys-text {
+        text-shadow: 0 0 5px #10b981;
+      }
+
+      #terminal-box {
+        font-family: "Space Mono", monospace;
+        font-size: 11px;
+        color: #10b981;
+        background: #000;
+        border: 1px solid #064e3b;
+        padding: 12px;
+        height: 200px;
+        overflow-y: auto;
+        text-shadow: 0 0 2px #10b981;
+      }
+      .term-log {
+        margin-bottom: 4px;
+      }
+      .term-err {
+        color: #ef4444;
+        text-shadow: 0 0 2px #ef4444;
+        margin-bottom: 4px;
+      }
+      .term-warn {
+        color: #eab308;
+        text-shadow: 0 0 2px #eab308;
+        margin-bottom: 4px;
+      }
+
+      /* Gen 2 Instant Snap (Super Ringan, No Delay) */
+      .gen2-screen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: none !important;
+      }
+      .gen2-screen.active {
+        display: flex !important;
+      }
+
+      .snap-x-mandatory {
+        scroll-snap-type: x mandatory;
+      }
+      .snap-center {
+        scroll-snap-align: center;
+      }
+      .gen2-app-ui {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        display: flex;
+        flex-direction: column;
+        color: white;
+        font-size: 11px;
+        z-index: 50;
+      }
+      .gen2-app-header {
+        background: #111;
+        padding: 6px 12px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #333;
+        font-weight: bold;
+        font-size: 11px;
+        color: #10b981;
+      }
+      .gen2-app-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 12px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+      .gen2-app-content::-webkit-scrollbar {
+        display: none;
+      }
+      .gen2-btn {
+        background: #222;
+        border: 1px solid #444;
+        padding: 8px 12px;
+        border-radius: 8px;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 6px;
+        cursor: pointer;
+        transition: background 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .gen2-btn:hover {
+        background: #333;
+        border-color: #10b981;
+      }
+      .hide-scroll::-webkit-scrollbar {
+        display: none;
+      }
     </style>
-</head>
-<body class="antialiased selection:bg-brand-500 selection:text-black">
+  </head>
+  <body class="antialiased selection:bg-brand-500 selection:text-black">
     <div class="scanlines"></div>
 
-    <main class="relative z-10 max-w-7xl mx-auto px-6 py-12 lg:py-20 flex flex-col items-center">
-        <header class="text-center mb-12">
-            <div class="inline-flex items-center justify-center px-4 py-1.5 mb-6 rounded-sm bg-black border border-brand-500 text-brand-500 text-xs font-bold tracking-[0.2em] uppercase shadow-[0_0_15px_rgba(16,185,129,0.4)]">
-                > SYSTEM.INIT("Pesantren Darularafah Raya");
-            </div>
-            <h1 class="text-5xl lg:text-7xl font-extrabold mb-4 tracking-tighter text-white sys-text">ZYLO <span class="text-brand-500">OS</span></h1>
-            <p class="text-brand-600 text-lg max-w-2xl mx-auto font-medium">[SECURE_BOOT_V2: ENABLED] - Advanced Firmware Deployment Matrix</p>
-        </header>
-
-        <div class="w-full grid grid-cols-1 xl:grid-cols-12 gap-8 mb-12">
-            
-            <!-- Installer & Terminal Box -->
-            <div class="xl:col-span-4 flex flex-col gap-6">
-                <div class="bento-card flex flex-col items-center text-center justify-center p-6">
-                    <div class="w-16 h-16 bg-black border border-brand-500 rounded-sm flex items-center justify-center mb-4 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
-                        <svg class="w-8 h-8 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-                    </div>
-                    <h2 class="text-xl font-bold text-brand-400 mb-2 uppercase tracking-widest sys-text">Web Flasher</h2>
-                    <p class="text-xs text-brand-600 mb-6">Connect ESP32-C3 via USB. Secure Boot handshake required.</p>
-                    
-                    <div class="w-full text-left mb-6">
-                        <label class="block text-brand-500 text-xs font-bold mb-2 uppercase tracking-widest">> Select Firmware_Gen:</label>
-                        <select id="firmware-select" class="w-full bg-black border border-brand-500 text-brand-400 text-sm font-mono p-3 rounded-sm focus:outline-none focus:ring-1 focus:ring-brand-400 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
-                            <option value="manifest.json">[GEN 1] Zylo 0.0.1v (Basic Core)</option>
-                            <option value="manifest_gen2.json">[GEN 2] Zylo 0.2.1v (Smart AI & Grok)</option>
-                            <option value="manifest_gen3.json">[GEN 3] Zylo 3.2.1v (Cellular / Neural Web)</option>
-                        </select>
-                    </div>
-
-                    <esp-web-install-button manifest="manifest.json" id="install-btn" class="w-full block">
-                        <button slot="activate" onclick="termLog('Executing Flash Command...', 'warn')" class="w-full bg-brand-500 hover:bg-brand-400 text-black font-bold py-4 px-6 rounded-sm transition-all shadow-[0_0_25px_rgba(16,185,129,0.6)] flex items-center justify-center gap-3 uppercase tracking-widest cursor-pointer">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                            Execute Flash
-                        </button>
-                        <span slot="unsupported" class="text-red-500 text-xs mt-4 block bg-red-900/20 py-2 border border-red-500/50">ERROR: Browser Web Serial API missing.</span>
-                        <span slot="not-allowed" class="text-yellow-500 text-xs mt-4 block bg-yellow-900/20 py-2 border border-yellow-500/50">WARN: Serial Port permission denied.</span>
-                    </esp-web-install-button>
-                    
-                    <button onclick="generateLicense()" class="w-full mt-4 hacker-btn text-xs py-2 uppercase font-bold">Generate Unique License</button>
-                </div>
-                
-                <!-- Terminal Output -->
-                <div class="bento-card p-4">
-                    <div class="flex items-center justify-between border-b border-brand-900 pb-2 mb-2">
-                        <span class="text-brand-500 text-xs font-bold uppercase">>_ TERMINAL_OUT</span>
-                        <div class="flex gap-1"><div class="w-2 h-2 bg-red-500"></div><div class="w-2 h-2 bg-yellow-500"></div><div class="w-2 h-2 bg-green-500"></div></div>
-                    </div>
-                    <div id="terminal-box">
-                        <div class="term-log">ZYLO OS Installer v1.0.0 initialized.</div>
-                        <div class="term-log">Awaiting ESP32-C3 connection...</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Full Simulator Dashboard -->
-            <div class="xl:col-span-8 bento-card p-8 flex flex-col">
-                <div class="flex items-center justify-between mb-12">
-                    <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 bg-brand-500 animate-pulse"></div>
-                        <h2 class="text-sm font-bold tracking-widest text-brand-400 uppercase sys-text">Interactive Simulation Matrix</h2>
-                    </div>
-                </div>
-
-                <!-- Top Section: OLED Screen Centered (1.5x Scaled) -->
-                <div class="flex flex-col items-center justify-center w-full mt-4">
-                    <div class="oled-wrapper">
-                        <div id="oled-display" class="oled-screen state-normal shadow-2xl">
-                            
-                            <!-- GEN 1 UI -->
-                            <div class="gen1-view" id="ui-gen1">
-                                <div class="eye left"></div>
-                                <div class="eye right"></div>
-                            </div>
-                            
-                            <!-- GEN 2 UI (Smart AI - Premium Glass) -->
-                            <div id="ui-gen2" class="w-full h-full relative overflow-hidden" style="display:none; background: #000; border-radius: inherit;">
-                                <!-- Home Screen -->
-                                <div id="gen2-home" class="gen2-screen active bg-cover bg-center cursor-pointer" style="background-image: url('assets/wp_spiderman.png');" onclick="gen2Navigate('menu')">
-                                    <div class="absolute inset-0 bg-black/30"></div>
-                                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10 pt-4">
-                                        <div id="gen2-time" class="text-[52px] text-white font-bold drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)] leading-none tracking-tighter" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">12:30</div>
-                                    </div>
-                                    <div class="absolute top-4 left-4 w-6 h-6 rounded-full border-[3px] border-red-500 border-t-transparent shadow-lg transform rotate-45"></div>
-                                    <div class="absolute top-5 left-5 w-4 h-4 rounded-full border-[3px] border-green-500 border-l-transparent shadow-lg transform -rotate-12"></div>
-                                </div>
-                                
-                                <!-- App Menu (Glassmorphism Grid) -->
-                                <div id="gen2-menu" class="gen2-screen flex-col bg-gray-900">
-                                    <div class="absolute inset-0 bg-gradient-to-b from-gray-800 to-black pointer-events-none"></div>
-                                    <div class="w-full h-full glass-grid relative z-10 pt-[10px]">
-                                        
-                                        <!-- Phone (Green) -->
-                                        <div class="glass-icon" onclick="openGen2App('app-phone')">
-                                            <div class="glass-glow bg-green-500"></div>
-                                            <svg class="text-green-400" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg>
-                                        </div>
-                                        
-                                        <!-- Battery (Gray) -->
-                                        <div class="glass-icon" onclick="openGen2App('app-battery')">
-                                            <div class="glass-glow bg-gray-400"></div>
-                                            <svg class="text-gray-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 8h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4a2 2 0 012-2zm14 3v2m2-2h1a1 1 0 011 1v0a1 1 0 01-1 1h-1"></path></svg>
-                                        </div>
-                                        
-                                        <!-- Camera (Blue) -->
-                                        <div class="glass-icon" onclick="openGen2App('app-camera')">
-                                            <div class="glass-glow bg-blue-500"></div>
-                                            <svg class="text-blue-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path></svg>
-                                        </div>
-                                        
-                                        <!-- Heart (Pink) -->
-                                        <div class="glass-icon" onclick="termLog('Opening Health...')">
-                                            <div class="glass-glow bg-pink-500"></div>
-                                            <svg class="text-pink-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path></svg>
-                                        </div>
-                                        
-                                        <!-- Music (Purple) -->
-                                        <div class="glass-icon" onclick="openGen2App('app-music')">
-                                            <div class="glass-glow bg-purple-500"></div>
-                                            <svg class="text-purple-400" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path></svg>
-                                        </div>
-                                        
-                                        <!-- Video (Red) -->
-                                        <div class="glass-icon" onclick="gen2Navigate('wallpapers')">
-                                            <div class="glass-glow bg-red-500"></div>
-                                            <svg class="text-red-400" fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path></svg>
-                                        </div>
-                                        
-                                        <!-- Lock/Settings (Orange) -->
-                                        <div class="glass-icon" onclick="openGen2App('app-settings')">
-                                            <div class="glass-glow bg-orange-500"></div>
-                                            <svg class="text-orange-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path></svg>
-                                        </div>
-                                        
-                                        <!-- Location (Red) -->
-                                        <div class="glass-icon" onclick="openGen2App('app-gps')">
-                                            <div class="glass-glow bg-red-500"></div>
-                                            <svg class="text-red-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
-                                        </div>
-                                        
-                                        <!-- App Drawer (Yellow) -->
-                                        <div class="glass-icon" onclick="gen2Navigate('home')">
-                                            <div class="glass-glow bg-yellow-500"></div>
-                                            <svg class="text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-
-                                <!-- APPS -->
-                                <!-- Phone -->
-                                <div id="app-phone" class="gen2-screen gen2-app-ui">
-                                    <div class="gen2-app-header"><span onclick="gen2Navigate('menu')" class="cursor-pointer mr-2">◀</span> Kontak</div>
-                                    <div class="gen2-app-content">
-                                        <svg class="w-8 h-8 text-green-500 mb-2" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg>
-                                        <p class="text-gray-300">Tambahkan kontak atau hubungkan ke ponsel anda.</p>
-                                    </div>
-                                </div>
-                                <!-- GPS -->
-                                <div id="app-gps" class="gen2-screen gen2-app-ui">
-                                    <div class="gen2-app-header"><span onclick="gen2Navigate('menu')" class="cursor-pointer mr-2">◀</span> Lokasi</div>
-                                    <div class="gen2-app-content">
-                                        <div class="w-8 h-8 rounded-full border-2 border-red-500 border-t-transparent animate-spin mb-2"></div>
-                                        <p class="text-brand-400 font-bold">GPS Aktif</p>
-                                        <p class="text-gray-400 text-[9px]">Mendeteksi satelit...</p>
-                                    </div>
-                                </div>
-                                <!-- Battery -->
-                                <div id="app-battery" class="gen2-screen gen2-app-ui">
-                                    <div class="gen2-app-header"><span onclick="gen2Navigate('menu')" class="cursor-pointer mr-2">◀</span> Baterai</div>
-                                    <div class="gen2-app-content px-2">
-                                        <div class="text-2xl font-bold text-green-400">98%</div>
-                                        <div class="w-full bg-gray-800 rounded-full h-2 mb-2"><div class="bg-green-500 h-2 rounded-full" style="width: 98%"></div></div>
-                                        <div class="gen2-btn text-[9px] py-1">Mode Hemat Daya <input type="checkbox"></div>
-                                        <div class="gen2-btn text-[9px] py-1">Optimasi Baterai <span>▶</span></div>
-                                    </div>
-                                </div>
-                                <!-- Music (Spotify-like Premium) -->
-                                <div id="app-music" class="gen2-screen gen2-app-ui">
-                                    <!-- Library View -->
-                                    <div id="music-library" style="display:flex; flex-direction:column; width:100%; height:100%; background: linear-gradient(180deg, #1a1a2e 0%, #0d0d0d 100%);">
-                                        <div class="gen2-app-header" style="background:#1a1a2e; border-color:#333;">
-                                            <span onclick="gen2Navigate('menu')" class="cursor-pointer mr-2">◀</span>
-                                            <svg class="w-4 h-4 text-green-400 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path></svg>
-                                            Zylo Music
-                                        </div>
-                                        <div style="flex:1; overflow-y:auto; padding:6px;" class="hide-scroll">
-                                            <!-- Track 1 -->
-                                            <div onclick="playTrack(0)" class="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-white/10 transition-colors mb-1" id="track-row-0">
-                                                <img src="assets/music/album_midnight.jpg" class="w-9 h-9 rounded-md object-cover shadow-lg">
-                                                <div class="flex-1 min-w-0">
-                                                    <div class="text-[10px] text-white font-semibold truncate">Midnight Circuit</div>
-                                                    <div class="text-[8px] text-gray-400 truncate">Zylo x ARAFAH</div>
-                                                </div>
-                                                <svg class="w-3 h-3 text-gray-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
-                                            </div>
-                                            <!-- Track 2 -->
-                                            <div onclick="playTrack(1)" class="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-white/10 transition-colors mb-1" id="track-row-1">
-                                                <img src="assets/music/album_neon.jpg" class="w-9 h-9 rounded-md object-cover shadow-lg">
-                                                <div class="flex-1 min-w-0">
-                                                    <div class="text-[10px] text-white font-semibold truncate">Neon Dreams</div>
-                                                    <div class="text-[8px] text-gray-400 truncate">Zylo x ARAFAH</div>
-                                                </div>
-                                                <svg class="w-3 h-3 text-gray-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
-                                            </div>
-                                            <!-- Track 3 -->
-                                            <div onclick="playTrack(2)" class="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-white/10 transition-colors mb-1" id="track-row-2">
-                                                <img src="assets/music/album_ocean.jpg" class="w-9 h-9 rounded-md object-cover shadow-lg">
-                                                <div class="flex-1 min-w-0">
-                                                    <div class="text-[10px] text-white font-semibold truncate">Digital Ocean</div>
-                                                    <div class="text-[8px] text-gray-400 truncate">Zylo x ARAFAH</div>
-                                                </div>
-                                                <svg class="w-3 h-3 text-gray-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
-                                            </div>
-                                        </div>
-                                        <!-- Mini Player Bar -->
-                                        <div id="mini-player" style="display:none; background:#181818; border-top:1px solid #333; padding:4px 8px;" class="flex items-center gap-2 cursor-pointer" onclick="showNowPlaying()">
-                                            <img id="mini-art" src="" class="w-7 h-7 rounded-sm object-cover">
-                                            <div class="flex-1 min-w-0">
-                                                <div id="mini-title" class="text-[9px] text-white font-semibold truncate"></div>
-                                                <div id="mini-artist" class="text-[7px] text-gray-400 truncate"></div>
-                                            </div>
-                                            <div onclick="event.stopPropagation(); togglePlay()" class="w-6 h-6 rounded-full bg-white flex items-center justify-center">
-                                                <svg id="mini-play-icon" class="w-3 h-3 text-black" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Now Playing View -->
-                                    <div id="music-nowplaying" style="display:none; flex-direction:column; width:100%; height:100%; background: linear-gradient(180deg, #1a1a2e 0%, #0d0d0d 60%);">
-                                        <div style="padding:6px 10px; display:flex; align-items:center;">
-                                            <span onclick="hideNowPlaying()" class="cursor-pointer text-gray-400 hover:text-white text-[10px]">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg>
-                                            </span>
-                                            <div class="flex-1 text-center text-[8px] text-gray-400 uppercase tracking-widest">NOW PLAYING</div>
-                                        </div>
-                                        <div class="flex-1 flex flex-col items-center justify-center px-4 gap-2">
-                                            <img id="np-art" src="" class="w-[100px] h-[100px] rounded-xl object-cover shadow-[0_8px_30px_rgba(0,0,0,0.8)]">
-                                            <div class="text-center mt-1">
-                                                <div id="np-title" class="text-[12px] text-white font-bold"></div>
-                                                <div id="np-artist" class="text-[9px] text-gray-400"></div>
-                                            </div>
-                                            <!-- Progress -->
-                                            <div class="w-full px-2">
-                                                <div class="w-full bg-gray-700 rounded-full h-[3px] relative cursor-pointer" onclick="seekTrack(event)">
-                                                    <div id="np-progress" class="bg-green-500 h-[3px] rounded-full" style="width:0%;"></div>
-                                                </div>
-                                                <div class="flex justify-between text-[7px] text-gray-500 mt-[2px]">
-                                                    <span id="np-elapsed">0:00</span>
-                                                    <span id="np-duration">0:00</span>
-                                                </div>
-                                            </div>
-                                            <!-- Controls -->
-                                            <div class="flex items-center justify-center gap-4">
-                                                <svg onclick="prevTrack()" class="w-5 h-5 text-gray-300 cursor-pointer hover:text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z"></path></svg>
-                                                <div onclick="togglePlay()" class="w-9 h-9 rounded-full bg-white flex items-center justify-center cursor-pointer hover:scale-105 transition-transform shadow-lg">
-                                                    <svg id="np-play-icon" class="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
-                                                </div>
-                                                <svg onclick="nextTrack()" class="w-5 h-5 text-gray-300 cursor-pointer hover:text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M11.555 5.168A1 1 0 0010 6v2.798L4.555 5.168A1 1 0 003 6v8a1 1 0 001.555.832L10 11.202V14a1 1 0 001.555.832l6-4a1 1 0 000-1.664l-6-4z"></path></svg>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Camera -->
-                                <div id="app-camera" class="gen2-screen gen2-app-ui">
-                                    <div class="gen2-app-header absolute top-0 w-full z-10 bg-transparent border-none"><span onclick="closeCamera()" class="cursor-pointer drop-shadow-md text-white bg-black/50 rounded-full px-2 py-1">◀ Tutup</span></div>
-                                    <div class="w-full h-full bg-black relative flex items-center justify-center overflow-hidden">
-                                        <video id="cam-video" autoplay playsinline class="absolute inset-0 w-full h-full object-cover"></video>
-                                        <div class="absolute bottom-3 w-10 h-10 rounded-full border-2 border-white flex items-center justify-center cursor-pointer" onclick="snapPhoto()">
-                                            <div class="w-8 h-8 rounded-full bg-white"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Settings -->
-                                <div id="app-settings" class="gen2-screen gen2-app-ui">
-                                    <div class="gen2-app-header"><span onclick="gen2Navigate('menu')" class="cursor-pointer mr-2">◀</span> Pengaturan</div>
-                                    <div class="gen2-app-content !justify-start !items-stretch px-2 pb-6">
-                                        <div class="gen2-btn" onclick="openGen2App('app-display')"><span class="flex items-center gap-2"><svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path></svg> Tampilan & Layar</span></div>
-                                        <div class="gen2-btn" onclick="openGen2App('app-battery')"><span class="flex items-center gap-2"><svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 8h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4a2 2 0 012-2zm14 3v2"></path></svg> Perawatan Baterai</span></div>
-                                        <div class="gen2-btn"><span class="flex items-center gap-2"><svg class="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M17.778 8.222c-4.296-4.296-11.26-4.296-15.556 0A1 1 0 01.808 6.808c5.076-5.076 13.308-5.076 18.384 0a1 1 0 01-1.414 1.414zM14.95 11.05a7 7 0 00-9.9 0 1 1 0 01-1.414-1.414 9 9 0 0112.728 0 1 1 0 01-1.414 1.414zM12.12 13.88a3 3 0 00-4.242 0 1 1 0 01-1.415-1.415 5 5 0 017.072 0 1 1 0 01-1.415 1.415zM9 16a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg> SIM & Jaringan</span></div>
-                                        <div class="gen2-btn"><span class="flex items-center gap-2"><svg class="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg> Lockscreen</span></div>
-                                        <div class="gen2-btn"><span class="flex items-center gap-2"><svg class="w-4 h-4 text-purple-400" fill="currentColor" viewBox="0 0 20 20"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg> Semua Aplikasi</span></div>
-                                    </div>
-                                </div>
-                                <!-- Settings -> Display -->
-                                <div id="app-display" class="gen2-screen gen2-app-ui">
-                                    <div class="gen2-app-header"><span onclick="openGen2App('app-settings')" class="cursor-pointer mr-2">◀</span> Tampilan</div>
-                                    <div class="gen2-app-content px-2 !justify-start !items-stretch">
-                                        <p class="text-[9px] text-gray-400 text-left mb-1">Kecerahan</p>
-                                        <input type="range" min="0" max="100" value="80" class="w-full mb-4 accent-brand-500">
-                                        <div class="gen2-btn" onclick="gen2Navigate('wallpapers')"><span class="flex items-center gap-2"><svg class="w-4 h-4 text-pink-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path></svg> Ganti Wallpaper</span></div>
-                                        <div class="gen2-btn text-gray-400"><span class="flex items-center gap-2"><svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg> Atur Waktu Nyala</span></div>
-                                    </div>
-                                </div>
-
-                                <!-- Wallpaper Selector -->
-                                <div id="gen2-wallpapers" class="gen2-screen bg-black flex-col">
-                                    <div class="absolute top-2 left-2 z-20 cursor-pointer text-white opacity-60 hover:opacity-100" onclick="gen2Navigate('menu')">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path></svg>
-                                    </div>
-                                    <div class="w-full text-center mt-3 text-white text-[10px] font-bold tracking-widest">FACES</div>
-                                    <div class="flex-1 flex overflow-x-auto hide-scroll snap-x-mandatory items-center px-[40px] gap-3 pb-4">
-                                        <div onclick="setGen2Wallpaper('assets/wp_spiderman.png')" class="snap-center shrink-0 w-[90px] h-[110px] rounded-[24px] border-[3px] border-gray-800 hover:border-brand-500 bg-cover bg-center cursor-pointer transition-all hover:scale-105 shadow-lg" style="background-image: url('assets/wp_spiderman.png')"></div>
-                                        <div onclick="setGen2Wallpaper('assets/wp_luffy.png')" class="snap-center shrink-0 w-[90px] h-[110px] rounded-[24px] border-[3px] border-gray-800 hover:border-brand-500 bg-cover bg-center cursor-pointer transition-all hover:scale-105 shadow-lg" style="background-image: url('assets/wp_luffy.png')"></div>
-                                        <div onclick="setGen2Wallpaper('assets/wp_pikachu.png')" class="snap-center shrink-0 w-[90px] h-[110px] rounded-[24px] border-[3px] border-gray-800 hover:border-brand-500 bg-cover bg-center cursor-pointer transition-all hover:scale-105 shadow-lg" style="background-image: url('assets/wp_pikachu.png')"></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- GEN 3 UI (Cellular) -->
-                            <div class="app-grid" id="ui-gen3">
-                                <div class="app-icon"><div>📞</div><span>Call</span></div>
-                                <div class="app-icon"><div>💬</div><span>W.App</span></div>
-                                <div class="app-icon"><div>🌐</div><span>Browser</span></div>
-                                <div class="app-icon"><div>📱</div><span>TikTok</span></div>
-                                <div class="app-icon"><div>📸</div><span>Insta</span></div>
-                                <div class="app-icon"><div>🛰️</div><span>GPS</span></div>
-                            </div>
-
-                            <!-- Boot Screen Overlay -->
-                            <div id="boot-text" class="hidden absolute flex-col items-center justify-center text-brand-500 oled-font w-full h-full z-20 border-[4px] border-brand-900 bg-black">
-                                <div class="flex items-center justify-center gap-2 mt-1">
-                                    <img src="assets/arafah_logo.png" alt="Arafah" class="w-8 h-8 rounded-full border border-brand-500 grayscale brightness-200 contrast-200 hue-rotate-[100deg]" onerror="this.style.display='none'">
-                                    <span class="text-[24px] font-bold leading-none block tracking-widest whitespace-nowrap">Z Y L O</span>
-                                </div>
-                                <div class="text-[10px] tracking-widest mt-2 whitespace-nowrap text-brand-500 font-bold">>_ ARAFAH_SYS</div>
-                                <div class="text-[10px] tracking-widest mt-2 text-brand-600 whitespace-nowrap" id="loading-bar">[ . . . . ]</div>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="text-xs text-brand-900 font-mono uppercase tracking-widest">> 1.3" OLED Render (1.5x Scaling)</p>
-                </div>
-
-                <!-- Bottom Section: Controls Grid -->
-                <div class="w-full bg-black p-6 border border-brand-900 shadow-inner mt-8">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="w-full">
-                            <p class="text-xs text-brand-600 font-bold uppercase tracking-widest mb-3 ml-1">> Eye_States (Gen 1 Only)</p>
-                            <div class="flex flex-wrap gap-2">
-                                <button onclick="setEyeState('normal')" class="hacker-btn px-3 py-2 text-xs uppercase">😐 Normal</button>
-                                <button onclick="setEyeState('happy')" class="hacker-btn px-3 py-2 text-xs uppercase">😊 Happy</button>
-                                <button onclick="setEyeState('love')" class="hacker-btn px-3 py-2 text-xs uppercase">😍 Love</button>
-                                <button onclick="setEyeState('surprised')" class="hacker-btn px-3 py-2 text-xs uppercase">😲 Shock</button>
-                                <button onclick="setEyeState('dizzy')" class="hacker-btn px-3 py-2 text-xs uppercase">😵 Dizzy</button>
-                                <button onclick="setEyeState('angry')" class="hacker-btn px-3 py-2 text-xs uppercase">😠 Anger</button>
-                            </div>
-                        </div>
-                        <div class="w-full">
-                            <p class="text-xs text-brand-600 font-bold uppercase tracking-widest mb-3 ml-1">> Audio_Sys_Cmd</p>
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <button onclick="simulateBoot()" class="hacker-btn px-4 py-2 text-xs uppercase font-bold">🚀 Run_Boot</button>
-                                <button onclick="playHappySound()" class="hacker-btn px-4 py-2 text-xs uppercase">✨ Chirp.Wav</button>
-                                <button onclick="playSadSound()" class="hacker-btn px-4 py-2 text-xs uppercase">💧 Sad.Wav</button>
-                                <button onclick="playAngrySound()" class="hacker-btn px-4 py-2 text-xs uppercase">💢 Buzz.Wav</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <main
+      class="relative z-10 max-w-7xl mx-auto px-6 py-12 lg:py-20 flex flex-col items-center"
+    >
+      <header class="text-center mb-12">
+        <div
+          class="inline-flex items-center justify-center px-4 py-1.5 mb-6 rounded-sm bg-black border border-brand-500 text-brand-500 text-xs font-bold tracking-[0.2em] uppercase shadow-[0_0_15px_rgba(16,185,129,0.4)]"
+        >
+          > SYSTEM.INIT("Pesantren Darularafah Raya");
         </div>
+        <h1
+          class="text-5xl lg:text-7xl font-extrabold mb-4 tracking-tighter text-white sys-text"
+        >
+          ZYLO <span class="text-brand-500">OS</span>
+        </h1>
+        <p class="text-brand-600 text-lg max-w-2xl mx-auto font-medium">
+          [SECURE_BOOT_V2: ENABLED] - Advanced Firmware Deployment Matrix
+        </p>
+      </header>
+
+      <div class="w-full grid grid-cols-1 xl:grid-cols-12 gap-8 mb-12">
+        <!-- Installer & Terminal Box -->
+        <div class="xl:col-span-4 flex flex-col gap-6">
+          <div
+            class="bento-card flex flex-col items-center text-center justify-center p-6"
+          >
+            <div
+              class="w-16 h-16 bg-black border border-brand-500 rounded-sm flex items-center justify-center mb-4 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+            >
+              <svg
+                class="w-8 h-8 text-brand-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+                ></path>
+              </svg>
+            </div>
+            <h2
+              class="text-xl font-bold text-brand-400 mb-2 uppercase tracking-widest sys-text"
+            >
+              Web Flasher
+            </h2>
+            <p class="text-xs text-brand-600 mb-6">
+              Connect ESP32-C3 via USB. Secure Boot handshake required.
+            </p>
+
+            <div class="w-full text-left mb-6">
+              <label
+                class="block text-brand-500 text-xs font-bold mb-2 uppercase tracking-widest"
+                >> Select Firmware_Gen:</label
+              >
+              <select
+                id="firmware-select"
+                class="w-full bg-black border border-brand-500 text-brand-400 text-sm font-mono p-3 rounded-sm focus:outline-none focus:ring-1 focus:ring-brand-400 shadow-[0_0_10px_rgba(16,185,129,0.1)]"
+              >
+                <option value="manifest.json">
+                  [GEN 1] Zylo 0.0.1v (Basic Core)
+                </option>
+                <option value="manifest_gen2.json">
+                  [GEN 2] Zylo 0.2.1v (Smart AI & Grok)
+                </option>
+                <option value="manifest_gen3.json">
+                  [GEN 3] Zylo 3.2.1v (Cellular / Neural Web)
+                </option>
+              </select>
+            </div>
+
+            <esp-web-install-button
+              manifest="manifest.json"
+              id="install-btn"
+              class="w-full block"
+            >
+              <button
+                slot="activate"
+                onclick="termLog('Executing Flash Command...', 'warn')"
+                class="w-full bg-brand-500 hover:bg-brand-400 text-black font-bold py-4 px-6 rounded-sm transition-all shadow-[0_0_25px_rgba(16,185,129,0.6)] flex items-center justify-center gap-3 uppercase tracking-widest cursor-pointer"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                  ></path>
+                </svg>
+                Execute Flash
+              </button>
+              <span
+                slot="unsupported"
+                class="text-red-500 text-xs mt-4 block bg-red-900/20 py-2 border border-red-500/50"
+                >ERROR: Browser Web Serial API missing.</span
+              >
+              <span
+                slot="not-allowed"
+                class="text-yellow-500 text-xs mt-4 block bg-yellow-900/20 py-2 border border-yellow-500/50"
+                >WARN: Serial Port permission denied.</span
+              >
+            </esp-web-install-button>
+
+            <button
+              onclick="generateLicense()"
+              class="w-full mt-4 hacker-btn text-xs py-2 uppercase font-bold"
+            >
+              Generate Unique License
+            </button>
+          </div>
+
+          <!-- Terminal Output -->
+          <div class="bento-card p-4">
+            <div
+              class="flex items-center justify-between border-b border-brand-900 pb-2 mb-2"
+            >
+              <span class="text-brand-500 text-xs font-bold uppercase"
+                >>_ TERMINAL_OUT</span
+              >
+              <div class="flex gap-1">
+                <div class="w-2 h-2 bg-red-500"></div>
+                <div class="w-2 h-2 bg-yellow-500"></div>
+                <div class="w-2 h-2 bg-green-500"></div>
+              </div>
+            </div>
+            <div id="terminal-box">
+              <div class="term-log">ZYLO OS Installer v1.0.0 initialized.</div>
+              <div class="term-log">Awaiting ESP32-C3 connection...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Full Simulator Dashboard -->
+        <div class="xl:col-span-8 bento-card p-8 flex flex-col">
+          <div class="flex items-center justify-between mb-12">
+            <div class="flex items-center gap-3">
+              <div class="w-3 h-3 bg-brand-500 animate-pulse"></div>
+              <h2
+                class="text-sm font-bold tracking-widest text-brand-400 uppercase sys-text"
+              >
+                Interactive Simulation Matrix
+              </h2>
+            </div>
+          </div>
+
+          <!-- Top Section: OLED Screen Centered (1.5x Scaled) -->
+          <div class="flex flex-col items-center justify-center w-full mt-4">
+            <div class="oled-wrapper">
+              <div
+                id="oled-display"
+                class="oled-screen state-normal shadow-2xl"
+              >
+                <!-- GEN 1 UI -->
+                <div class="gen1-view" id="ui-gen1">
+                  <div class="eye left"></div>
+                  <div class="eye right"></div>
+                </div>
+
+                <!-- GEN 2 UI (Smart AI - Premium Glass) -->
+                <div
+                  id="ui-gen2"
+                  class="w-full h-full relative overflow-hidden"
+                  style="
+                    display: none;
+                    background: #000;
+                    border-radius: inherit;
+                  "
+                >
+                  <!-- Home Screen -->
+                  <div
+                    id="gen2-home"
+                    class="gen2-screen active bg-cover bg-center cursor-pointer"
+                    style="
+                      background-image: url(&quot;assets/wp_spiderman.png&quot;);
+                    "
+                    onclick="gen2Navigate('menu')"
+                  >
+                    <div class="absolute inset-0 bg-black/30"></div>
+                    <div
+                      class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10 pt-4"
+                    >
+                      <div
+                        id="gen2-time"
+                        class="text-[52px] text-white font-bold drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)] leading-none tracking-tighter"
+                        style="
+                          font-family:
+                            -apple-system, BlinkMacSystemFont,
+                            &quot;Segoe UI&quot;, Roboto, Helvetica, Arial,
+                            sans-serif;
+                        "
+                      >
+                        12:30
+                      </div>
+                    </div>
+                    <div
+                      class="absolute top-4 left-4 w-6 h-6 rounded-full border-[3px] border-red-500 border-t-transparent shadow-lg transform rotate-45"
+                    ></div>
+                    <div
+                      class="absolute top-5 left-5 w-4 h-4 rounded-full border-[3px] border-green-500 border-l-transparent shadow-lg transform -rotate-12"
+                    ></div>
+                  </div>
+
+                  <!-- App Menu (Glassmorphism Grid) -->
+                  <div id="gen2-menu" class="gen2-screen flex-col bg-gray-900">
+                    <div
+                      class="absolute inset-0 bg-gradient-to-b from-gray-800 to-black pointer-events-none"
+                    ></div>
+                    <div
+                      class="w-full h-full glass-grid relative z-10 pt-[10px]"
+                    >
+                      <!-- Phone (Green) -->
+                      <div
+                        class="glass-icon"
+                        onclick="openGen2App('app-phone')"
+                      >
+                        <div class="glass-glow bg-green-500"></div>
+                        <svg
+                          class="text-green-400"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"
+                          ></path>
+                        </svg>
+                      </div>
+
+                      <!-- Battery (Gray) -->
+                      <div
+                        class="glass-icon"
+                        onclick="openGen2App('app-battery')"
+                      >
+                        <div class="glass-glow bg-gray-400"></div>
+                        <svg
+                          class="text-gray-300"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M4 8h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4a2 2 0 012-2zm14 3v2m2-2h1a1 1 0 011 1v0a1 1 0 01-1 1h-1"
+                          ></path>
+                        </svg>
+                      </div>
+
+                      <!-- Camera (Blue) -->
+                      <div
+                        class="glass-icon"
+                        onclick="openGen2App('app-camera')"
+                      >
+                        <div class="glass-glow bg-blue-500"></div>
+                        <svg
+                          class="text-blue-400"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z"
+                            clip-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </div>
+
+                      <!-- Heart (Pink) -->
+                      <div
+                        class="glass-icon"
+                        onclick="termLog('Opening Health...')"
+                      >
+                        <div class="glass-glow bg-pink-500"></div>
+                        <svg
+                          class="text-pink-400"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                            clip-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </div>
+
+                      <!-- Music (Purple) -->
+                      <div
+                        class="glass-icon"
+                        onclick="openGen2App('app-music')"
+                      >
+                        <div class="glass-glow bg-purple-500"></div>
+                        <svg
+                          class="text-purple-400"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"
+                          ></path>
+                        </svg>
+                      </div>
+
+                      <!-- Video (Red) -->
+                      <div
+                        class="glass-icon"
+                        onclick="gen2Navigate('wallpapers')"
+                      >
+                        <div class="glass-glow bg-red-500"></div>
+                        <svg
+                          class="text-red-400"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"
+                          ></path>
+                        </svg>
+                      </div>
+
+                      <!-- Lock/Settings (Orange) -->
+                      <div
+                        class="glass-icon"
+                        onclick="openGen2App('app-settings')"
+                      >
+                        <div class="glass-glow bg-orange-500"></div>
+                        <svg
+                          class="text-orange-400"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                            clip-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </div>
+
+                      <!-- Location (Red) -->
+                      <div class="glass-icon" onclick="openGen2App('app-gps')">
+                        <div class="glass-glow bg-red-500"></div>
+                        <svg
+                          class="text-red-400"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                            clip-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </div>
+
+                      <!-- App Drawer (Yellow) -->
+                      <div class="glass-icon" onclick="gen2Navigate('home')">
+                        <div class="glass-glow bg-yellow-500"></div>
+                        <svg
+                          class="text-yellow-400"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                          ></path>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- APPS -->
+                  <!-- Phone -->
+                  <div id="app-phone" class="gen2-screen gen2-app-ui">
+                    <div class="gen2-app-header">
+                      <span
+                        onclick="gen2Navigate('menu')"
+                        class="cursor-pointer mr-2"
+                        >◀</span
+                      >
+                      Kontak
+                    </div>
+                    <div class="gen2-app-content">
+                      <svg
+                        class="w-8 h-8 text-green-500 mb-2"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"
+                        ></path>
+                      </svg>
+                      <p class="text-gray-300">
+                        Tambahkan kontak atau hubungkan ke ponsel anda.
+                      </p>
+                    </div>
+                  </div>
+                  <!-- GPS -->
+                  <div id="app-gps" class="gen2-screen gen2-app-ui">
+                    <div class="gen2-app-header">
+                      <span
+                        onclick="gen2Navigate('menu')"
+                        class="cursor-pointer mr-2"
+                        >◀</span
+                      >
+                      Lokasi
+                    </div>
+                    <div class="gen2-app-content">
+                      <div
+                        class="w-8 h-8 rounded-full border-2 border-red-500 border-t-transparent animate-spin mb-2"
+                      ></div>
+                      <p class="text-brand-400 font-bold">GPS Aktif</p>
+                      <p class="text-gray-400 text-[9px]">
+                        Mendeteksi satelit...
+                      </p>
+                    </div>
+                  </div>
+                  <!-- Battery -->
+                  <div id="app-battery" class="gen2-screen gen2-app-ui">
+                    <div class="gen2-app-header">
+                      <span
+                        onclick="gen2Navigate('menu')"
+                        class="cursor-pointer mr-2"
+                        >◀</span
+                      >
+                      Baterai
+                    </div>
+                    <div class="gen2-app-content px-2">
+                      <div class="text-2xl font-bold text-green-400">98%</div>
+                      <div class="w-full bg-gray-800 rounded-full h-2 mb-2">
+                        <div
+                          class="bg-green-500 h-2 rounded-full"
+                          style="width: 98%"
+                        ></div>
+                      </div>
+                      <div class="gen2-btn text-[9px] py-1">
+                        Mode Hemat Daya <input type="checkbox" />
+                      </div>
+                      <div class="gen2-btn text-[9px] py-1">
+                        Optimasi Baterai <span>▶</span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Music (Spotify-like Premium) -->
+                  <div id="app-music" class="gen2-screen gen2-app-ui">
+                    <!-- Library View -->
+                    <div
+                      id="music-library"
+                      style="
+                        display: flex;
+                        flex-direction: column;
+                        width: 100%;
+                        height: 100%;
+                        background: linear-gradient(
+                          180deg,
+                          #1a1a2e 0%,
+                          #0d0d0d 100%
+                        );
+                      "
+                    >
+                      <div
+                        class="gen2-app-header"
+                        style="background: #1a1a2e; border-color: #333"
+                      >
+                        <span
+                          onclick="gen2Navigate('menu')"
+                          class="cursor-pointer mr-2"
+                          >◀</span
+                        >
+                        <svg
+                          class="w-4 h-4 text-green-400 mr-1"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"
+                          ></path>
+                        </svg>
+                        Zylo Music
+                      </div>
+                      <div
+                        style="flex: 1; overflow-y: auto; padding: 6px"
+                        class="hide-scroll"
+                      >
+                        <!-- Track 0 -->
+                        <div
+                          onclick="playTrack(0)"
+                          class="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-white/10 transition-colors mb-1"
+                          id="track-row-0"
+                        >
+                          <img
+                            src="assets/music/olivia_rodrigo.jpg"
+                            class="w-9 h-9 rounded-md object-cover shadow-lg"
+                          />
+                          <div class="flex-1 min-w-0">
+                            <div class="text-[10px] text-white font-semibold truncate">
+                              happier
+                            </div>
+                            <div class="text-[8px] text-gray-400 truncate">
+                              Olivia Rodrigo
+                            </div>
+                          </div>
+                          <svg class="w-3 h-3 text-gray-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+                        </div>
+                        <!-- Track 1 -->
+                        <div
+                          onclick="playTrack(1)"
+                          class="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-white/10 transition-colors mb-1"
+                          id="track-row-1"
+                        >
+                          <img
+                            src="assets/music/olivia_rodrigo.jpg"
+                            class="w-9 h-9 rounded-md object-cover shadow-lg"
+                          />
+                          <div class="flex-1 min-w-0">
+                            <div class="text-[10px] text-white font-semibold truncate">
+                              traitor
+                            </div>
+                            <div class="text-[8px] text-gray-400 truncate">
+                              Olivia Rodrigo
+                            </div>
+                          </div>
+                          <svg class="w-3 h-3 text-gray-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+                        </div>
+                        <!-- Track 2 -->
+                        <div
+                          onclick="playTrack(2)"
+                          class="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-white/10 transition-colors mb-1"
+                          id="track-row-2"
+                        >
+                          <img
+                            src="assets/music/bruno_mars.jpg"
+                            class="w-9 h-9 rounded-md object-cover shadow-lg"
+                          />
+                          <div class="flex-1 min-w-0">
+                            <div class="text-[10px] text-white font-semibold truncate">
+                              When I Was Your Man
+                            </div>
+                            <div class="text-[8px] text-gray-400 truncate">
+                              Bruno Mars
+                            </div>
+                          </div>
+                          <svg class="w-3 h-3 text-gray-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+                        </div>
+                        <!-- Track 3 -->
+                        <div
+                          onclick="playTrack(3)"
+                          class="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-white/10 transition-colors mb-1"
+                          id="track-row-3"
+                        >
+                          <img
+                            src="assets/music/justin_bieber.jpg"
+                            class="w-9 h-9 rounded-md object-cover shadow-lg"
+                          />
+                          <div class="flex-1 min-w-0">
+                            <div class="text-[10px] text-white font-semibold truncate">
+                              That Should Be Me
+                            </div>
+                            <div class="text-[8px] text-gray-400 truncate">
+                              Justin Bieber
+                            </div>
+                          </div>
+                          <svg class="w-3 h-3 text-gray-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+                        </div>
+                      </div>
+                      <!-- Mini Player Bar -->
+                      <div
+                        id="mini-player"
+                        style="
+                          display: none;
+                          background: #181818;
+                          border-top: 1px solid #333;
+                          padding: 4px 8px;
+                        "
+                        class="flex items-center gap-2 cursor-pointer"
+                        onclick="showNowPlaying()"
+                      >
+                        <img
+                          id="mini-art"
+                          src=""
+                          class="w-7 h-7 rounded-sm object-cover"
+                        />
+                        <div class="flex-1 min-w-0">
+                          <div
+                            id="mini-title"
+                            class="text-[9px] text-white font-semibold truncate"
+                          ></div>
+                          <div
+                            id="mini-artist"
+                            class="text-[7px] text-gray-400 truncate"
+                          ></div>
+                        </div>
+                        <div
+                          onclick="
+                            event.stopPropagation();
+                            togglePlay();
+                          "
+                          class="w-6 h-6 rounded-full bg-white flex items-center justify-center"
+                        >
+                          <svg
+                            id="mini-play-icon"
+                            class="w-3 h-3 text-black"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                              clip-rule="evenodd"
+                            ></path>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Now Playing View -->
+                    <div
+                      id="music-nowplaying"
+                      style="
+                        display: none;
+                        flex-direction: column;
+                        width: 100%;
+                        height: 100%;
+                        background: linear-gradient(
+                          180deg,
+                          #1a1a2e 0%,
+                          #0d0d0d 60%
+                        );
+                      "
+                    >
+                      <div
+                        style="
+                          padding: 6px 10px;
+                          display: flex;
+                          align-items: center;
+                        "
+                      >
+                        <span
+                          onclick="hideNowPlaying()"
+                          class="cursor-pointer text-gray-400 hover:text-white text-[10px]"
+                        >
+                          <svg
+                            class="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M19 9l-7 7-7-7"></path>
+                          </svg>
+                        </span>
+                        <div
+                          class="flex-1 text-center text-[8px] text-gray-400 uppercase tracking-widest"
+                        >
+                          NOW PLAYING
+                        </div>
+                      </div>
+                      <div
+                        class="flex-1 flex flex-col items-center justify-start pt-1 px-4 gap-1"
+                      >
+                        <img
+                          id="np-art"
+                          src=""
+                          class="w-[75px] h-[75px] rounded-xl object-cover shadow-[0_8px_30px_rgba(0,0,0,0.8)]"
+                        />
+                        <div class="text-center mt-1 w-full px-2">
+                          <div
+                            id="np-title"
+                            class="text-[12px] text-white font-bold truncate"
+                          ></div>
+                          <div
+                            id="np-artist"
+                            class="text-[9px] text-gray-400 truncate"
+                          ></div>
+                        </div>
+                        <!-- Progress -->
+                        <div class="w-full px-2 mt-1">
+                          <div
+                            class="w-full bg-gray-700 rounded-full h-[3px] relative cursor-pointer"
+                            onclick="seekTrack(event)"
+                          >
+                            <div
+                              id="np-progress"
+                              class="bg-green-500 h-[3px] rounded-full"
+                              style="width: 0%"
+                            ></div>
+                          </div>
+                          <div
+                            class="flex justify-between text-[7px] text-gray-500 mt-[2px]"
+                          >
+                            <span id="np-elapsed">0:00</span>
+                            <span id="np-duration">0:00</span>
+                          </div>
+                        </div>
+                        <!-- Controls -->
+                        <div class="flex items-center justify-center gap-4 mt-1">
+                          <svg
+                            onclick="prevTrack()"
+                            class="w-5 h-5 text-gray-300 cursor-pointer hover:text-white"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z"
+                            ></path>
+                          </svg>
+                          <div
+                            onclick="togglePlay()"
+                            class="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer hover:scale-105 transition-transform shadow-lg"
+                          >
+                            <svg
+                              id="np-play-icon"
+                              class="w-4 h-4 text-black"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                clip-rule="evenodd"
+                              ></path>
+                            </svg>
+                          </div>
+                          <svg
+                            onclick="nextTrack()"
+                            class="w-5 h-5 text-gray-300 cursor-pointer hover:text-white"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              d="M11.555 5.168A1 1 0 0010 6v2.798L4.555 5.168A1 1 0 003 6v8a1 1 0 001.555.832L10 11.202V14a1 1 0 001.555.832l6-4a1 1 0 000-1.664l-6-4z"
+                            ></path>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Camera -->
+                  <div id="app-camera" class="gen2-screen gen2-app-ui">
+                    <div
+                      class="gen2-app-header absolute top-0 w-full z-10 bg-transparent border-none"
+                    >
+                      <span
+                        onclick="closeCamera()"
+                        class="cursor-pointer drop-shadow-md text-white bg-black/50 rounded-full px-2 py-1"
+                        >◀ Tutup</span
+                      >
+                    </div>
+                    <div
+                      class="w-full h-full bg-black relative flex items-center justify-center overflow-hidden"
+                    >
+                      <video
+                        id="cam-video"
+                        autoplay
+                        playsinline
+                        class="absolute inset-0 w-full h-full object-cover"
+                      ></video>
+                      <div
+                        class="absolute bottom-3 w-10 h-10 rounded-full border-2 border-white flex items-center justify-center cursor-pointer"
+                        onclick="snapPhoto()"
+                      >
+                        <div class="w-8 h-8 rounded-full bg-white"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Settings -->
+                  <div id="app-settings" class="gen2-screen gen2-app-ui">
+                    <div class="gen2-app-header">
+                      <span
+                        onclick="gen2Navigate('menu')"
+                        class="cursor-pointer mr-2"
+                        >◀</span
+                      >
+                      Pengaturan
+                    </div>
+                    <div
+                      class="gen2-app-content !justify-start !items-stretch px-2 pb-6"
+                    >
+                      <div
+                        class="gen2-btn"
+                        onclick="openGen2App('app-display')"
+                      >
+                        <span class="flex items-center gap-2"
+                          ><svg
+                            class="w-4 h-4 text-yellow-400"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                              clip-rule="evenodd"
+                            ></path>
+                          </svg>
+                          Tampilan & Layar</span
+                        >
+                      </div>
+                      <div
+                        class="gen2-btn"
+                        onclick="openGen2App('app-battery')"
+                      >
+                        <span class="flex items-center gap-2"
+                          ><svg
+                            class="w-4 h-4 text-green-400"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M4 8h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4a2 2 0 012-2zm14 3v2"
+                            ></path>
+                          </svg>
+                          Perawatan Baterai</span
+                        >
+                      </div>
+                      <div class="gen2-btn">
+                        <span class="flex items-center gap-2"
+                          ><svg
+                            class="w-4 h-4 text-blue-400"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M17.778 8.222c-4.296-4.296-11.26-4.296-15.556 0A1 1 0 01.808 6.808c5.076-5.076 13.308-5.076 18.384 0a1 1 0 01-1.414 1.414zM14.95 11.05a7 7 0 00-9.9 0 1 1 0 01-1.414-1.414 9 9 0 0112.728 0 1 1 0 01-1.414 1.414zM12.12 13.88a3 3 0 00-4.242 0 1 1 0 01-1.415-1.415 5 5 0 017.072 0 1 1 0 01-1.415 1.415zM9 16a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z"
+                              clip-rule="evenodd"
+                            ></path>
+                          </svg>
+                          SIM & Jaringan</span
+                        >
+                      </div>
+                      <div class="gen2-btn">
+                        <span class="flex items-center gap-2"
+                          ><svg
+                            class="w-4 h-4 text-red-400"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                              clip-rule="evenodd"
+                            ></path>
+                          </svg>
+                          Lockscreen</span
+                        >
+                      </div>
+                      <div class="gen2-btn">
+                        <span class="flex items-center gap-2"
+                          ><svg
+                            class="w-4 h-4 text-purple-400"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                            ></path>
+                          </svg>
+                          Semua Aplikasi</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Settings -> Display -->
+                  <div id="app-display" class="gen2-screen gen2-app-ui">
+                    <div class="gen2-app-header">
+                      <span
+                        onclick="openGen2App('app-settings')"
+                        class="cursor-pointer mr-2"
+                        >◀</span
+                      >
+                      Tampilan
+                    </div>
+                    <div
+                      class="gen2-app-content px-2 !justify-start !items-stretch"
+                    >
+                      <p class="text-[9px] text-gray-400 text-left mb-1">
+                        Kecerahan
+                      </p>
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value="80"
+                        class="w-full mb-4 accent-brand-500"
+                      />
+                      <div
+                        class="gen2-btn"
+                        onclick="gen2Navigate('wallpapers')"
+                      >
+                        <span class="flex items-center gap-2"
+                          ><svg
+                            class="w-4 h-4 text-pink-400"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                              clip-rule="evenodd"
+                            ></path>
+                          </svg>
+                          Ganti Wallpaper</span
+                        >
+                      </div>
+                      <div class="gen2-btn text-gray-400">
+                        <span class="flex items-center gap-2"
+                          ><svg
+                            class="w-4 h-4 text-gray-500"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                              clip-rule="evenodd"
+                            ></path>
+                          </svg>
+                          Atur Waktu Nyala</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Wallpaper Selector -->
+                  <div
+                    id="gen2-wallpapers"
+                    class="gen2-screen bg-black flex-col"
+                  >
+                    <div
+                      class="absolute top-2 left-2 z-20 cursor-pointer text-white opacity-60 hover:opacity-100"
+                      onclick="gen2Navigate('menu')"
+                    >
+                      <svg
+                        class="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="3"
+                          d="M15 19l-7-7 7-7"
+                        ></path>
+                      </svg>
+                    </div>
+                    <div
+                      class="w-full text-center mt-3 text-white text-[10px] font-bold tracking-widest"
+                    >
+                      FACES
+                    </div>
+                    <div
+                      class="flex-1 flex overflow-x-auto hide-scroll snap-x-mandatory items-center px-[40px] gap-3 pb-4"
+                    >
+                      <div
+                        onclick="setGen2Wallpaper('assets/wp_spiderman.png')"
+                        class="snap-center shrink-0 w-[90px] h-[110px] rounded-[24px] border-[3px] border-gray-800 hover:border-brand-500 bg-cover bg-center cursor-pointer transition-all hover:scale-105 shadow-lg"
+                        style="
+                          background-image: url(&quot;assets/wp_spiderman.png&quot;);
+                        "
+                      ></div>
+                      <div
+                        onclick="setGen2Wallpaper('assets/wp_luffy.png')"
+                        class="snap-center shrink-0 w-[90px] h-[110px] rounded-[24px] border-[3px] border-gray-800 hover:border-brand-500 bg-cover bg-center cursor-pointer transition-all hover:scale-105 shadow-lg"
+                        style="
+                          background-image: url(&quot;assets/wp_luffy.png&quot;);
+                        "
+                      ></div>
+                      <div
+                        onclick="setGen2Wallpaper('assets/wp_pikachu.png')"
+                        class="snap-center shrink-0 w-[90px] h-[110px] rounded-[24px] border-[3px] border-gray-800 hover:border-brand-500 bg-cover bg-center cursor-pointer transition-all hover:scale-105 shadow-lg"
+                        style="
+                          background-image: url(&quot;assets/wp_pikachu.png&quot;);
+                        "
+                      ></div>
+                      <div
+                        onclick="setGen2Wallpaper('assets/wp_new1.jpg')"
+                        class="snap-center shrink-0 w-[90px] h-[110px] rounded-[24px] border-[3px] border-gray-800 hover:border-brand-500 bg-cover bg-center cursor-pointer transition-all hover:scale-105 shadow-lg"
+                        style="
+                          background-image: url(&quot;assets/wp_new1.jpg&quot;);
+                        "
+                      ></div>
+                      <div
+                        onclick="setGen2Wallpaper('assets/wp_new2.jpg')"
+                        class="snap-center shrink-0 w-[90px] h-[110px] rounded-[24px] border-[3px] border-gray-800 hover:border-brand-500 bg-cover bg-center cursor-pointer transition-all hover:scale-105 shadow-lg"
+                        style="
+                          background-image: url(&quot;assets/wp_new2.jpg&quot;);
+                        "
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- GEN 3 UI (Cellular) -->
+                <div class="app-grid" id="ui-gen3">
+                  <div class="app-icon">
+                    <div>📞</div>
+                    <span>Call</span>
+                  </div>
+                  <div class="app-icon">
+                    <div>💬</div>
+                    <span>W.App</span>
+                  </div>
+                  <div class="app-icon">
+                    <div>🌐</div>
+                    <span>Browser</span>
+                  </div>
+                  <div class="app-icon">
+                    <div>📱</div>
+                    <span>TikTok</span>
+                  </div>
+                  <div class="app-icon">
+                    <div>📸</div>
+                    <span>Insta</span>
+                  </div>
+                  <div class="app-icon">
+                    <div>🛰️</div>
+                    <span>GPS</span>
+                  </div>
+                </div>
+
+                <!-- Boot Screen Overlay -->
+                <div
+                  id="boot-text"
+                  class="hidden absolute flex-col items-center justify-center text-brand-500 oled-font w-full h-full z-20 border-[4px] border-brand-900 bg-black"
+                >
+                  <div class="flex items-center justify-center gap-2 mt-1">
+                    <img
+                      src="assets/arafah_logo.png"
+                      alt="Arafah"
+                      class="w-8 h-8 rounded-full border border-brand-500 grayscale brightness-200 contrast-200 hue-rotate-[100deg]"
+                      onerror="this.style.display = 'none'"
+                    />
+                    <span
+                      class="text-[24px] font-bold leading-none block tracking-widest whitespace-nowrap"
+                      >Z Y L O</span
+                    >
+                  </div>
+                  <div
+                    class="text-[10px] tracking-widest mt-2 whitespace-nowrap text-brand-500 font-bold"
+                  >
+                    >_ ARAFAH_SYS
+                  </div>
+                  <div
+                    class="text-[10px] tracking-widest mt-2 text-brand-600 whitespace-nowrap"
+                    id="loading-bar"
+                  >
+                    [ . . . . ]
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p
+              class="text-xs text-brand-900 font-mono uppercase tracking-widest"
+            >
+              > 1.3" OLED Render (1.5x Scaling)
+            </p>
+          </div>
+
+          <!-- Bottom Section: Controls Grid -->
+          <div
+            class="w-full bg-black p-6 border border-brand-900 shadow-inner mt-8"
+          >
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div class="w-full">
+                <p
+                  class="text-xs text-brand-600 font-bold uppercase tracking-widest mb-3 ml-1"
+                >
+                  > Eye_States (Gen 1 Only)
+                </p>
+                <div class="flex flex-wrap gap-2">
+                  <button
+                    onclick="setEyeState('normal')"
+                    class="hacker-btn px-3 py-2 text-xs uppercase"
+                  >
+                    😐 Normal
+                  </button>
+                  <button
+                    onclick="setEyeState('happy')"
+                    class="hacker-btn px-3 py-2 text-xs uppercase"
+                  >
+                    😊 Happy
+                  </button>
+                  <button
+                    onclick="setEyeState('love')"
+                    class="hacker-btn px-3 py-2 text-xs uppercase"
+                  >
+                    😍 Love
+                  </button>
+                  <button
+                    onclick="setEyeState('surprised')"
+                    class="hacker-btn px-3 py-2 text-xs uppercase"
+                  >
+                    😲 Shock
+                  </button>
+                  <button
+                    onclick="setEyeState('dizzy')"
+                    class="hacker-btn px-3 py-2 text-xs uppercase"
+                  >
+                    😵 Dizzy
+                  </button>
+                  <button
+                    onclick="setEyeState('angry')"
+                    class="hacker-btn px-3 py-2 text-xs uppercase"
+                  >
+                    😠 Anger
+                  </button>
+                </div>
+              </div>
+              <div class="w-full">
+                <p
+                  class="text-xs text-brand-600 font-bold uppercase tracking-widest mb-3 ml-1"
+                >
+                  > Audio_Sys_Cmd
+                </p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                  <button
+                    onclick="simulateBoot()"
+                    class="hacker-btn px-4 py-2 text-xs uppercase font-bold"
+                  >
+                    🚀 Run_Boot
+                  </button>
+                  <button
+                    onclick="playHappySound()"
+                    class="hacker-btn px-4 py-2 text-xs uppercase"
+                  >
+                    ✨ Chirp.Wav
+                  </button>
+                  <button
+                    onclick="playSadSound()"
+                    class="hacker-btn px-4 py-2 text-xs uppercase"
+                  >
+                    💧 Sad.Wav
+                  </button>
+                  <button
+                    onclick="playAngrySound()"
+                    class="hacker-btn px-4 py-2 text-xs uppercase"
+                  >
+                    💢 Buzz.Wav
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
 
     <script>
-        // Terminal Logging
-        function termLog(msg, type='info') {
-            const term = document.getElementById('terminal-box');
-            const div = document.createElement('div');
-            const time = new Date().toLocaleTimeString('en-US', { hour12: false });
-            div.className = type === 'error' ? 'term-err' : (type === 'warn' ? 'term-warn' : 'term-log');
-            div.innerText = `[${time}] ${msg}`;
-            term.appendChild(div);
-            term.scrollTop = term.scrollHeight;
-        }
+      // Terminal Logging
+      function termLog(msg, type = "info") {
+        const term = document.getElementById("terminal-box");
+        const div = document.createElement("div");
+        const time = new Date().toLocaleTimeString("en-US", { hour12: false });
+        div.className =
+          type === "error"
+            ? "term-err"
+            : type === "warn"
+              ? "term-warn"
+              : "term-log";
+        div.innerText = `[${time}] ${msg}`;
+        term.appendChild(div);
+        term.scrollTop = term.scrollHeight;
+      }
 
-        // License Generator
-        function generateLicense() {
-            const hex = [...Array(32)].map(() => Math.floor(Math.random() * 16).toString(16)).join('').toUpperCase();
-            termLog(`Generating unique port signature...`);
-            termLog(`EFUSE_KEY: ${hex}`, 'warn');
-            termLog(`Locking firmware to current domain... SECURE_BOOT ready.`, 'info');
-            alert(`Lisensi Dihasilkan!\nKunci Hardware: ${hex}\nChip ZYLO akan dikunci secara permanen ke port/server ini.`);
-        }
+      // License Generator
+      function generateLicense() {
+        const hex = [...Array(32)]
+          .map(() => Math.floor(Math.random() * 16).toString(16))
+          .join("")
+          .toUpperCase();
+        termLog(`Generating unique port signature...`);
+        termLog(`EFUSE_KEY: ${hex}`, "warn");
+        termLog(
+          `Locking firmware to current domain... SECURE_BOOT ready.`,
+          "info",
+        );
+        alert(
+          `Lisensi Dihasilkan!\nKunci Hardware: ${hex}\nChip ZYLO akan dikunci secara permanen ke port/server ini.`,
+        );
+      }
 
-        // Firmware Selector Logic
-        document.getElementById('firmware-select').addEventListener('change', (e) => {
-            const val = e.target.value;
-            const installBtn = document.getElementById('install-btn');
-            installBtn.setAttribute('manifest', val);
-            termLog(`Firmware target updated to: ${val}`);
-            
-            // UI Switch
-            document.getElementById('ui-gen1').style.display = 'none';
-            document.getElementById('ui-gen2').style.display = 'none';
-            document.getElementById('ui-gen3').style.display = 'none';
-            
-            const oledDisplay = document.getElementById('oled-display');
-            oledDisplay.classList.remove('shape-watch');
+      // Firmware Selector Logic
+      document
+        .getElementById("firmware-select")
+        .addEventListener("change", (e) => {
+          const val = e.target.value;
+          const installBtn = document.getElementById("install-btn");
+          installBtn.setAttribute("manifest", val);
+          termLog(`Firmware target updated to: ${val}`);
 
-            if(val === 'manifest.json') {
-                document.getElementById('ui-gen1').style.display = 'flex';
-                termLog(`Loaded UI: Classic Core`);
-            } else if (val === 'manifest_gen2.json') {
-                document.getElementById('ui-gen2').style.display = 'block';
-                oledDisplay.classList.add('shape-watch');
-                termLog(`Loaded UI: Smart AI Matrix`);
-            } else if (val === 'manifest_gen3.json') {
-                document.getElementById('ui-gen3').style.display = 'grid';
-                oledDisplay.classList.add('shape-watch');
-                termLog(`Loaded UI: Cellular Neural Web`);
-            }
+          // UI Switch
+          document.getElementById("ui-gen1").style.display = "none";
+          document.getElementById("ui-gen2").style.display = "none";
+          document.getElementById("ui-gen3").style.display = "none";
+
+          const oledDisplay = document.getElementById("oled-display");
+          oledDisplay.classList.remove("shape-watch");
+
+          if (val === "manifest.json") {
+            document.getElementById("ui-gen1").style.display = "flex";
+            termLog(`Loaded UI: Classic Core`);
+          } else if (val === "manifest_gen2.json") {
+            document.getElementById("ui-gen2").style.display = "block";
+            oledDisplay.classList.add("shape-watch");
+            termLog(`Loaded UI: Smart AI Matrix`);
+          } else if (val === "manifest_gen3.json") {
+            document.getElementById("ui-gen3").style.display = "grid";
+            oledDisplay.classList.add("shape-watch");
+            termLog(`Loaded UI: Cellular Neural Web`);
+          }
         });
 
-        // Event listener for Web Serial Button to capture clicks natively
-        const espButton = document.querySelector('esp-web-install-button');
-        espButton.addEventListener('click', () => {
-            termLog('Init USB Serial connection...', 'info');
-            termLog('Checking port permissions...', 'warn');
+      // Event listener for Web Serial Button to capture clicks natively
+      const espButton = document.querySelector("esp-web-install-button");
+      espButton.addEventListener("click", () => {
+        termLog("Init USB Serial connection...", "info");
+        termLog("Checking port permissions...", "warn");
+      });
+
+      // --- Core UI & Audio ---
+      const display = document.getElementById("oled-display");
+      const bootText = document.getElementById("boot-text");
+      let stateTimeout;
+
+      function setEyeState(state) {
+        clearTimeout(stateTimeout);
+        if (bootText.style.display === "flex") return;
+        const view = document.getElementById("ui-gen1");
+        view.className = "gen1-view state-" + state;
+        termLog(`Eye_State changed: ${state}`);
+        if (state !== "normal") {
+          stateTimeout = setTimeout(() => {
+            view.className = "gen1-view state-normal";
+          }, 3000);
+        }
+      }
+
+      async function simulateBoot() {
+        termLog(`Executing Boot Sequence...`);
+        clearTimeout(stateTimeout);
+        bootText.classList.remove("boot-anim");
+        void bootText.offsetWidth;
+        bootText.classList.add("boot-anim");
+        bootText.style.display = "flex";
+
+        const loadingBar = document.getElementById("loading-bar");
+        loadingBar.innerText = "[ . . . . ]";
+
+        setTimeout(() => {
+          loadingBar.innerText = "[ O . . . ]";
+        }, 100);
+        setTimeout(() => {
+          loadingBar.innerText = "[ O O . . ]";
+        }, 300);
+        setTimeout(() => {
+          loadingBar.innerText = "[ O O O . ]";
+        }, 500);
+        setTimeout(() => {
+          loadingBar.innerText = "[ O O O O ]";
+          termLog("Boot successful.");
+        }, 700);
+
+        stateTimeout = setTimeout(() => {
+          bootText.style.display = "none";
+          bootText.classList.remove("boot-anim");
+        }, 1800);
+      }
+
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      const audioCtx = new AudioContext();
+      function playTone(freq, dur, type = "square") {
+        if (audioCtx.state === "suspended") audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(
+          0.001,
+          audioCtx.currentTime + dur / 1000,
+        );
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + dur / 1000);
+      }
+      function playChatter(baseFreq, durationMs, count) {
+        if (audioCtx.state === "suspended") audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = "square";
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        let now = audioCtx.currentTime;
+        let step = durationMs / 1000 / count;
+        osc.start(now);
+        for (let i = 0; i < count; i++) {
+          osc.frequency.setValueAtTime(
+            baseFreq + (Math.random() * 600 - 300),
+            now + i * step,
+          );
+          gain.gain.setValueAtTime(0.05, now + i * step);
+          gain.gain.setValueAtTime(0.001, now + i * step + step - 0.01);
+        }
+        osc.stop(now + durationMs / 1000);
+      }
+      function playHappySound() {
+        setEyeState("happy");
+        playChatter(2200, 400, 5);
+        termLog("Played: Happy.wav");
+      }
+      function playSadSound() {
+        setEyeState("sad");
+        playTone(800, 200, "triangle");
+        setTimeout(() => playTone(600, 300, "triangle"), 220);
+        termLog("Played: Sad.wav");
+      }
+      function playAngrySound() {
+        setEyeState("angry");
+        playChatter(400, 500, 8);
+        termLog("Played: Buzz.wav");
+      }
+
+      document.body.addEventListener(
+        "click",
+        () => {
+          if (audioCtx.state === "suspended") audioCtx.resume();
+        },
+        { once: true },
+      );
+
+      // Gen 2 OS Simulator Logic (INSTANT - Zero Delay)
+      function gen2Navigate(screen) {
+        // Hide ALL screens including app screens
+        document.querySelectorAll("#ui-gen2 .gen2-screen").forEach((el) => {
+          el.classList.remove("active");
         });
-
-        // --- Core UI & Audio ---
-        const display = document.getElementById('oled-display');
-        const bootText = document.getElementById('boot-text');
-        let stateTimeout;
-
-        function setEyeState(state) {
-            clearTimeout(stateTimeout);
-            if (bootText.style.display === 'flex') return;
-            const view = document.getElementById('ui-gen1');
-            view.className = 'gen1-view state-' + state;
-            termLog(`Eye_State changed: ${state}`);
-            if (state !== 'normal') {
-                stateTimeout = setTimeout(() => { view.className = 'gen1-view state-normal'; }, 3000);
-            }
+        // Stop camera if leaving
+        if (localStream) {
+          localStream.getTracks().forEach((t) => t.stop());
+          localStream = null;
         }
+        // Show target
+        const id =
+          screen === "home"
+            ? "gen2-home"
+            : screen === "menu"
+              ? "gen2-menu"
+              : "gen2-wallpapers";
+        document.getElementById(id).classList.add("active");
+        termLog(`Gen 2 UI Navigated to: ${screen.toUpperCase()}`);
+      }
 
-        async function simulateBoot() {
-            termLog(`Executing Boot Sequence...`);
-            clearTimeout(stateTimeout);
-            bootText.classList.remove('boot-anim'); 
-            void bootText.offsetWidth; 
-            bootText.classList.add('boot-anim');
-            bootText.style.display = 'flex';
-            
-            const loadingBar = document.getElementById('loading-bar');
-            loadingBar.innerText = '[ . . . . ]';
-            
-            setTimeout(() => { loadingBar.innerText = '[ O . . . ]'; }, 100);
-            setTimeout(() => { loadingBar.innerText = '[ O O . . ]'; }, 300);
-            setTimeout(() => { loadingBar.innerText = '[ O O O . ]'; }, 500);
-            setTimeout(() => { loadingBar.innerText = '[ O O O O ]'; termLog('Boot successful.'); }, 700);
+      function setGen2Wallpaper(url) {
+        document.getElementById("gen2-home").style.backgroundImage =
+          `url('${url}')`;
+        gen2Navigate("home");
+        termLog(`Gen 2 Wallpaper Set: ${url.split("/").pop()}`);
+      }
 
-            stateTimeout = setTimeout(() => {
-                bootText.style.display = 'none';
-                bootText.classList.remove('boot-anim');
-            }, 1800);
-        }
-
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        const audioCtx = new AudioContext();
-        function playTone(freq, dur, type='square') {
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = type; osc.frequency.value = freq;
-            gain.gain.setValueAtTime(0.03, audioCtx.currentTime); 
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur/1000);
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.start(); osc.stop(audioCtx.currentTime + dur/1000);
-        }
-        function playChatter(baseFreq, durationMs, count) {
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'square'; osc.connect(gain); gain.connect(audioCtx.destination);
-            let now = audioCtx.currentTime; let step = (durationMs / 1000) / count;
-            osc.start(now);
-            for(let i=0; i<count; i++) {
-                osc.frequency.setValueAtTime(baseFreq + (Math.random() * 600 - 300), now + (i*step));
-                gain.gain.setValueAtTime(0.05, now + (i*step));
-                gain.gain.setValueAtTime(0.001, now + (i*step) + step - 0.01);
-            }
-            osc.stop(now + (durationMs/1000));
-        }
-        function playHappySound() { setEyeState('happy'); playChatter(2200, 400, 5); termLog('Played: Happy.wav'); }
-        function playSadSound() { setEyeState('sad'); playTone(800, 200, 'triangle'); setTimeout(() => playTone(600, 300, 'triangle'), 220); termLog('Played: Sad.wav'); }
-        function playAngrySound() { setEyeState('angry'); playChatter(400, 500, 8); termLog('Played: Buzz.wav'); }
-        
-        document.body.addEventListener('click', () => {
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-        }, { once: true });
-
-        // Gen 2 OS Simulator Logic (INSTANT - Zero Delay)
-        function gen2Navigate(screen) {
-            // Hide ALL screens including app screens
-            document.querySelectorAll('#ui-gen2 .gen2-screen').forEach(el => {
-                el.classList.remove('active');
-            });
-            // Stop camera if leaving
-            if(localStream) {
-                localStream.getTracks().forEach(t => t.stop());
-                localStream = null;
-            }
-            // Show target
-            const id = screen === 'home' ? 'gen2-home' : screen === 'menu' ? 'gen2-menu' : 'gen2-wallpapers';
-            document.getElementById(id).classList.add('active');
-            termLog(`Gen 2 UI Navigated to: ${screen.toUpperCase()}`);
-        }
-
-        function setGen2Wallpaper(url) {
-            document.getElementById('gen2-home').style.backgroundImage = `url('${url}')`;
-            gen2Navigate('home');
-            termLog(`Gen 2 Wallpaper Set: ${url.split('/').pop()}`);
-        }
-
-        // --- GEN 2 APPS LOGIC ---
-        function openGen2App(appId) {
-            termLog('App Opened: ' + appId.replace('app-', '').toUpperCase());
-            // Hide ALL screens
-            document.querySelectorAll('#ui-gen2 .gen2-screen').forEach(el => {
-                el.classList.remove('active');
-            });
-            document.getElementById(appId).classList.add('active');
-            if(appId === 'app-camera') startCamera();
-        }
-        
-        let localStream = null;
-        async function startCamera() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-                document.getElementById('cam-video').srcObject = stream;
-                localStream = stream;
-                termLog('Camera Activated');
-            } catch (err) {
-                termLog('Camera Error: ' + err.message);
-                alert('Akses kamera ditolak atau tidak tersedia: ' + err.message);
-            }
-        }
-        
-        function closeCamera() {
-            if(localStream) {
-                localStream.getTracks().forEach(track => track.stop());
-                localStream = null;
-            }
-            gen2Navigate('menu');
-        }
-        
-        function snapPhoto() {
-            termLog('Camera Snap! Photo saved to gallery (simulated).');
-            const flash = document.createElement('div');
-            flash.style.cssText = 'position:absolute;inset:0;background:white;z-index:100';
-            document.getElementById('app-camera').appendChild(flash);
-            setTimeout(() => flash.remove(), 150);
-        }
-
-        // ===== ZYLO MUSIC ENGINE (Real MP3 Playback) =====
-        const zyloTracks = [
-            // Developer: Tambahkan lagu baru di sini!
-            // Format: { title: 'Judul', artist: 'Artis', art: 'path/to/album.jpg', src: 'path/to/file.mp3' }
-            { title: 'Midnight Circuit', artist: 'Zylo x ARAFAH', art: 'assets/music/album_midnight.jpg', src: 'assets/music/track_midnight.mp3' },
-            { title: 'Neon Dreams', artist: 'Zylo x ARAFAH', art: 'assets/music/album_neon.jpg', src: 'assets/music/track_neon.mp3' },
-            { title: 'Digital Ocean', artist: 'Zylo x ARAFAH', art: 'assets/music/album_ocean.jpg', src: 'assets/music/track_ocean.mp3' }
-        ];
-        let currentTrack = -1;
-        let isPlaying = false;
-        const audioPlayer = new Audio();
-        audioPlayer.preload = 'metadata';
-        let musicInterval = null;
-        const pauseSvg = '<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>';
-        const playSvg = '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>';
-
-        audioPlayer.addEventListener('ended', () => nextTrack());
-        audioPlayer.addEventListener('loadedmetadata', () => {
-            document.getElementById('np-duration').textContent = formatTime(audioPlayer.duration);
+      // --- GEN 2 APPS LOGIC ---
+      function openGen2App(appId) {
+        termLog("App Opened: " + appId.replace("app-", "").toUpperCase());
+        // Hide ALL screens
+        document.querySelectorAll("#ui-gen2 .gen2-screen").forEach((el) => {
+          el.classList.remove("active");
         });
+        document.getElementById(appId).classList.add("active");
+        if (appId === "app-camera") startCamera();
+      }
 
-        function playTrack(idx) {
-            currentTrack = idx;
-            const t = zyloTracks[idx];
-            // Update UI
-            document.getElementById('mini-player').style.display = 'flex';
-            document.getElementById('mini-art').src = t.art;
-            document.getElementById('mini-title').textContent = t.title;
-            document.getElementById('mini-artist').textContent = t.artist;
-            document.getElementById('np-art').src = t.art;
-            document.getElementById('np-title').textContent = t.title;
-            document.getElementById('np-artist').textContent = t.artist;
-            // Highlight active row
-            document.querySelectorAll('[id^=track-row]').forEach(el => el.style.background = '');
-            const row = document.getElementById('track-row-' + idx);
-            if(row) row.style.background = 'rgba(16,185,129,0.15)';
-            // Play real MP3
-            audioPlayer.src = t.src;
-            audioPlayer.play().catch(e => termLog('Audio Error: ' + e.message));
-            isPlaying = true;
-            updatePlayIcons();
-            startProgressUpdate();
-            showNowPlaying();
-            termLog('Now Playing: ' + t.title);
+      let localStream = null;
+      async function startCamera() {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "environment" },
+          });
+          document.getElementById("cam-video").srcObject = stream;
+          localStream = stream;
+          termLog("Camera Activated");
+        } catch (err) {
+          termLog("Camera Error: " + err.message);
+          alert("Akses kamera ditolak atau tidak tersedia: " + err.message);
         }
+      }
 
-        function startProgressUpdate() {
-            if(musicInterval) clearInterval(musicInterval);
-            musicInterval = setInterval(() => {
-                if(!audioPlayer.duration) return;
-                const pct = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-                document.getElementById('np-progress').style.width = pct + '%';
-                document.getElementById('np-elapsed').textContent = formatTime(audioPlayer.currentTime);
-            }, 250);
+      function closeCamera() {
+        if (localStream) {
+          localStream.getTracks().forEach((track) => track.stop());
+          localStream = null;
         }
+        gen2Navigate("menu");
+      }
 
-        function togglePlay() {
-            if(currentTrack < 0) { playTrack(0); return; }
-            if(isPlaying) {
-                audioPlayer.pause();
-                isPlaying = false;
-                if(musicInterval) { clearInterval(musicInterval); musicInterval = null; }
-                termLog('Music Paused');
-            } else {
-                audioPlayer.play().catch(e => termLog('Audio Error: ' + e.message));
-                isPlaying = true;
-                startProgressUpdate();
-                termLog('Music Resumed');
-            }
-            updatePlayIcons();
-        }
+      function snapPhoto() {
+        termLog("Camera Snap! Photo saved to gallery (simulated).");
+        const flash = document.createElement("div");
+        flash.style.cssText =
+          "position:absolute;inset:0;background:white;z-index:100";
+        document.getElementById("app-camera").appendChild(flash);
+        setTimeout(() => flash.remove(), 150);
+      }
 
-        function nextTrack() {
-            playTrack((currentTrack + 1) % zyloTracks.length);
-        }
-        function prevTrack() {
-            playTrack((currentTrack - 1 + zyloTracks.length) % zyloTracks.length);
-        }
+      // ===== ZYLO MUSIC ENGINE (Real MP3 Playback) =====
+      const zyloTracks = [
+        // Developer: Tambahkan lagu baru di sini!
+        // Format: { title: 'Judul', artist: 'Artis', art: 'path/to/album.jpg', src: 'path/to/file.mp3' }
+        {
+          title: "happier",
+          artist: "Olivia Rodrigo",
+          art: "assets/music/olivia_rodrigo.jpg",
+          src: "assets/music/happier.mp3",
+        },
+        {
+          title: "traitor",
+          artist: "Olivia Rodrigo",
+          art: "assets/music/olivia_rodrigo.jpg",
+          src: "assets/music/traitor.mp3",
+        },
+        {
+          title: "When I Was Your Man",
+          artist: "Bruno Mars",
+          art: "assets/music/bruno_mars.jpg",
+          src: "assets/music/bruno_mars_when_i_was_your_man.mp3",
+        },
+        {
+          title: "That Should Be Me",
+          artist: "Justin Bieber",
+          art: "assets/music/justin_bieber.jpg",
+          src: "assets/music/justin_bieber_that_should_be_me.mp3",
+        },
+      ];
+      let currentTrack = -1;
+      let isPlaying = false;
+      const audioPlayer = new Audio();
+      audioPlayer.preload = "metadata";
+      let musicInterval = null;
+      const pauseSvg =
+        '<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>';
+      const playSvg =
+        '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>';
 
-        function showNowPlaying() {
-            document.getElementById('music-library').style.display = 'none';
-            document.getElementById('music-nowplaying').style.display = 'flex';
-        }
-        function hideNowPlaying() {
-            document.getElementById('music-nowplaying').style.display = 'none';
-            document.getElementById('music-library').style.display = 'flex';
-        }
+      audioPlayer.addEventListener("ended", () => nextTrack());
+      audioPlayer.addEventListener("loadedmetadata", () => {
+        document.getElementById("np-duration").textContent = formatTime(
+          audioPlayer.duration,
+        );
+      });
 
-        function updatePlayIcons() {
-            const svg = isPlaying ? pauseSvg : playSvg;
-            ['np-play-icon','mini-play-icon'].forEach(id => {
-                const el = document.getElementById(id);
-                if(el) el.innerHTML = svg;
-            });
-        }
+      function playTrack(idx) {
+        currentTrack = idx;
+        const t = zyloTracks[idx];
+        // Update UI
+        document.getElementById("mini-player").style.display = "flex";
+        document.getElementById("mini-art").src = t.art;
+        document.getElementById("mini-title").textContent = t.title;
+        document.getElementById("mini-artist").textContent = t.artist;
+        document.getElementById("np-art").src = t.art;
+        document.getElementById("np-title").textContent = t.title;
+        document.getElementById("np-artist").textContent = t.artist;
+        // Highlight active row
+        document
+          .querySelectorAll("[id^=track-row]")
+          .forEach((el) => (el.style.background = ""));
+        const row = document.getElementById("track-row-" + idx);
+        if (row) row.style.background = "rgba(16,185,129,0.15)";
+        // Play real MP3
+        audioPlayer.src = t.src;
+        audioPlayer.play().catch((e) => termLog("Audio Error: " + e.message));
+        isPlaying = true;
+        updatePlayIcons();
+        startProgressUpdate();
+        showNowPlaying();
+        termLog("Now Playing: " + t.title);
+      }
 
-        function formatTime(s) {
-            if(!s || isNaN(s)) return '0:00';
-            const m = Math.floor(s/60);
-            const sec = Math.floor(s%60);
-            return m + ':' + (sec < 10 ? '0' : '') + sec;
-        }
+      function startProgressUpdate() {
+        if (musicInterval) clearInterval(musicInterval);
+        musicInterval = setInterval(() => {
+          if (!audioPlayer.duration) return;
+          const pct = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+          document.getElementById("np-progress").style.width = pct + "%";
+          document.getElementById("np-elapsed").textContent = formatTime(
+            audioPlayer.currentTime,
+          );
+        }, 250);
+      }
 
-        function seekTrack(e) {
-            if(currentTrack < 0 || !audioPlayer.duration) return;
-            const rect = e.currentTarget.getBoundingClientRect();
-            const pct = (e.clientX - rect.left) / rect.width;
-            audioPlayer.currentTime = pct * audioPlayer.duration;
-            document.getElementById('np-progress').style.width = (pct*100) + '%';
-            document.getElementById('np-elapsed').textContent = formatTime(audioPlayer.currentTime);
+      function togglePlay() {
+        if (currentTrack < 0) {
+          playTrack(0);
+          return;
         }
+        if (isPlaying) {
+          audioPlayer.pause();
+          isPlaying = false;
+          if (musicInterval) {
+            clearInterval(musicInterval);
+            musicInterval = null;
+          }
+          termLog("Music Paused");
+        } else {
+          audioPlayer.play().catch((e) => termLog("Audio Error: " + e.message));
+          isPlaying = true;
+          startProgressUpdate();
+          termLog("Music Resumed");
+        }
+        updatePlayIcons();
+      }
 
-        // Live Clock Update for Gen 2
-        setInterval(() => {
-            const timeElement = document.getElementById('gen2-time');
-            if(timeElement) {
-                const now = new Date();
-                let h = now.getHours();
-                let m = now.getMinutes();
-                h = h % 12; h = h ? h : 12; 
-                m = m < 10 ? '0' + m : m;
-                timeElement.innerText = `${h}:${m}`;
-            }
-        }, 10000);
+      function nextTrack() {
+        playTrack((currentTrack + 1) % zyloTracks.length);
+      }
+      function prevTrack() {
+        playTrack((currentTrack - 1 + zyloTracks.length) % zyloTracks.length);
+      }
+
+      function showNowPlaying() {
+        document.getElementById("music-library").style.display = "none";
+        document.getElementById("music-nowplaying").style.display = "flex";
+      }
+      function hideNowPlaying() {
+        document.getElementById("music-nowplaying").style.display = "none";
+        document.getElementById("music-library").style.display = "flex";
+      }
+
+      function updatePlayIcons() {
+        const svg = isPlaying ? pauseSvg : playSvg;
+        ["np-play-icon", "mini-play-icon"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.innerHTML = svg;
+        });
+      }
+
+      function formatTime(s) {
+        if (!s || isNaN(s)) return "0:00";
+        const m = Math.floor(s / 60);
+        const sec = Math.floor(s % 60);
+        return m + ":" + (sec < 10 ? "0" : "") + sec;
+      }
+
+      function seekTrack(e) {
+        if (currentTrack < 0 || !audioPlayer.duration) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        const pct = (e.clientX - rect.left) / rect.width;
+        audioPlayer.currentTime = pct * audioPlayer.duration;
+        document.getElementById("np-progress").style.width = pct * 100 + "%";
+        document.getElementById("np-elapsed").textContent = formatTime(
+          audioPlayer.currentTime,
+        );
+      }
+
+      // Live Clock Update for Gen 2
+      setInterval(() => {
+        const timeElement = document.getElementById("gen2-time");
+        if (timeElement) {
+          const now = new Date();
+          let h = now.getHours();
+          let m = now.getMinutes();
+          h = h % 12;
+          h = h ? h : 12;
+          m = m < 10 ? "0" + m : m;
+          timeElement.innerText = `${h}:${m}`;
+        }
+      }, 10000);
     </script>
-</body>
+  </body>
 </html>
