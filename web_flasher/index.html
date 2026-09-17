@@ -696,25 +696,28 @@
             setTimeout(() => flash.remove(), 150);
         }
 
-        // ===== ZYLO MUSIC ENGINE (Spotify-like) =====
+        // ===== ZYLO MUSIC ENGINE (Real MP3 Playback) =====
         const zyloTracks = [
-            { title: 'Midnight Circuit', artist: 'Zylo x ARAFAH', art: 'assets/music/album_midnight.jpg', freq: 220, type: 'sawtooth', dur: 45 },
-            { title: 'Neon Dreams', artist: 'Zylo x ARAFAH', art: 'assets/music/album_neon.jpg', freq: 330, type: 'sine', dur: 38 },
-            { title: 'Digital Ocean', artist: 'Zylo x ARAFAH', art: 'assets/music/album_ocean.jpg', freq: 261, type: 'triangle', dur: 52 }
+            // Developer: Tambahkan lagu baru di sini!
+            // Format: { title: 'Judul', artist: 'Artis', art: 'path/to/album.jpg', src: 'path/to/file.mp3' }
+            { title: 'Midnight Circuit', artist: 'Zylo x ARAFAH', art: 'assets/music/album_midnight.jpg', src: 'assets/music/track_midnight.mp3' },
+            { title: 'Neon Dreams', artist: 'Zylo x ARAFAH', art: 'assets/music/album_neon.jpg', src: 'assets/music/track_neon.mp3' },
+            { title: 'Digital Ocean', artist: 'Zylo x ARAFAH', art: 'assets/music/album_ocean.jpg', src: 'assets/music/track_ocean.mp3' }
         ];
         let currentTrack = -1;
         let isPlaying = false;
-        let musicOsc = null;
-        let musicGain = null;
-        let musicLfo = null;
-        let musicStartTime = 0;
-        let musicElapsed = 0;
+        const audioPlayer = new Audio();
+        audioPlayer.preload = 'metadata';
         let musicInterval = null;
         const pauseSvg = '<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>';
         const playSvg = '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>';
 
+        audioPlayer.addEventListener('ended', () => nextTrack());
+        audioPlayer.addEventListener('loadedmetadata', () => {
+            document.getElementById('np-duration').textContent = formatTime(audioPlayer.duration);
+        });
+
         function playTrack(idx) {
-            stopMusic();
             currentTrack = idx;
             const t = zyloTracks[idx];
             // Update UI
@@ -725,74 +728,51 @@
             document.getElementById('np-art').src = t.art;
             document.getElementById('np-title').textContent = t.title;
             document.getElementById('np-artist').textContent = t.artist;
-            document.getElementById('np-duration').textContent = formatTime(t.dur);
             // Highlight active row
             document.querySelectorAll('[id^=track-row]').forEach(el => el.style.background = '');
-            document.getElementById('track-row-' + idx).style.background = 'rgba(16,185,129,0.15)';
-            // Start synth audio
-            musicElapsed = 0;
-            startSynthMusic(t);
+            const row = document.getElementById('track-row-' + idx);
+            if(row) row.style.background = 'rgba(16,185,129,0.15)';
+            // Play real MP3
+            audioPlayer.src = t.src;
+            audioPlayer.play().catch(e => termLog('Audio Error: ' + e.message));
+            isPlaying = true;
+            updatePlayIcons();
+            startProgressUpdate();
             showNowPlaying();
             termLog('Now Playing: ' + t.title);
         }
 
-        function startSynthMusic(t) {
-            if(!audioCtx || audioCtx.state === 'closed') return;
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-            musicGain = audioCtx.createGain();
-            musicGain.gain.value = 0.08;
-            musicGain.connect(audioCtx.destination);
-            musicOsc = audioCtx.createOscillator();
-            musicOsc.type = t.type;
-            musicOsc.frequency.value = t.freq;
-            musicLfo = audioCtx.createOscillator();
-            musicLfo.type = 'sine';
-            musicLfo.frequency.value = 0.5;
-            const lfoGain = audioCtx.createGain();
-            lfoGain.gain.value = t.freq * 0.02;
-            musicLfo.connect(lfoGain);
-            lfoGain.connect(musicOsc.frequency);
-            musicOsc.connect(musicGain);
-            musicOsc.start();
-            musicLfo.start();
-            isPlaying = true;
-            musicStartTime = audioCtx.currentTime;
-            updatePlayIcons();
+        function startProgressUpdate() {
+            if(musicInterval) clearInterval(musicInterval);
             musicInterval = setInterval(() => {
-                musicElapsed++;
-                const pct = Math.min((musicElapsed / t.dur) * 100, 100);
+                if(!audioPlayer.duration) return;
+                const pct = (audioPlayer.currentTime / audioPlayer.duration) * 100;
                 document.getElementById('np-progress').style.width = pct + '%';
-                document.getElementById('np-elapsed').textContent = formatTime(musicElapsed);
-                if(musicElapsed >= t.dur) nextTrack();
-            }, 1000);
-        }
-
-        function stopMusic() {
-            if(musicOsc) { try { musicOsc.stop(); } catch(e){} musicOsc = null; }
-            if(musicLfo) { try { musicLfo.stop(); } catch(e){} musicLfo = null; }
-            if(musicInterval) { clearInterval(musicInterval); musicInterval = null; }
-            isPlaying = false;
-            updatePlayIcons();
+                document.getElementById('np-elapsed').textContent = formatTime(audioPlayer.currentTime);
+            }, 250);
         }
 
         function togglePlay() {
             if(currentTrack < 0) { playTrack(0); return; }
             if(isPlaying) {
-                stopMusic();
+                audioPlayer.pause();
+                isPlaying = false;
+                if(musicInterval) { clearInterval(musicInterval); musicInterval = null; }
                 termLog('Music Paused');
             } else {
-                startSynthMusic(zyloTracks[currentTrack]);
+                audioPlayer.play().catch(e => termLog('Audio Error: ' + e.message));
+                isPlaying = true;
+                startProgressUpdate();
                 termLog('Music Resumed');
             }
+            updatePlayIcons();
         }
 
         function nextTrack() {
-            const next = (currentTrack + 1) % zyloTracks.length;
-            playTrack(next);
+            playTrack((currentTrack + 1) % zyloTracks.length);
         }
         function prevTrack() {
-            const prev = (currentTrack - 1 + zyloTracks.length) % zyloTracks.length;
-            playTrack(prev);
+            playTrack((currentTrack - 1 + zyloTracks.length) % zyloTracks.length);
         }
 
         function showNowPlaying() {
@@ -813,18 +793,19 @@
         }
 
         function formatTime(s) {
+            if(!s || isNaN(s)) return '0:00';
             const m = Math.floor(s/60);
             const sec = Math.floor(s%60);
             return m + ':' + (sec < 10 ? '0' : '') + sec;
         }
 
         function seekTrack(e) {
-            if(currentTrack < 0) return;
+            if(currentTrack < 0 || !audioPlayer.duration) return;
             const rect = e.currentTarget.getBoundingClientRect();
             const pct = (e.clientX - rect.left) / rect.width;
-            musicElapsed = Math.floor(pct * zyloTracks[currentTrack].dur);
+            audioPlayer.currentTime = pct * audioPlayer.duration;
             document.getElementById('np-progress').style.width = (pct*100) + '%';
-            document.getElementById('np-elapsed').textContent = formatTime(musicElapsed);
+            document.getElementById('np-elapsed').textContent = formatTime(audioPlayer.currentTime);
         }
 
         // Live Clock Update for Gen 2
