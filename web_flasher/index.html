@@ -579,6 +579,19 @@
             >
               Generate Unique License
             </button>
+            
+            <!-- Upload Music to Firmware -->
+            <div id="gen2-upload-music" class="mt-4 p-4 border border-green-800 rounded bg-black" style="display:none;">
+              <div class="text-xs text-green-400 mb-2 font-bold">> SUNTIK LAGU (GEN 2 ONLY)</div>
+              <p class="text-[10px] text-gray-500 mb-2">Pilih lagu & cover untuk ditanam ke firmware.</p>
+              <input type="file" id="music-mp3-upload" accept=".mp3" class="w-full text-[10px] bg-gray-900 text-green-300 border border-green-800 p-1 mb-2">
+              <input type="file" id="music-cover-upload" accept="image/*" class="w-full text-[10px] bg-gray-900 text-green-300 border border-green-800 p-1 mb-2" title="Cover Album">
+              <input type="text" id="music-title" placeholder="Judul Lagu" class="w-full text-[10px] bg-gray-900 text-green-300 border border-green-800 p-1 mb-2">
+              <input type="text" id="music-artist" placeholder="Artis / Album" class="w-full text-[10px] bg-gray-900 text-green-300 border border-green-800 p-1 mb-2">
+              <button onclick="handleMusicUpload()" class="w-full hacker-btn p-2 text-xs font-bold mt-1">
+                + SUNTIK KE FIRMWARE
+              </button>
+            </div>
           </div>
 
           <!-- Terminal Output -->
@@ -846,7 +859,7 @@
                       <span
                         onclick="gen2Navigate('menu')"
                         class="cursor-pointer mr-2"
-                        >◀</span
+                        >â—€</span
                       >
                       Kontak
                     </div>
@@ -871,7 +884,7 @@
                       <span
                         onclick="gen2Navigate('menu')"
                         class="cursor-pointer mr-2"
-                        >◀</span
+                        >â—€</span
                       >
                       Lokasi
                     </div>
@@ -891,7 +904,7 @@
                       <span
                         onclick="gen2Navigate('menu')"
                         class="cursor-pointer mr-2"
-                        >◀</span
+                        >â—€</span
                       >
                       Baterai
                     </div>
@@ -907,7 +920,7 @@
                         Mode Hemat Daya <input type="checkbox" />
                       </div>
                       <div class="gen2-btn text-[9px] py-1">
-                        Optimasi Baterai <span>▶</span>
+                        Optimasi Baterai <span>â–¶</span>
                       </div>
                     </div>
                   </div>
@@ -935,7 +948,7 @@
                         <span
                           onclick="gen2Navigate('menu')"
                           class="cursor-pointer mr-2"
-                          >◀</span
+                          >â—€</span
                         >
                         <svg
                           class="w-4 h-4 text-green-400 mr-1"
@@ -949,89 +962,18 @@
                         Zylo Music
                       </div>
                       <div
+                        id="music-albums-view"
                         style="flex: 1; overflow-y: auto; padding: 6px"
                         class="hide-scroll"
                       >
-                        <!-- Track 0 -->
-                        <div
-                          onclick="playTrack(0)"
-                          class="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-white/10 transition-colors mb-1"
-                          id="track-row-0"
-                        >
-                          <img
-                            src="assets/music/olivia_rodrigo.jpg"
-                            class="w-9 h-9 rounded-md object-cover shadow-lg"
-                          />
-                          <div class="flex-1 min-w-0">
-                            <div class="text-[10px] text-white font-semibold truncate">
-                              happier
-                            </div>
-                            <div class="text-[8px] text-gray-400 truncate">
-                              Olivia Rodrigo
-                            </div>
-                          </div>
-                          <svg class="w-3 h-3 text-gray-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
-                        </div>
-                        <!-- Track 1 -->
-                        <div
-                          onclick="playTrack(1)"
-                          class="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-white/10 transition-colors mb-1"
-                          id="track-row-1"
-                        >
-                          <img
-                            src="assets/music/olivia_rodrigo.jpg"
-                            class="w-9 h-9 rounded-md object-cover shadow-lg"
-                          />
-                          <div class="flex-1 min-w-0">
-                            <div class="text-[10px] text-white font-semibold truncate">
-                              traitor
-                            </div>
-                            <div class="text-[8px] text-gray-400 truncate">
-                              Olivia Rodrigo
-                            </div>
-                          </div>
-                          <svg class="w-3 h-3 text-gray-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
-                        </div>
-                        <!-- Track 2 -->
-                        <div
-                          onclick="playTrack(2)"
-                          class="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-white/10 transition-colors mb-1"
-                          id="track-row-2"
-                        >
-                          <img
-                            src="assets/music/bruno_mars.jpg"
-                            class="w-9 h-9 rounded-md object-cover shadow-lg"
-                          />
-                          <div class="flex-1 min-w-0">
-                            <div class="text-[10px] text-white font-semibold truncate">
-                              When I Was Your Man
-                            </div>
-                            <div class="text-[8px] text-gray-400 truncate">
-                              Bruno Mars
-                            </div>
-                          </div>
-                          <svg class="w-3 h-3 text-gray-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
-                        </div>
-                        <!-- Track 3 -->
-                        <div
-                          onclick="playTrack(3)"
-                          class="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-white/10 transition-colors mb-1"
-                          id="track-row-3"
-                        >
-                          <img
-                            src="assets/music/justin_bieber.jpg"
-                            class="w-9 h-9 rounded-md object-cover shadow-lg"
-                          />
-                          <div class="flex-1 min-w-0">
-                            <div class="text-[10px] text-white font-semibold truncate">
-                              That Should Be Me
-                            </div>
-                            <div class="text-[8px] text-gray-400 truncate">
-                              Justin Bieber
-                            </div>
-                          </div>
-                          <svg class="w-3 h-3 text-gray-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
-                        </div>
+                        <!-- Rendered by JS -->
+                      </div>
+                      <div
+                        id="music-playlist-view"
+                        style="display: none; flex: 1; overflow-y: auto; padding: 6px"
+                        class="hide-scroll"
+                      >
+                        <!-- Rendered by JS -->
                       </div>
                       <!-- Mini Player Bar -->
                       <div
@@ -1212,7 +1154,7 @@
                       <span
                         onclick="closeCamera()"
                         class="cursor-pointer drop-shadow-md text-white bg-black/50 rounded-full px-2 py-1"
-                        >◀ Tutup</span
+                        >â—€ Tutup</span
                       >
                     </div>
                     <div
@@ -1238,7 +1180,7 @@
                       <span
                         onclick="gen2Navigate('menu')"
                         class="cursor-pointer mr-2"
-                        >◀</span
+                        >â—€</span
                       >
                       Pengaturan
                     </div>
@@ -1337,7 +1279,7 @@
                       <span
                         onclick="openGen2App('app-settings')"
                         class="cursor-pointer mr-2"
-                        >◀</span
+                        >â—€</span
                       >
                       Tampilan
                     </div>
@@ -1465,27 +1407,27 @@
                 <!-- GEN 3 UI (Cellular) -->
                 <div class="app-grid" id="ui-gen3">
                   <div class="app-icon">
-                    <div>📞</div>
+                    <div>ðŸ“ž</div>
                     <span>Call</span>
                   </div>
                   <div class="app-icon">
-                    <div>💬</div>
+                    <div>ðŸ’¬</div>
                     <span>W.App</span>
                   </div>
                   <div class="app-icon">
-                    <div>🌐</div>
+                    <div>ðŸŒ</div>
                     <span>Browser</span>
                   </div>
                   <div class="app-icon">
-                    <div>📱</div>
+                    <div>ðŸ“±</div>
                     <span>TikTok</span>
                   </div>
                   <div class="app-icon">
-                    <div>📸</div>
+                    <div>ðŸ“¸</div>
                     <span>Insta</span>
                   </div>
                   <div class="app-icon">
-                    <div>🛰️</div>
+                    <div>ðŸ›°ï¸</div>
                     <span>GPS</span>
                   </div>
                 </div>
@@ -1544,37 +1486,37 @@
                     onclick="setEyeState('normal')"
                     class="hacker-btn px-3 py-2 text-xs uppercase"
                   >
-                    😐 Normal
+                    ðŸ˜ Normal
                   </button>
                   <button
                     onclick="setEyeState('happy')"
                     class="hacker-btn px-3 py-2 text-xs uppercase"
                   >
-                    😊 Happy
+                    ðŸ˜Š Happy
                   </button>
                   <button
                     onclick="setEyeState('love')"
                     class="hacker-btn px-3 py-2 text-xs uppercase"
                   >
-                    😍 Love
+                    ðŸ˜ Love
                   </button>
                   <button
                     onclick="setEyeState('surprised')"
                     class="hacker-btn px-3 py-2 text-xs uppercase"
                   >
-                    😲 Shock
+                    ðŸ˜² Shock
                   </button>
                   <button
                     onclick="setEyeState('dizzy')"
                     class="hacker-btn px-3 py-2 text-xs uppercase"
                   >
-                    😵 Dizzy
+                    ðŸ˜µ Dizzy
                   </button>
                   <button
                     onclick="setEyeState('angry')"
                     class="hacker-btn px-3 py-2 text-xs uppercase"
                   >
-                    😠 Anger
+                    ðŸ˜  Anger
                   </button>
                 </div>
               </div>
@@ -1589,25 +1531,25 @@
                     onclick="simulateBoot()"
                     class="hacker-btn px-4 py-2 text-xs uppercase font-bold"
                   >
-                    🚀 Run_Boot
+                    ðŸš€ Run_Boot
                   </button>
                   <button
                     onclick="playHappySound()"
                     class="hacker-btn px-4 py-2 text-xs uppercase"
                   >
-                    ✨ Chirp.Wav
+                    âœ¨ Chirp.Wav
                   </button>
                   <button
                     onclick="playSadSound()"
                     class="hacker-btn px-4 py-2 text-xs uppercase"
                   >
-                    💧 Sad.Wav
+                    ðŸ’§ Sad.Wav
                   </button>
                   <button
                     onclick="playAngrySound()"
                     class="hacker-btn px-4 py-2 text-xs uppercase"
                   >
-                    💢 Buzz.Wav
+                    ðŸ’¢ Buzz.Wav
                   </button>
                 </div>
               </div>
@@ -1664,6 +1606,7 @@
           document.getElementById("ui-gen1").style.display = "none";
           document.getElementById("ui-gen2").style.display = "none";
           document.getElementById("ui-gen3").style.display = "none";
+          document.getElementById("gen2-upload-music").style.display = "none";
 
           const oledDisplay = document.getElementById("oled-display");
           oledDisplay.classList.remove("shape-watch");
@@ -1673,6 +1616,7 @@
             termLog(`Loaded UI: Classic Core`);
           } else if (val === "manifest_gen2.json") {
             document.getElementById("ui-gen2").style.display = "block";
+            document.getElementById("gen2-upload-music").style.display = "block";
             oledDisplay.classList.add("shape-watch");
             termLog(`Loaded UI: Smart AI Matrix`);
           } else if (val === "manifest_gen3.json") {
@@ -1681,6 +1625,49 @@
             termLog(`Loaded UI: Cellular Neural Web`);
           }
         });
+
+      // Handle Mock Upload Music
+      function handleMusicUpload() {
+        const fileInput = document.getElementById("music-mp3-upload");
+        const coverInput = document.getElementById("music-cover-upload");
+        const titleInput = document.getElementById("music-title").value;
+        const artistInput = document.getElementById("music-artist").value;
+        
+        if (!fileInput.files.length) {
+          termLog("Error: MP3 file is required.", "err");
+          return;
+        }
+        
+        const file = fileInput.files[0];
+        const fakeUrl = URL.createObjectURL(file);
+        
+        let coverUrl = "assets/music/album_ocean.jpg";
+        if (coverInput.files.length) {
+          coverUrl = URL.createObjectURL(coverInput.files[0]);
+        }
+        
+        const newTrack = {
+          title: titleInput || file.name.replace(".mp3",""),
+          artist: artistInput || "Unknown Artist",
+          art: coverUrl,
+          src: fakeUrl,
+          album: artistInput || "Unknown Artist"
+        };
+        
+        zyloTracks.push(newTrack);
+        termLog(`Memulai transfer file ${file.name} ke Flash Memory ZYLO...`, "warn");
+        
+        setTimeout(() => {
+          termLog(`Lagu berhasil ditambahkan ke firmware!`);
+          termLog(`Title: ${newTrack.title}, Artist: ${newTrack.artist}`);
+          initAlbums();
+          
+          fileInput.value = "";
+          coverInput.value = "";
+          document.getElementById("music-title").value = "";
+          document.getElementById("music-artist").value = "";
+        }, 1500);
+      }
 
       // Event listener for Web Serial Button to capture clicks natively
       const espButton = document.querySelector("esp-web-install-button");
@@ -1838,6 +1825,15 @@
           el.classList.remove("active");
         });
         document.getElementById(appId).classList.add("active");
+        
+        if (appId === "app-music") {
+          // Reset to Album View
+          document.getElementById("music-albums-view").style.display = "block";
+          document.getElementById("music-playlist-view").style.display = "none";
+          document.getElementById("music-nowplaying").style.display = "none";
+          document.getElementById("music-library").style.display = "flex";
+        }
+        
         if (appId === "app-camera") startCamera();
       }
 
@@ -1875,33 +1871,189 @@
 
       // ===== ZYLO MUSIC ENGINE (Real MP3 Playback) =====
       const zyloTracks = [
-        // Developer: Tambahkan lagu baru di sini!
-        // Format: { title: 'Judul', artist: 'Artis', art: 'path/to/album.jpg', src: 'path/to/file.mp3' }
+        {
+          title: "Ari Lasso  Cinta Terakhir  fadhli rqbbi",
+          artist: "Dewa 19",
+          album: "Dewa 19",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/Ari_Lasso__Cinta_Terakhir__fadhli_rqbbi.mp3"
+        },
+        {
+          title: "bersenja Gurau  Raim Laode Lirik Video  Raim Laode",
+          artist: "Raim Laode",
+          album: "Raim Laode",
+          art: "assets/music/Raim_Laode_di_TikTok.jpg",
+          src: "assets/music/bersenja_Gurau__Raim_Laode_Lirik_Video__Raim_Laode.mp3"
+        },
+        {
+          title: "bruno mars when i was your man",
+          artist: "Bruno Mars",
+          album: "Bruno Mars",
+          art: "assets/music/bruno_mars.jpg",
+          src: "assets/music/bruno_mars_when_i_was_your_man.mp3"
+        },
+        {
+          title: "Bruno Mars  It Will Rain Lyrics  Pizza Music",
+          artist: "Bruno Mars",
+          album: "Bruno Mars",
+          art: "assets/music/bruno_mars.jpg",
+          src: "assets/music/Bruno_Mars__It_Will_Rain_Lyrics__Pizza_Music.mp3"
+        },
+        {
+          title: "Bruno Mars  Locked Out Of Heaven Official Music Video  Bruno Mars",
+          artist: "Bruno Mars",
+          album: "Bruno Mars",
+          art: "assets/music/bruno_mars.jpg",
+          src: "assets/music/Bruno_Mars__Locked_Out_Of_Heaven_Official_Music_Video__Bruno_Mars.mp3"
+        },
+        {
+          title: "d4vd  Here With Me [Official Music Video]  d4vdVEVO",
+          artist: "Indie/Mix",
+          album: "Indie/Mix",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/d4vd__Here_With_Me_[Official_Music_Video]__d4vdVEVO.mp3"
+        },
+        {
+          title: "DEWA  Roman Picisan Lirik  Happy Sing",
+          artist: "Dewa 19",
+          album: "Dewa 19",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/DEWA__Roman_Picisan_Lirik__Happy_Sing.mp3"
+        },
+        {
+          title: "eÅ„au feat. Ari Lesmana  Sesi Potret Official Music Video  Aku eÅ„au",
+          artist: "Indie/Mix",
+          album: "Indie/Mix",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/eÅ„au_feat._Ari_Lesmana__Sesi_Potret_Official_Music_Video__Aku_eÅ„au.mp3"
+        },
+        {
+          title: "for Revenge  Sadrah Official Lyric Video  FORREVENGEVEVO",
+          artist: "Indie/Mix",
+          album: "Indie/Mix",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/for_Revenge__Sadrah_Official_Lyric_Video__FORREVENGEVEVO.mp3"
+        },
         {
           title: "happier",
           artist: "Olivia Rodrigo",
+          album: "Olivia Rodrigo",
           art: "assets/music/olivia_rodrigo.jpg",
-          src: "assets/music/happier.mp3",
+          src: "assets/music/happier.mp3"
+        },
+        {
+          title: "happier olivia rodrigo",
+          artist: "Olivia Rodrigo",
+          album: "Olivia Rodrigo",
+          art: "assets/music/olivia_rodrigo.jpg",
+          src: "assets/music/happier_olivia_rodrigo.mp3"
+        },
+        {
+          title: "James Arthur  Impossible Lyrics  dopamineee",
+          artist: "Indie/Mix",
+          album: "Indie/Mix",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/James_Arthur__Impossible_Lyrics__dopamineee.mp3"
+        },
+        {
+          title: "justin bieber that should be me",
+          artist: "Justin Bieber",
+          album: "Justin Bieber",
+          art: "assets/music/justin_bieber.jpg",
+          src: "assets/music/justin_bieber_that_should_be_me.mp3"
+        },
+        {
+          title: "Kangen  Dewa 19 Lirik Lagu  Alin Febrina Utami",
+          artist: "Dewa 19",
+          album: "Dewa 19",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/Kangen__Dewa_19_Lirik_Lagu__Alin_Febrina_Utami.mp3"
+        },
+        {
+          title: "Pamungkas  Berapa Kali Kita Akan Saling Memaafkan Official Audio  Pamungkas",
+          artist: "Pamungkas",
+          album: "Pamungkas",
+          art: "assets/music/pamungkas.jpg",
+          src: "assets/music/Pamungkas__Berapa_Kali_Kita_Akan_Saling_Memaafkan_Official_Audio__Pamungkas.mp3"
+        },
+        {
+          title: "Perunggu  Ini Abadi Video Lirik  Perunggu Official",
+          artist: "Indie/Mix",
+          album: "Indie/Mix",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/Perunggu__Ini_Abadi_Video_Lirik__Perunggu_Official.mp3"
+        },
+        {
+          title: "Pupus  Dewa 19 Lirik Lagu  paundra",
+          artist: "Dewa 19",
+          album: "Dewa 19",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/Pupus__Dewa_19_Lirik_Lagu__paundra.mp3"
+        },
+        {
+          title: "Raim Laode  Arti Hidup Lirik Video  Raim Laode",
+          artist: "Raim Laode",
+          album: "Raim Laode",
+          art: "assets/music/Raim_Laode_di_TikTok.jpg",
+          src: "assets/music/Raim_Laode__Arti_Hidup_Lirik_Video__Raim_Laode.mp3"
+        },
+        {
+          title: "Raim Laode  Dunia Yang Nanti Lirik video  Raim Laode",
+          artist: "Raim Laode",
+          album: "Raim Laode",
+          art: "assets/music/Raim_Laode_di_TikTok.jpg",
+          src: "assets/music/Raim_Laode__Dunia_Yang_Nanti_Lirik_video__Raim_Laode.mp3"
+        },
+        {
+          title: "Raim Laode  IQRO' Official Lyric Video  Raim Laode",
+          artist: "Raim Laode",
+          album: "Raim Laode",
+          art: "assets/music/Raim_Laode_di_TikTok.jpg",
+          src: "assets/music/Raim_Laode__IQRO'_Official_Lyric_Video__Raim_Laode.mp3"
+        },
+        {
+          title: "Raim Laode  Menari nari Lirik Video  Raim Laode",
+          artist: "Raim Laode",
+          album: "Raim Laode",
+          art: "assets/music/Raim_Laode_di_TikTok.jpg",
+          src: "assets/music/Raim_Laode__Menari_nari_Lirik_Video__Raim_Laode.mp3"
+        },
+        {
+          title: "Sang Badut  Raim Laode Video Clip  Raim Laode",
+          artist: "Raim Laode",
+          album: "Raim Laode",
+          art: "assets/music/Raim_Laode_di_TikTok.jpg",
+          src: "assets/music/Sang_Badut__Raim_Laode_Video_Clip__Raim_Laode.mp3"
+        },
+        {
+          title: "The 1975  About You Official  The1975VEVO",
+          artist: "Indie/Mix",
+          album: "Indie/Mix",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/The_1975__About_You_Official__The1975VEVO.mp3"
         },
         {
           title: "traitor",
           artist: "Olivia Rodrigo",
+          album: "Olivia Rodrigo",
           art: "assets/music/olivia_rodrigo.jpg",
-          src: "assets/music/traitor.mp3",
+          src: "assets/music/traitor.mp3"
         },
         {
-          title: "When I Was Your Man",
-          artist: "Bruno Mars",
-          art: "assets/music/bruno_mars.jpg",
-          src: "assets/music/bruno_mars_when_i_was_your_man.mp3",
+          title: "TULUS  Jatuh Suka Lyric Music  Studio Gembira",
+          artist: "Indie/Mix",
+          album: "Indie/Mix",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/TULUS__Jatuh_Suka_Lyric_Music__Studio_Gembira.mp3"
         },
         {
-          title: "That Should Be Me",
-          artist: "Justin Bieber",
-          art: "assets/music/justin_bieber.jpg",
-          src: "assets/music/justin_bieber_that_should_be_me.mp3",
-        },
-      ];
+          title: "Wish You Were Here  Neck Deep",
+          artist: "Indie/Mix",
+          album: "Indie/Mix",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/Wish_You_Were_Here__Neck_Deep.mp3"
+        }
+];
       let currentTrack = -1;
       let isPlaying = false;
       const audioPlayer = new Audio();
@@ -2022,6 +2174,81 @@
         );
       }
 
+      // UI Render for Albums
+      function initAlbums() {
+        const albumsView = document.getElementById("music-albums-view");
+        if (!albumsView) return;
+        albumsView.innerHTML = "";
+        
+        // Extract unique albums and their cover art
+        const albumsMap = {};
+        zyloTracks.forEach(t => {
+          if (!albumsMap[t.album]) {
+            albumsMap[t.album] = t.art;
+          }
+        });
+
+        // Generate Album DOM
+        Object.keys(albumsMap).forEach(albumName => {
+          const div = document.createElement("div");
+          div.className = "flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-white/10 transition-colors mb-1";
+          div.onclick = () => openAlbum(albumName);
+          
+          div.innerHTML = `
+            <img src="${albumsMap[albumName]}" class="w-10 h-10 rounded-md object-cover shadow-lg" />
+            <div class="flex-1 min-w-0">
+              <div class="text-[11px] text-white font-bold truncate">${albumName}</div>
+              <div class="text-[8px] text-gray-400 truncate">Album</div>
+            </div>
+            <svg class="w-4 h-4 text-gray-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          `;
+          albumsView.appendChild(div);
+        });
+      }
+
+      function openAlbum(albumName) {
+        const albumsView = document.getElementById("music-albums-view");
+        const playlistView = document.getElementById("music-playlist-view");
+        
+        albumsView.style.display = "none";
+        playlistView.style.display = "block";
+        playlistView.innerHTML = `
+          <div class="flex items-center gap-2 mb-2 p-1">
+             <span onclick="closeAlbum()" class="cursor-pointer text-white px-2 py-1 bg-white/10 rounded text-[9px] hover:bg-white/20">◀ Back</span>
+             <span class="text-[10px] text-white font-bold truncate flex-1">${albumName}</span>
+          </div>
+        `;
+        
+        zyloTracks.forEach((t, idx) => {
+          if (t.album !== albumName) return;
+          
+          const div = document.createElement("div");
+          div.id = "track-row-" + idx;
+          div.className = "flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-white/10 transition-colors mb-1";
+          div.onclick = () => playTrack(idx);
+          
+          div.innerHTML = `
+            <img src="${t.art}" class="w-8 h-8 rounded-md object-cover shadow-lg" />
+            <div class="flex-1 min-w-0">
+              <div class="text-[10px] text-white font-semibold truncate">${t.title}</div>
+              <div class="text-[8px] text-gray-400 truncate">${t.artist}</div>
+            </div>
+            <svg class="w-3 h-3 text-gray-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+          `;
+          playlistView.appendChild(div);
+        });
+      }
+
+      function closeAlbum() {
+        document.getElementById("music-playlist-view").style.display = "none";
+        document.getElementById("music-albums-view").style.display = "block";
+      }
+
+      // Initialize on load
+      setTimeout(() => initAlbums(), 1000);
+
       // Live Clock Update for Gen 2
       setInterval(() => {
         const timeElement = document.getElementById("gen2-time");
@@ -2038,3 +2265,4 @@
     </script>
   </body>
 </html>
+

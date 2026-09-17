@@ -1,0 +1,184 @@
+[
+        {
+          title: "Ari Lasso  Cinta Terakhir  fadhli rqbbi",
+          artist: "Dewa 19",
+          album: "Dewa 19",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/Ari_Lasso__Cinta_Terakhir__fadhli_rqbbi.mp3"
+        },
+        {
+          title: "bersenja Gurau  Raim Laode Lirik Video  Raim Laode",
+          artist: "Raim Laode",
+          album: "Raim Laode",
+          art: "assets/music/Raim_Laode_di_TikTok.jpg",
+          src: "assets/music/bersenja_Gurau__Raim_Laode_Lirik_Video__Raim_Laode.mp3"
+        },
+        {
+          title: "bruno mars when i was your man",
+          artist: "Bruno Mars",
+          album: "Bruno Mars",
+          art: "assets/music/bruno_mars.jpg",
+          src: "assets/music/bruno_mars_when_i_was_your_man.mp3"
+        },
+        {
+          title: "Bruno Mars  It Will Rain Lyrics  Pizza Music",
+          artist: "Bruno Mars",
+          album: "Bruno Mars",
+          art: "assets/music/bruno_mars.jpg",
+          src: "assets/music/Bruno_Mars__It_Will_Rain_Lyrics__Pizza_Music.mp3"
+        },
+        {
+          title: "Bruno Mars  Locked Out Of Heaven Official Music Video  Bruno Mars",
+          artist: "Bruno Mars",
+          album: "Bruno Mars",
+          art: "assets/music/bruno_mars.jpg",
+          src: "assets/music/Bruno_Mars__Locked_Out_Of_Heaven_Official_Music_Video__Bruno_Mars.mp3"
+        },
+        {
+          title: "d4vd  Here With Me [Official Music Video]  d4vdVEVO",
+          artist: "Indie/Mix",
+          album: "Indie/Mix",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/d4vd__Here_With_Me_[Official_Music_Video]__d4vdVEVO.mp3"
+        },
+        {
+          title: "DEWA  Roman Picisan Lirik  Happy Sing",
+          artist: "Dewa 19",
+          album: "Dewa 19",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/DEWA__Roman_Picisan_Lirik__Happy_Sing.mp3"
+        },
+        {
+          title: "eńau feat. Ari Lesmana  Sesi Potret Official Music Video  Aku eńau",
+          artist: "Indie/Mix",
+          album: "Indie/Mix",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/eńau_feat._Ari_Lesmana__Sesi_Potret_Official_Music_Video__Aku_eńau.mp3"
+        },
+        {
+          title: "for Revenge  Sadrah Official Lyric Video  FORREVENGEVEVO",
+          artist: "Indie/Mix",
+          album: "Indie/Mix",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/for_Revenge__Sadrah_Official_Lyric_Video__FORREVENGEVEVO.mp3"
+        },
+        {
+          title: "happier",
+          artist: "Olivia Rodrigo",
+          album: "Olivia Rodrigo",
+          art: "assets/music/olivia_rodrigo.jpg",
+          src: "assets/music/happier.mp3"
+        },
+        {
+          title: "happier olivia rodrigo",
+          artist: "Olivia Rodrigo",
+          album: "Olivia Rodrigo",
+          art: "assets/music/olivia_rodrigo.jpg",
+          src: "assets/music/happier_olivia_rodrigo.mp3"
+        },
+        {
+          title: "James Arthur  Impossible Lyrics  dopamineee",
+          artist: "Indie/Mix",
+          album: "Indie/Mix",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/James_Arthur__Impossible_Lyrics__dopamineee.mp3"
+        },
+        {
+          title: "justin bieber that should be me",
+          artist: "Justin Bieber",
+          album: "Justin Bieber",
+          art: "assets/music/justin_bieber.jpg",
+          src: "assets/music/justin_bieber_that_should_be_me.mp3"
+        },
+        {
+          title: "Kangen  Dewa 19 Lirik Lagu  Alin Febrina Utami",
+          artist: "Dewa 19",
+          album: "Dewa 19",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/Kangen__Dewa_19_Lirik_Lagu__Alin_Febrina_Utami.mp3"
+        },
+        {
+          title: "Pamungkas  Berapa Kali Kita Akan Saling Memaafkan Official Audio  Pamungkas",
+          artist: "Pamungkas",
+          album: "Pamungkas",
+          art: "assets/music/pamungkas.jpg",
+          src: "assets/music/Pamungkas__Berapa_Kali_Kita_Akan_Saling_Memaafkan_Official_Audio__Pamungkas.mp3"
+        },
+        {
+          title: "Perunggu  Ini Abadi Video Lirik  Perunggu Official",
+          artist: "Indie/Mix",
+          album: "Indie/Mix",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/Perunggu__Ini_Abadi_Video_Lirik__Perunggu_Official.mp3"
+        },
+        {
+          title: "Pupus  Dewa 19 Lirik Lagu  paundra",
+          artist: "Dewa 19",
+          album: "Dewa 19",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/Pupus__Dewa_19_Lirik_Lagu__paundra.mp3"
+        },
+        {
+          title: "Raim Laode  Arti Hidup Lirik Video  Raim Laode",
+          artist: "Raim Laode",
+          album: "Raim Laode",
+          art: "assets/music/Raim_Laode_di_TikTok.jpg",
+          src: "assets/music/Raim_Laode__Arti_Hidup_Lirik_Video__Raim_Laode.mp3"
+        },
+        {
+          title: "Raim Laode  Dunia Yang Nanti Lirik video  Raim Laode",
+          artist: "Raim Laode",
+          album: "Raim Laode",
+          art: "assets/music/Raim_Laode_di_TikTok.jpg",
+          src: "assets/music/Raim_Laode__Dunia_Yang_Nanti_Lirik_video__Raim_Laode.mp3"
+        },
+        {
+          title: "Raim Laode  IQRO' Official Lyric Video  Raim Laode",
+          artist: "Raim Laode",
+          album: "Raim Laode",
+          art: "assets/music/Raim_Laode_di_TikTok.jpg",
+          src: "assets/music/Raim_Laode__IQRO'_Official_Lyric_Video__Raim_Laode.mp3"
+        },
+        {
+          title: "Raim Laode  Menari nari Lirik Video  Raim Laode",
+          artist: "Raim Laode",
+          album: "Raim Laode",
+          art: "assets/music/Raim_Laode_di_TikTok.jpg",
+          src: "assets/music/Raim_Laode__Menari_nari_Lirik_Video__Raim_Laode.mp3"
+        },
+        {
+          title: "Sang Badut  Raim Laode Video Clip  Raim Laode",
+          artist: "Raim Laode",
+          album: "Raim Laode",
+          art: "assets/music/Raim_Laode_di_TikTok.jpg",
+          src: "assets/music/Sang_Badut__Raim_Laode_Video_Clip__Raim_Laode.mp3"
+        },
+        {
+          title: "The 1975  About You Official  The1975VEVO",
+          artist: "Indie/Mix",
+          album: "Indie/Mix",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/The_1975__About_You_Official__The1975VEVO.mp3"
+        },
+        {
+          title: "traitor",
+          artist: "Olivia Rodrigo",
+          album: "Olivia Rodrigo",
+          art: "assets/music/olivia_rodrigo.jpg",
+          src: "assets/music/traitor.mp3"
+        },
+        {
+          title: "TULUS  Jatuh Suka Lyric Music  Studio Gembira",
+          artist: "Indie/Mix",
+          album: "Indie/Mix",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/TULUS__Jatuh_Suka_Lyric_Music__Studio_Gembira.mp3"
+        },
+        {
+          title: "Wish You Were Here  Neck Deep",
+          artist: "Indie/Mix",
+          album: "Indie/Mix",
+          art: "assets/music/download_18.jpg",
+          src: "assets/music/Wish_You_Were_Here__Neck_Deep.mp3"
+        }
+]
